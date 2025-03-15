@@ -42,23 +42,80 @@ export type Database = {
       departments: {
         Row: {
           created_at: string | null
+          created_by: string | null
           description: string
           id: string
           name: string
         }
         Insert: {
           created_at?: string | null
+          created_by?: string | null
           description: string
           id?: string
           name: string
         }
         Update: {
           created_at?: string | null
+          created_by?: string | null
           description?: string
           id?: string
           name?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "departments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_roles: {
+        Row: {
+          assigned_by: string
+          created_at: string | null
+          employee_id: string | null
+          id: string
+          role_id: string | null
+        }
+        Insert: {
+          assigned_by: string
+          created_at?: string | null
+          employee_id?: string | null
+          id?: string
+          role_id?: string | null
+        }
+        Update: {
+          assigned_by?: string
+          created_at?: string | null
+          employee_id?: string | null
+          id?: string
+          role_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_roles_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_roles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_roles_user_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       employees: {
         Row: {
@@ -72,6 +129,7 @@ export type Database = {
           dob: string
           email: string
           emergency_contact: string
+          employee_id: string
           employment_type: Database["public"]["Enums"]["employment_type_enum"]
           first_name: string
           gender: Database["public"]["Enums"]["gender_enum"]
@@ -80,6 +138,7 @@ export type Database = {
           job_title_id: string
           last_name: string
           pancard: string
+          password: string
           phone: string
           provident_fund: number | null
           reporting_manager: string | null
@@ -98,6 +157,7 @@ export type Database = {
           dob: string
           email: string
           emergency_contact: string
+          employee_id: string
           employment_type: Database["public"]["Enums"]["employment_type_enum"]
           first_name: string
           gender: Database["public"]["Enums"]["gender_enum"]
@@ -106,6 +166,7 @@ export type Database = {
           job_title_id: string
           last_name: string
           pancard: string
+          password: string
           phone: string
           provident_fund?: number | null
           reporting_manager?: string | null
@@ -124,6 +185,7 @@ export type Database = {
           dob?: string
           email?: string
           emergency_contact?: string
+          employee_id?: string
           employment_type?: Database["public"]["Enums"]["employment_type_enum"]
           first_name?: string
           gender?: Database["public"]["Enums"]["gender_enum"]
@@ -132,6 +194,7 @@ export type Database = {
           job_title_id?: string
           last_name?: string
           pancard?: string
+          password?: string
           phone?: string
           provident_fund?: number | null
           reporting_manager?: string | null
@@ -332,6 +395,13 @@ export type Database = {
             referencedRelation: "permissions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "role_permissions_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       roles: {
@@ -339,7 +409,7 @@ export type Database = {
           created_by: string
           department_id: string | null
           description: string
-          id: string | null
+          id: string
           role: string
           role_name: string
         }
@@ -347,7 +417,7 @@ export type Database = {
           created_by: string
           department_id?: string | null
           description: string
-          id?: string | null
+          id?: string
           role: string
           role_name: string
         }
@@ -355,7 +425,7 @@ export type Database = {
           created_by?: string
           department_id?: string | null
           description?: string
-          id?: string | null
+          id?: string
           role?: string
           role_name?: string
         }
@@ -372,45 +442,6 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "departments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          assigned_by: string
-          created_at: string | null
-          id: string
-          role_id: string | null
-          user_id: string | null
-        }
-        Insert: {
-          assigned_by: string
-          created_at?: string | null
-          id?: string
-          role_id?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          assigned_by?: string
-          created_at?: string | null
-          id?: string
-          role_id?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_roles_assigned_by_fkey"
-            columns: ["assigned_by"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_roles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
         ]

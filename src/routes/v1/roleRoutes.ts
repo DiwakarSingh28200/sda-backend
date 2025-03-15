@@ -6,8 +6,6 @@ import {
   updateRole,
   deleteRole
 } from "../../controllers/roleController";
-import { authenticateUser } from "../../middleware/authMiddleware";
-import { authorizePermission } from "../../middleware/permissionMiddleware";
 import { asyncHandler } from "../../middleware/asyncHandler";
 
 const router = express.Router();

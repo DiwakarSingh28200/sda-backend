@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { loginEmployee, logoutEmployee } from "../../controllers/authController";
+import { loginEmployee} from "../../controllers/authController";
+import { asyncHandler } from "../../middleware/asyncHandler";
 
 const router: Router = Router();
 
-router.post("/login", loginEmployee);
-router.post("/logout", logoutEmployee);
+router.post("/login", asyncHandler(loginEmployee));
+
 
 export default router;

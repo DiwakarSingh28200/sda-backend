@@ -7,8 +7,7 @@ import {
   removeRoleFromDepartment,
   getDepartmentsWithRoles,
 } from "../../controllers/departmentController";
-import { authenticateUser } from "../../middleware/authMiddleware";
-import { authorizePermission } from "../../middleware/permissionMiddleware";
+
 import { asyncHandler } from "../../middleware/asyncHandler";
 
 const router = express.Router();

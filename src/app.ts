@@ -3,7 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import pino from "pino-http";
-import { db } from "./config/db";
+import logger from "./config/logger";
+
 
 import apiV1Routes from "./routes/v1"; // Import versioned routes
 
@@ -16,7 +17,14 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
 app.use(cors()); // Enable CORS
 app.use(helmet()); // Secure HTTP headers
 app.use(compression()); // Enable response compression
-app.use(pino()); // Modern request logging
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    logger.info(`${req.method} ${req.originalUrl} | ${res.statusCode} | ${Date.now() - start}ms`);
+  });
+
+  next();
+});
 
 
 app.use("/api/v1", apiV1Routes);
