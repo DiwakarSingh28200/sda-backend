@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { db } from "../config/db";
-import { AuthRequest } from "../types/auth";
 import { ApiResponse } from "../types/apiResponse";
 
 // ✅ Get all roles assigned to an employee
