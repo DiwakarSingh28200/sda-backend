@@ -70,7 +70,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
   .cookie("access_token", token, {
     httpOnly: true, 
     secure: process.env.NODE_ENV === "production", 
-    sameSite: "strict", 
+    sameSite: "none", 
     maxAge: 30 * 24 * 60 * 60 * 1000, 
   })
   .json({
@@ -110,7 +110,6 @@ export const getAllEmployees = async (req: Request, res: Response<any>): Promise
 export const getLoggedInUser = async (req: Request<any>, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     const user = req.user; 
-
 
     // Step 1: Fetch Employee Using `employee_id
     const { data: employee, error: employeeError } = await db
