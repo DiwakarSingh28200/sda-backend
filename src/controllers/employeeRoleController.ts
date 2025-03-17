@@ -31,7 +31,7 @@ export const getEmployeeRoles = async (req: Request, res: Response<ApiResponse<a
 export const assignRoleToEmployee = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     const { employee_id, role_id } = req.body;
-    const user = (req as AuthRequest).user; // ✅ Fix TypeScript issue
+    const user = req.user;
 
     if (!employee_id || !role_id) {
       return res.status(400).json({ success: false, message: "Employee ID and Role ID are required." });
@@ -39,7 +39,7 @@ export const assignRoleToEmployee = async (req: Request, res: Response<ApiRespon
 
     const { error } = await db
       .from("employee_roles")
-      .insert({ employee_id, role_id, assigned_by: 'f3be3c6a-99a6-43e4-b48e-011b3f44d054' }); // hardcoded for now
+      .insert({ employee_id, role_id, assigned_by: user?.id! }); // hardcoded for now
 
     if (error) {
       return res.status(500).json({ success: false, message: "Failed to assign role.", error: error.message });

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { db } from "../config/db";
-import { AuthRequest } from "../types/auth";
 import { ApiResponse } from "../types/apiResponse";
 
 // Get all permissions assigned to a role
@@ -32,7 +31,7 @@ export const getPermissionsByRole = async (req: Request, res: Response<ApiRespon
 export const assignPermissionToRole = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     const { role_id, permission_id } = req.body;
-    const user = (req as AuthRequest).user;
+    const user = req.user;
 
     if (!role_id || !permission_id) {
       return res.status(400).json({ success: false, message: "Role ID and Permission ID are required." });
@@ -40,7 +39,7 @@ export const assignPermissionToRole = async (req: Request, res: Response<ApiResp
 
     const { error } = await db
       .from("role_permissions")
-      .insert({ role_id, permission_id, assigned_by: user.id });
+      .insert({ role_id, permission_id, assigned_by: user?.id! });
 
     if (error) {
       return res.status(500).json({ success: false, message: "Failed to assign permission.", error: error.message });
