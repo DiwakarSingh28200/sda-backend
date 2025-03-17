@@ -39,7 +39,7 @@ export const getDepartmentById = async (req: Request, res: Response<ApiResponse<
 export const updateDepartment = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   const { id } = req.params;
   const { name, description } = req.body;
-  const user = (req as AuthRequest).user; // ✅ Type Casting Fix
+  const user =  req.user
 
   if (!name || !description) {
     return res.status(400).json({ success: false, message: "Name and description are required." });
@@ -58,7 +58,7 @@ export const updateDepartment = async (req: Request, res: Response<ApiResponse<a
 export const addRoleToDepartment = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   const { id } = req.params;
   const { role, role_name, description } = req.body;
-  const user = (req as AuthRequest).user; 
+  const user = req.user; 
 
 
 
@@ -66,7 +66,7 @@ export const addRoleToDepartment = async (req: Request, res: Response<ApiRespons
     return res.status(400).json({ success: false, message: "Role name and description are required." });
   }
 
-  const { error } = await db.from("roles").insert({ role, role_name, description, department_id: id, created_by: 'f3be3c6a-99a6-43e4-b48e-011b3f44d054' });
+  const { error } = await db.from("roles").insert({ role, role_name, description, department_id: id, created_by: user?.id! });
 
   if (error) {
     return res.status(500).json({ success: false, message: "Failed to add role.", error: error.message });

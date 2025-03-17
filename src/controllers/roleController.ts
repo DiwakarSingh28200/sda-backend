@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { db } from "../config/db";
-import { AuthRequest } from "../types/auth"; // Import custom request type
 import { ApiResponse } from "../types/apiResponse";
 
 // Get all roles
@@ -80,7 +79,7 @@ export const getRoleById = async (req: Request, res: Response<ApiResponse<any>>)
 export const createRole = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     const { role, role_name, description, department_id } = req.body;
-    const user = (req as AuthRequest).user; 
+    const user = req.user;
 
     console.log('Body: ', req.body);
 
@@ -90,7 +89,7 @@ export const createRole = async (req: Request, res: Response<ApiResponse<any>>):
 
     const { error } = await db
       .from("roles")
-      .insert({ role, role_name, description, department_id, created_by: 'f3be3c6a-99a6-43e4-b48e-011b3f44d054' });
+      .insert({ role, role_name, description, department_id, created_by: user?.id! });
 
     if (error) {
       return res.status(500).json({success: false, message: "Failed to create role.", error: error.message });

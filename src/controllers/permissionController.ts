@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { db } from "../config/db";
-import { AuthRequest } from "../types/auth"; 
 import { ApiResponse } from "../types/apiResponse"; 
 
 // ✅ Get all permissions
@@ -53,7 +52,7 @@ export const getPermissionById = async (req: Request, res: Response<ApiResponse<
 export const createPermission = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     const { name, description, category } = req.body;
-    // const user = (req as AuthRequest).user; 
+    const user = req.user;
 
     if (!name || !description || !category) {
       return res.status(400).json({ success: false, message: "All fields are required." });
@@ -61,7 +60,7 @@ export const createPermission = async (req: Request, res: Response<ApiResponse<a
 
     const { error } = await db
       .from("permissions")
-      .insert({ name, description, category, created_by: 'f3be3c6a-99a6-43e4-b48e-011b3f44d054' });
+      .insert({ name, description, category, created_by: user?.id! });
 
     if (error) {
       return res.status(500).json({ success: false, message: "Failed to create permission.", error: error.message });
