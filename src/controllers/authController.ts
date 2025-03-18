@@ -69,9 +69,8 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     return res
   .cookie("access_token", token, {
     httpOnly: true, 
-    secure: process.env.NODE_ENV === "production", 
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
-    domain: process.env.COOKIE_DOMAIN || undefined, 
+    secure: true, 
+    sameSite: "strict", 
     maxAge: 30 * 24 * 60 * 60 * 1000, 
 
   })
