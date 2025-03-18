@@ -12,7 +12,6 @@ const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
 const app: Application = express(); 
 app.use(cookieParser()); 
 
-
 // Global Middleware
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
