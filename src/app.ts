@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response, NextFunction } from "express";  
 import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
@@ -13,6 +13,23 @@ app.use(cookieParser());
 // Global Middleware
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
+
+const setCorsHeaders = (req: Request, res: Response, next: NextFunction): void => {   
+  res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_URL || "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+
+  next();
+};
+
+app.use(setCorsHeaders);
+
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL || "http://localhost:3000", 
