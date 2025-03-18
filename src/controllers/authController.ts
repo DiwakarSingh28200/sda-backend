@@ -69,10 +69,11 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     return res
   .cookie("access_token", token, {
     httpOnly: true, 
-    secure: true,  
-    sameSite: "none",
-    domain: process.env.COOKIE_DOMAIN,
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
+    domain: process.env.COOKIE_DOMAIN || undefined, 
     maxAge: 30 * 24 * 60 * 60 * 1000, 
+
   })
   .json({
     success: true,
