@@ -6,59 +6,86 @@ import { ApiResponse } from "../types/apiResponse";
 
 export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
+    // console.log("🔹 Login request received:", req.body);
+
     const { employee_id, password } = req.body;
 
-    // Step 1: Fetch Employee Using `employee_id
+    // Step 1: Fetch Employee Using `employee_id`
     const { data: employee, error: employeeError } = await db
       .from("employees")
       .select("id, employee_id, first_name, last_name, password, department:department_id(id, name)")
       .eq("employee_id", employee_id)
       .single();
 
-    if (employeeError || !employee) {
+    // console.log("🔹 Employee Fetch Result:", employee, employeeError);
+
+    if (employeeError) {
+      // console.error("❌ Supabase Employee Query Error:", employeeError);
+      return res.status(500).json({ success: false, message: "Database error fetching employee.", error: employeeError.message });
+    }
+
+    if (!employee) {
+      // console.warn("❌ No employee found with this ID.");
       return res.status(401).json({ success: false, message: "Invalid Employee ID or password." });
     }
 
     // Step 2: Verify Password
+    // console.log("🔹 Checking password for:", employee.employee_id);
+    if (!employee.password) {
+      // console.error(`❌ Employee ${employee.employee_id} has no password set.`);
+      return res.status(400).json({ success: false, message: "Employee password not set. Contact admin." });
+    }
+
     const isMatch = await bcrypt.compare(password, employee.password);
+    // console.log("🔹 Password Match:", isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid Employee ID or password." });
     }
 
-    // Step 3: Fetch Employee Roles (Using `id`, NOT `employee_id`)
+    // Step 3: Fetch Employee Roles
+    // console.log("🔹 Fetching roles for:", employee.id);
     const { data: roles, error: rolesError } = await db
-    .from("employee_roles")
-    .select("role_id, roles(role, role_name)")
-    .eq("employee_id", employee.id)
+      .from("employee_roles")
+      .select("role_id, roles(role, role_name)")
+      .eq("employee_id", employee.id);
 
+    // console.log("🔹 Roles Fetch Result:", roles, rolesError);
 
-    if (rolesError || !roles.length) {
-      return res.status(403).json({ success: false, message: "No roles assigned. Contact admin.", error: rolesError?.message, data: roles });
+    if (rolesError) {
+      // console.error("❌ Supabase Roles Query Error:", rolesError);
+      return res.status(500).json({ success: false, message: "Database error fetching roles.", error: rolesError.message });
     }
 
-    // return res.status(200).json({ success: true, message: "Roles fetched successfully.", data: roles });
-    
-    const roleIds = roles.map((r:any) => r.role_id);
-    const roleNames = roles.map((r:any) => r.roles.role_name);
-    
-    // Step 4: Fetch Permissions Based on Roles (Using `role_id`)
+    if (!roles || roles.length === 0) {
+      // console.warn("❌ No roles assigned for employee.");
+      return res.status(403).json({ success: false, message: "No roles assigned. Contact admin." });
+    }
+
+    const roleIds = roles.map((r: any) => r.role_id);
+    const roleNames = roles.map((r: any) => r.roles.role_name);
+
+    // Step 4: Fetch Permissions Based on Roles
+    // console.log("🔹 Fetching permissions for roles:", roleIds);
     const { data: permissions, error: permissionsError } = await db
-    .from("role_permissions")
-    .select("permission_id, permissions(name)")
-    .in("role_id", roleIds);
-    
-    // return res.status(200).json({ success: true, message: "Roles fetched successfully.", data: permissions });
-    
+      .from("role_permissions")
+      .select("permission_id, permissions(name)")
+      .in("role_id", roleIds);
+
+    // console.log("🔹 Permissions Fetch Result:", permissions, permissionsError);
+
     if (permissionsError) {
-      return res.status(500).json({ success: false, message: "Error fetching permissions.", error: permissionsError?.message });
+      // console.error("❌ Supabase Permissions Query Error:", permissionsError);
+      return res.status(500).json({ success: false, message: "Database error fetching permissions.", error: permissionsError.message });
     }
 
     const permissionNames = permissions.map((p: any) => p.permissions.name);
 
-    // ✅ Step 5: Generate JWT Token (Store UUID, NOT `employee_id`)
+    // Step 5: Generate JWT Token
+    // console.log("🔹 Generating JWT token for:", employee.employee_id);
     const token = jwt.sign(
       {
-        id: employee.id, // ✅ Use UUID, NOT `employee_id`
+        id: employee.id,
         roles: roleNames,
         permissions: permissionNames,
       },
@@ -66,32 +93,39 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
       { expiresIn: "30d" }
     );
 
+    // console.log("✅ JWT Token Generated Successfully.");
+
+    // Step 6: Set Cookie & Send Response
     return res
-  .cookie("access_token", token, {
-    httpOnly: true, 
-    secure: true, 
-    sameSite: "strict", 
-    domain: process.env.COOKIE_DOMAIN || "http://localhost:3000",
-    maxAge: 30 * 24 * 60 * 60 * 1000, 
+    .cookie("access_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      domain: process.env.COOKIE_DOMAIN || "localhost", 
+      maxAge: 30 * 24 * 60 * 60 * 1000, 
+    })
+      .json({
+        success: true,
+        message: "Login successful.",
+        data: {
+          employee: {
+            id: employee.id,
+            employee_id: employee.employee_id,
+            name: `${employee.first_name} ${employee.last_name}`,
+            department: employee.department,
+          },
+          roles: roleNames,
+          permissions: permissionNames,
+        },
+      });
 
-  })
-  .json({
-    success: true,
-    message: "Login successful.",
-    data: {
-      employee: {
-        id: employee.id,
-        employee_id: employee.employee_id,
-        name: `${employee.first_name} ${employee.last_name}`,
-        department: employee.department,
-      },
-      roles: roleNames,
-      permissions: permissionNames,
-    },
-  });
-
-  } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+  } catch (error: any) {
+    // console.error("🔥 LOGIN ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error.message || JSON.stringify(error),
+    });
   }
 };
 
