@@ -5,7 +5,7 @@ import compression from "compression";
 import logger from "./config/logger";
 import cookieParser from "cookie-parser";
 import apiV1Routes from "./routes/v1"; 
-const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
+// const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
 
 const app: Application = express(); 
 app.use(cookieParser()); 
@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
 app.use(cors({
-  origin: allowedOrigins, 
+  origin: ["https://www.vinaydemos.site"], 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
   allowedHeaders: ["Content-Type", "Authorization"], 

@@ -98,11 +98,13 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     // Step 6: Set Cookie & Send Response
     return res
     .cookie("access_token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      domain: process.env.COOKIE_DOMAIN || "localhost", 
-      maxAge: 30 * 24 * 60 * 60 * 1000, 
+      httpOnly: true,   
+    secure: true, 
+    sameSite: "none", 
+    domain: process.env.COOKIE_DOMAIN || "vinaydemos.site",
+    path: "/", 
+    maxAge: 30 * 24 * 60 * 60 * 1000, // ✅ 30 days
+
     })
       .json({
         success: true,
