@@ -9,6 +9,99 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      approvals: {
+        Row: {
+          approval_stage: string
+          approved_by: string
+          approver_role: string
+          created_at: string | null
+          employee_id: string
+          id: string
+          remarks: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          approval_stage?: string
+          approved_by: string
+          approver_role: string
+          created_at?: string | null
+          employee_id: string
+          id?: string
+          remarks?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          approval_stage?: string
+          approved_by?: string
+          approver_role?: string
+          created_at?: string | null
+          employee_id?: string
+          id?: string
+          remarks?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_approvals_approved_by"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_approvals_employee"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          employee_id: string
+          id: string
+          performed_by: string
+          remarks: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          employee_id: string
+          id?: string
+          performed_by: string
+          remarks?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          employee_id?: string
+          id?: string
+          performed_by?: string
+          remarks?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_audit_logs_employee"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_audit_logs_performed_by"
+            columns: ["performed_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact: {
         Row: {
           created_at: string
@@ -121,7 +214,6 @@ export type Database = {
         Row: {
           aadhar_id: string
           address: string
-          auth_uid: string | null
           bank_account: string
           created_at: string | null
           created_by: string | null
@@ -135,21 +227,20 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_enum"]
           id: string
           ifsc_code: string
-          job_title_id: string
           last_name: string
           pancard: string
           password: string
           phone: string
           provident_fund: number | null
           reporting_manager: string | null
+          role_id: string
           salary: number
-          status: Database["public"]["Enums"]["status_enum"] | null
+          status: string | null
           tax_deductions: number | null
         }
         Insert: {
           aadhar_id: string
           address: string
-          auth_uid?: string | null
           bank_account: string
           created_at?: string | null
           created_by?: string | null
@@ -163,21 +254,20 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_enum"]
           id?: string
           ifsc_code: string
-          job_title_id: string
           last_name: string
           pancard: string
           password: string
           phone: string
           provident_fund?: number | null
           reporting_manager?: string | null
+          role_id: string
           salary: number
-          status?: Database["public"]["Enums"]["status_enum"] | null
+          status?: string | null
           tax_deductions?: number | null
         }
         Update: {
           aadhar_id?: string
           address?: string
-          auth_uid?: string | null
           bank_account?: string
           created_at?: string | null
           created_by?: string | null
@@ -191,15 +281,15 @@ export type Database = {
           gender?: Database["public"]["Enums"]["gender_enum"]
           id?: string
           ifsc_code?: string
-          job_title_id?: string
           last_name?: string
           pancard?: string
           password?: string
           phone?: string
           provident_fund?: number | null
           reporting_manager?: string | null
+          role_id?: string
           salary?: number
-          status?: Database["public"]["Enums"]["status_enum"] | null
+          status?: string | null
           tax_deductions?: number | null
         }
         Relationships: [
@@ -218,17 +308,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "employees_job_title_id_fkey"
-            columns: ["job_title_id"]
-            isOneToOne: false
-            referencedRelation: "job_titles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "employees_reporting_manager_fkey"
             columns: ["reporting_manager"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employees_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
             referencedColumns: ["id"]
           },
         ]
@@ -319,6 +409,44 @@ export type Database = {
             columns: ["department_id"]
             isOneToOne: false
             referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_archived: boolean | null
+          is_read: boolean | null
+          message: string
+          recipient_id: string
+          type: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_archived?: boolean | null
+          is_read?: boolean | null
+          message: string
+          recipient_id: string
+          type?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_archived?: boolean | null
+          is_read?: boolean | null
+          message?: string
+          recipient_id?: string
+          type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_notifications_recipient"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
             referencedColumns: ["id"]
           },
         ]

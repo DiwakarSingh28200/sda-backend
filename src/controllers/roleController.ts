@@ -13,7 +13,7 @@ export const getAllRoles = async (req: Request, res: Response<ApiResponse<any>>)
     role_name, 
     description,
     departments(id,name), 
-    employees(id,first_name, last_name)
+    created_by:employees!roles_created_by_fkey(id, first_name, last_name)
   `)
 
 
@@ -28,7 +28,7 @@ export const getAllRoles = async (req: Request, res: Response<ApiResponse<any>>)
       role_name: role.role_name,
       description: role.description,
       department: role.departments, 
-      created_by: role.employees, 
+      created_by: role.created_by, 
     }));
 
 
