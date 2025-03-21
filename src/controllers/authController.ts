@@ -101,7 +101,6 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      domain: process.env.COOKIE_DOMAIN,
       maxAge: 30 * 24 * 60 * 60 * 1000, 
   
     }).json({

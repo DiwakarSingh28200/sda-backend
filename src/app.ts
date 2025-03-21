@@ -14,7 +14,14 @@ app.use(cookieParser());
 app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
 app.use(cors({
-  origin: [frontendUrl], 
+  // origin: [frontendUrl],
+  origin: (origin, callback) => {
+    if (origin) {
+      callback(null, origin)
+    } else {
+      callback(null, "*")
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
   allowedHeaders: ["Content-Type", "Authorization"], 

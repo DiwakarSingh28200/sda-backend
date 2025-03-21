@@ -9,51 +9,82 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      approval_types: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       approvals: {
         Row: {
-          approval_stage: string
-          approved_by: string
-          approver_role: string
+          approval_comment: string | null
+          approval_status: string | null
+          assigned_to: string
           created_at: string | null
-          employee_id: string
           id: string
-          remarks: string | null
-          status: string | null
+          is_archived: boolean | null
+          reference_id: string
+          request_type_id: string
+          requested_by: string
           updated_at: string | null
         }
         Insert: {
-          approval_stage?: string
-          approved_by: string
-          approver_role: string
+          approval_comment?: string | null
+          approval_status?: string | null
+          assigned_to: string
           created_at?: string | null
-          employee_id: string
           id?: string
-          remarks?: string | null
-          status?: string | null
+          is_archived?: boolean | null
+          reference_id: string
+          request_type_id: string
+          requested_by: string
           updated_at?: string | null
         }
         Update: {
-          approval_stage?: string
-          approved_by?: string
-          approver_role?: string
+          approval_comment?: string | null
+          approval_status?: string | null
+          assigned_to?: string
           created_at?: string | null
-          employee_id?: string
           id?: string
-          remarks?: string | null
-          status?: string | null
+          is_archived?: boolean | null
+          reference_id?: string
+          request_type_id?: string
+          requested_by?: string
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_approvals_approved_by"
-            columns: ["approved_by"]
+            foreignKeyName: "approvals_assigned_to_fkey"
+            columns: ["assigned_to"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_approvals_employee"
-            columns: ["employee_id"]
+            foreignKeyName: "approvals_request_type_id_fkey"
+            columns: ["request_type_id"]
+            isOneToOne: false
+            referencedRelation: "approval_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_requested_by_fkey"
+            columns: ["requested_by"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
@@ -64,37 +95,33 @@ export type Database = {
         Row: {
           action: string
           created_at: string | null
-          employee_id: string
+          entity_type: string
           id: string
           performed_by: string
+          reference_id: string
           remarks: string | null
         }
         Insert: {
           action: string
           created_at?: string | null
-          employee_id: string
+          entity_type: string
           id?: string
           performed_by: string
+          reference_id: string
           remarks?: string | null
         }
         Update: {
           action?: string
           created_at?: string | null
-          employee_id?: string
+          entity_type?: string
           id?: string
           performed_by?: string
+          reference_id?: string
           remarks?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_audit_logs_employee"
-            columns: ["employee_id"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_audit_logs_performed_by"
+            foreignKeyName: "audit_logs_performed_by_fkey"
             columns: ["performed_by"]
             isOneToOne: false
             referencedRelation: "employees"
@@ -365,54 +392,6 @@ export type Database = {
         }
         Relationships: []
       }
-      job_titles: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          department_id: string
-          description: string
-          id: string
-          is_active: boolean | null
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          department_id: string
-          description: string
-          id?: string
-          is_active?: boolean | null
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          department_id?: string
-          description?: string
-          id?: string
-          is_active?: boolean | null
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "job_titles_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "employees"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "job_titles_department_id_fkey"
-            columns: ["department_id"]
-            isOneToOne: false
-            referencedRelation: "departments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       notifications: {
         Row: {
           created_at: string | null
@@ -420,8 +399,12 @@ export type Database = {
           is_archived: boolean | null
           is_read: boolean | null
           message: string
+          metadata: Json | null
           recipient_id: string
-          type: string | null
+          reference_id: string | null
+          sender_id: string | null
+          type: string
+          updated_at: string | null
         }
         Insert: {
           created_at?: string | null
@@ -429,8 +412,12 @@ export type Database = {
           is_archived?: boolean | null
           is_read?: boolean | null
           message: string
+          metadata?: Json | null
           recipient_id: string
-          type?: string | null
+          reference_id?: string | null
+          sender_id?: string | null
+          type: string
+          updated_at?: string | null
         }
         Update: {
           created_at?: string | null
@@ -438,13 +425,24 @@ export type Database = {
           is_archived?: boolean | null
           is_read?: boolean | null
           message?: string
+          metadata?: Json | null
           recipient_id?: string
-          type?: string | null
+          reference_id?: string | null
+          sender_id?: string | null
+          type?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_notifications_recipient"
+            foreignKeyName: "notifications_recipient_id_fkey"
             columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_id_fkey"
+            columns: ["sender_id"]
             isOneToOne: false
             referencedRelation: "employees"
             referencedColumns: ["id"]
