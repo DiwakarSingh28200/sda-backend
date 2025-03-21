@@ -225,90 +225,150 @@ if (financeHead) {
   }
 };
 
-// export const createEmployee = async (req:  Request<any, any, CreateEmployeeRequest>, res: Response<ApiResponse<any>>): Promise<Response> => {
-//   try {
-//     const {
-//       personal_info,
-//       documents,
-//       bank_details,
-//       emergency_contact,
-//       employment_details,
-//       created_by
-//     } = req.body;
 
-//     // ✅ Step 1: Validate Required Fields
-//     if (!personal_info || !employment_details || !created_by) {
-//       return res.status(400).json({ success: false, message: "Missing required fields." });
-//     }
+export const createEmployeeS = async (
+  req: Request,
+  res: Response<ApiResponse<any>>,
+): Promise<Response> => {
+  try {
+    const {
+      first_name,
+      last_name,
+      email,
+      phone,
+      dob,
+      gender,
+      address,
+      aadhar_id,
+      pancard,
+      bank_account,
+      ifsc_code,
+      emergency_contact,
+      department_id,
+      role_id,
+      employment_type,
+      salary,
+      tax_deductions,
+      provident_fund,
+      reporting_manager,
+    } = req.body;
 
-//     // ✅ Step 2: Hash Employee Password
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash("Default@123", salt); // Default password (later changeable)
+    const created_by = req.user?.id;
+    if (!created_by) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
 
-//     // ✅ Step 3: Insert Employee into DB
-//     const { data: employee, error } = await db
-//       .from("employees")
-//       .insert({
-//         first_name: personal_info.first_name,
-//         last_name: personal_info.last_name,
-//         dob: personal_info.dob,
-//         gender: personal_info.gender,
-//         email: personal_info.email,
-//         phone: personal_info.phone,
-//         address: personal_info.address,
+    // 🔐 Step 1: Generate employee_id & password
+    const employee_id = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedPassword = await bcrypt.hash("Temp@1234", 10);
 
-//         // ✅ Documents
-//         aadhar_id: documents?.aadhar_id,
-//         pancard: documents?.pancard,
+    // 👷 Step 2: Create Employee Record
+    const { data: employee, error: employeeError } = await db
+      .from("employees")
+      .insert({
+        employee_id,
+        password: hashedPassword,
+        first_name,
+        last_name,
+        email,
+        phone,
+        dob,
+        gender,
+        address,
+        aadhar_id,
+        pancard,
+        bank_account,
+        ifsc_code,
+        emergency_contact,
+        department_id,
+        role_id,
+        employment_type: employment_type || "full_time",
+        salary,
+        tax_deductions,
+        provident_fund,
+        reporting_manager,
+        created_by,
+        status: "pending",
+      })
+      .select()
+      .single();
 
-//         // ✅ Bank Details
-//         bank_account: bank_details?.bank_account,
-//         ifsc_code: bank_details?.ifsc_code,
+    if (employeeError || !employee) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to create employee",
+        error: employeeError?.message,
+      });
+    }
 
-//         // ✅ Emergency Contact
-//         emergency_contact: `${emergency_contact?.name} - ${emergency_contact?.phone} (${emergency_contact?.relation})`,
+    // 👔 Step 3: Get Finance Head ID
+    const { data: financeRole } = await db
+      .from("roles")
+      .select("id")
+      .eq("role", "finance_head")
+      .single();
 
-//         // ✅ Employment Details
-//         role_id: employment_details.role_id,
-//         department_id: employment_details.department_id,
-//         employment_type: employment_details.employment_type,
-//         salary: employment_details.salary,
-//         tax_deductions: employment_details.tax_deductions ?? 0.0,
-//         provident_fund: employment_details.provident_fund ?? 0.0,
-//         reporting_manager: employment_details.reporting_manager,
+    if (!financeRole) {
+      return res.status(500).json({ success: false, message: "Finance Head role not found." });
+    }
 
-//         // ✅ Other Fields
-//         status: "pending", // Employee starts in pending state
-//         created_by,
-//         password: hashedPassword,
-//       })
-//       .select("id, first_name, last_name, email, department_id")
-//       .single();
+    const { data: financeHead } = await db
+      .from("employee_roles")
+      .select("employee_id")
+      .eq("role_id", financeRole.id)
+      .limit(1)
+      .single();
 
-//     if (error) {
-//       return res.status(500).json({ success: false, message: "Failed to create employee.", error: error.message });
-//     }
+    if (!financeHead) {
+      return res.status(500).json({ success: false, message: "No Finance Head assigned." });
+    }
 
-//     // ✅ Step 4: Insert Approval for Finance Head
-//     await db.from("approvals").insert({
-//       employee_id: employee.id,
-//       approved_by: null, // Finance Head to be assigned dynamically
-//       approver_role: "finance_head",
-//       status: "pending",
-//       approval_stage: "Finance Approval",
-//       remarks: null,
-//     });
+    // ✅ Step 4: Create Approval
+    await db.from("approvals").insert({
+      request_type_id: "54d21ddc-f4fd-4fc7-8f7f-f936494a757c",
+    reference_id: employee.id!,
+    requested_by: created_by!,
+    assigned_to: financeHead.employee_id!, 
+    approval_status: "pending",
+    approval_stage: "finance",
+    approval_comment: "",
+    });
 
-//     // ✅ Step 5: Log in Audit Table
-//     await db.from("audit_logs").insert({
-//       employee_id: employee.id,
-//       action: "Created Employee",
-//       performed_by: created_by,
-//       remarks: `New employee ${employee.first_name} ${employee.last_name} was created.`,
-//     });
+    // 🔔 Step 5: Send Notification to Finance Head
+    await db.from("notifications").insert({
+      recipient_id: financeHead.employee_id!,
+      sender_id: created_by, // HR who created the employee
+      type: "approval",
+      message: `New onboarding request for ${first_name} ${last_name}.`,
+      reference_id: employee.id, 
+      metadata: {
+      employee_name: `${first_name} ${last_name}`,
+      department_id: department_id,
+      role_id: role_id,
+      created_by: created_by,
+      status: "pending"
+    },
+    });
 
-//     return res.status(201).json({ success: true, message: "Employee created successfully.", data: employee });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
-//   }
-// };
+    // 📜 Step 6: Add Audit Log
+    await db.from("audit_logs").insert({
+      entity_type: "employee",
+      reference_id: employee.id,
+      action: "created",
+      performed_by: created_by,
+      remarks: `HR submitted onboarding request for ${first_name} ${last_name}. Awaiting finance approval.`,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Employee onboarding request submitted successfully.",
+      data: employee,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error as any,
+    });
+  }
+};

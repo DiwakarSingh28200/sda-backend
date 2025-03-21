@@ -6,7 +6,7 @@ import { ApiResponse } from "../types/apiResponse";
 
 export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
-    // console.log("🔹 Login request received:", req.body);
+    // console.log("Login request received:", req.body);
 
     const { employee_id, password } = req.body;
 
@@ -17,7 +17,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
       .eq("employee_id", employee_id)
       .single();
 
-    // console.log("🔹 Employee Fetch Result:", employee, employeeError);
+    // console.log("Employee Fetch Result:", employee, employeeError);
 
     if (employeeError) {
       // console.error("❌ Supabase Employee Query Error:", employeeError);
@@ -30,27 +30,27 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     }
 
     // Step 2: Verify Password
-    // console.log("🔹 Checking password for:", employee.employee_id);
+    // console.log("Checking password for:", employee.employee_id);
     if (!employee.password) {
       // console.error(`❌ Employee ${employee.employee_id} has no password set.`);
       return res.status(400).json({ success: false, message: "Employee password not set. Contact admin." });
     }
 
     const isMatch = await bcrypt.compare(password, employee.password);
-    // console.log("🔹 Password Match:", isMatch);
+    // console.log("Password Match:", isMatch);
 
     if (!isMatch) {
       return res.status(401).json({ success: false, message: "Invalid Employee ID or password." });
     }
 
     // Step 3: Fetch Employee Roles
-    // console.log("🔹 Fetching roles for:", employee.id);
+    // console.log("Fetching roles for:", employee.id);
     const { data: roles, error: rolesError } = await db
       .from("employee_roles")
       .select("role_id, roles(role, role_name)")
       .eq("employee_id", employee.id);
 
-    // console.log("🔹 Roles Fetch Result:", roles, rolesError);
+    // console.log("Roles Fetch Result:", roles, rolesError);
 
     if (rolesError) {
       // console.error("❌ Supabase Roles Query Error:", rolesError);
@@ -66,13 +66,13 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     const roleNames = roles.map((r: any) => r.roles.role_name);
 
     // Step 4: Fetch Permissions Based on Roles
-    // console.log("🔹 Fetching permissions for roles:", roleIds);
+    // console.log("Fetching permissions for roles:", roleIds);
     const { data: permissions, error: permissionsError } = await db
       .from("role_permissions")
       .select("permission_id, permissions(name)")
       .in("role_id", roleIds);
 
-    // console.log("🔹 Permissions Fetch Result:", permissions, permissionsError);
+    // console.log("Permissions Fetch Result:", permissions, permissionsError);
 
     if (permissionsError) {
       // console.error("❌ Supabase Permissions Query Error:", permissionsError);
@@ -119,7 +119,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
       });
 
   } catch (error: any) {
-    // console.error("🔥 LOGIN ERROR:", error);
+    
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
