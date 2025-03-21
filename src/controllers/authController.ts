@@ -100,7 +100,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     .cookie("access_token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60 * 1000, 
   
     }).json({
