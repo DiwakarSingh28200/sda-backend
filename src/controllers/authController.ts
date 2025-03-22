@@ -7,9 +7,7 @@ import { ApiResponse } from "../types/apiResponse";
 export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {
     // console.log("Login request received:", req.body);
-
     const { employee_id, password } = req.body;
-
     // Step 1: Fetch Employee Using `employee_id`
     const { data: employee, error: employeeError } = await db
       .from("employees")
@@ -82,7 +80,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     const permissionNames = permissions.map((p: any) => p.permissions.name);
 
     // Step 5: Generate JWT Token
-    // console.log("🔹 Generating JWT token for:", employee.employee_id);
+    // console.log("Generating JWT token for:", employee.employee_id);
     const token = jwt.sign(
       {
         id: employee.id,
@@ -93,16 +91,10 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
       { expiresIn: "30d" }
     );
 
-    // console.log("✅ JWT Token Generated Successfully.");
+    // console.log("JWT Token Generated Successfully.");
 
     // Step 6: Set Cookie & Send Response
-    return res
-    .cookie("access_token", token, {
-      httpOnly: true,
-      secure: true, 
-      sameSite: "none", 
-      maxAge: 30 * 24 * 60 * 60 * 1000, 
-    }).json({
+    return res.json({
         success: true,
         message: "Login successful.",
         data: {

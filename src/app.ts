@@ -5,18 +5,21 @@ import compression from "compression";
 import logger from "./config/logger";
 import cookieParser from "cookie-parser";
 import apiV1Routes from "./routes/v1"; 
-const allowedOrigins = ["https://www.vinaydemos.site", "https://suredrive-assist-app.vercel.app", "http://localhost:3000"];
+
+const frontendUrl = process.env.FRONTEND_URL!
+const frontendDevUrl = process.env.FRONTEND_DEV_URL!
+
+const allowedOrigins = [frontendUrl, frontendDevUrl, "http://localhost:3000"];
 const app: Application = express(); 
 app.use(cookieParser()); 
 
 // Global Middleware
-app.use(express.json()); // Parse JSON requests
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded requests
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 app.use(cors({
   // origin: [frontendUrl],
   origin: (origin, callback) => {
     console.log("Origin:", origin);
-    console.log("Allowed Origins:", allowedOrigins);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, origin);
     } else {
@@ -28,14 +31,13 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"], 
 })
 );
-app.use(helmet()); // Secure HTTP headers
+app.use(helmet());
 app.use(compression());
 app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
     logger.info(`${req.method} ${req.originalUrl} | ${res.statusCode} | ${Date.now() - start}ms`);
   });
-
   next();
 });
 
