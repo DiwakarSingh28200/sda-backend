@@ -17,7 +17,6 @@ app.use(cookieParser());
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 app.use(cors({
-  // origin: [frontendUrl],
   origin: (origin, callback) => {
     console.log("Origin:", origin);
     if (!origin || allowedOrigins.includes(origin)) {

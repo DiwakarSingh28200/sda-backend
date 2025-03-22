@@ -94,11 +94,17 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     // console.log("JWT Token Generated Successfully.");
 
     // Step 6: Set Cookie & Send Response
-    return res.json({
+    return res
+  .cookie("access_token", token, {
+    httpOnly: true,
+    secure: true, 
+    sameSite: "lax", 
+    // domain: ".vinaydemos.site", 
+    maxAge: 30 * 24 * 60 * 60 * 1000, 
+  }).json({
         success: true,
         message: "Login successful.",
         data: {
-          token: token,
           employee: {
             id: employee.id,
             employee_id: employee.employee_id,
