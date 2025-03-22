@@ -99,7 +99,7 @@ export const loginEmployee = async (req: Request, res: Response<ApiResponse<any>
     httpOnly: true,
     secure: true, 
     sameSite: "lax", 
-    // domain: ".vinaydemos.site", 
+    domain: ".vinaydemos.site", 
     maxAge: 30 * 24 * 60 * 60 * 1000, 
   }).json({
         success: true,
