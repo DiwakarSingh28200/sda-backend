@@ -8,6 +8,8 @@ import {
   
 } from "../../controllers/roleController";
 import { asyncHandler } from "../../middleware/asyncHandler";
+import { assignMultiplePermissionsToRole } from "../../controllers/rolePermissionController";
+import { authenticateEmployee } from "../../middleware/authMeddleware";
 
 const router = express.Router();
 
@@ -28,5 +30,9 @@ router.delete("/:id", asyncHandler(deleteRole));
 
 // ✅ Get roles with permissions
 // router.get("/with-permissions", asyncHandler(getRolesWithPermissions));
+
+// Assign multiple permissions to a role
+router.post("/:roleId/permissions", asyncHandler(authenticateEmployee), asyncHandler(assignMultiplePermissionsToRole));
+
 
 export default router;

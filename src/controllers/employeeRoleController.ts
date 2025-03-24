@@ -59,7 +59,7 @@ export const assignEmployeeRoles = async (
     const user = req.user;
 
     if (!employee_id || !Array.isArray(role_ids)) {
-      return res.status(400).json({ success: false, message: "Invalid payload." });
+      return res.status(400).json({ success: false, message: "Invalid payload.", data: req.body });
     }
 
     // Step 1: Fetch existing roles for the employee

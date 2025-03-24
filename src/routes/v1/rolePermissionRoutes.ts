@@ -18,4 +18,5 @@ router.post("/",  asyncHandler(assignPermissionToRole));
 // Remove a permission from a role
 router.delete("/:roleId/:permissionId", asyncHandler(removePermissionFromRole));
 
+
 export default router;
