@@ -50,6 +50,55 @@ export const assignRoleToEmployee = async (req: Request, res: Response<ApiRespon
   }
 };
 
+export const assignEmployeeRoles = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
+  try {
+    const { employee_id, role_ids } = req.body;
+    const user = req.user;
+
+    if (!employee_id || !Array.isArray(role_ids)) {
+      return res.status(400).json({ success: false, message: "Invalid payload." });
+    }
+
+    // Step 1: Fetch existing roles for the employee
+    const { data: existing, error: fetchError } = await db
+      .from("employee_roles")
+      .select("role_id")
+      .eq("employee_id", employee_id);
+
+    if (fetchError) {
+      return res.status(500).json({ success: false, message: "Failed to fetch existing roles.", error: fetchError.message });
+    }
+
+    const existingRoleIds = existing.map((r) => r.role_id);
+    const newRoleIds = role_ids.filter((role_id) => !existingRoleIds.includes(role_id));
+
+    if (newRoleIds.length === 0) {
+      return res.json({ success: true, message: "No new roles to assign." });
+    }
+
+    const toInsert = newRoleIds.map((role_id: string) => ({
+      employee_id,
+      role_id,
+      assigned_by: user?.id!,
+    }));
+
+    const { error: insertError } = await db.from("employee_roles").insert(toInsert);
+
+    if (insertError) {
+      return res.status(500).json({ success: false, message: "Failed to assign roles.", error: insertError.message });
+    }
+
+    return res.json({ success: true, message: "New roles assigned successfully." });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+  }
+};
+
+
+
 // ✅ Remove a role from an employee
 export const removeRoleFromEmployee = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
   try {

@@ -4,7 +4,8 @@ import {
   getRoleById,
   createRole,
   updateRole,
-  deleteRole
+  deleteRole,
+  
 } from "../../controllers/roleController";
 import { asyncHandler } from "../../middleware/asyncHandler";
 
@@ -24,5 +25,8 @@ router.put("/:id", asyncHandler(updateRole));
 
 // ✅ Delete a role
 router.delete("/:id", asyncHandler(deleteRole));
+
+// ✅ Get roles with permissions
+// router.get("/with-permissions", asyncHandler(getRolesWithPermissions));
 
 export default router;

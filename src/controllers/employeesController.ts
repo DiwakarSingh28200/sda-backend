@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { db } from "../config/db";
 import { ApiResponse } from "../types/apiResponse";
 import bcrypt from "bcrypt";
-import { CreateEmployeeRequest } from "../types/employeRequest";
 
 export const getAllEmployees = async (
   req: Request,
@@ -372,3 +371,140 @@ export const createEmployeeS = async (
     });
   }
 };
+
+
+export const getEmployeeRoles = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
+  try {
+    const { employee_id } = req.params;
+
+    const { data, error } = await db
+      .from("employee_roles")
+      .select(`role_id, roles(id, role_name)`)
+      .eq("employee_id", employee_id);
+
+    if (error || !data) {
+      return res.status(500).json({ success: false, message: "Failed to fetch employee roles.", error: error.message });
+    }
+
+    const roles = data.map((r: any) => ({
+      id: r.roles.id,
+      role_name: r.roles.role_name,
+    }));
+
+    return res.json({ success: true, message: "Employee roles retrieved successfully.", data: { employee_id, roles } });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+  }
+}
+
+// find employee by id, and as resposne return employee details like (first_name, last_name, employee_id) and role, department and permissions
+// export const getEmployeeById = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+//   try {
+//     const { employee_id } = req.params;
+//       const { data, error } = await db
+//       .from("employees")
+//       .select(`
+//         id,
+//         first_name,
+//         last_name,
+//         employee_id,
+//         roles:role_id(id, role_name),
+//         departments:department_id(id, name)
+//         `)
+//       .eq("employee_id", employee_id); 
+
+//     if (error || !data) {
+//       return res.status(500).json({ success: false, message: "Failed to fetch employee details.", error: error.message });
+//     }
+
+//     return res.json({ success: true, message: "Employee details fetched successfully.", data: data });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+//   }
+// }
+
+export const getEmployeeById = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
+  try {
+    const { employee_id } = req.params;
+
+    if (!employee_id) {
+      return res.status(400).json({ success: false, message: "Employee ID is required." });
+    }
+
+    const { data, error } = await db
+      .from('employees')
+      .select(`
+        id,
+        first_name,
+        last_name,
+        employee_id,
+        department:department_id(id, name),
+        roles:employee_roles!employee_id(
+          role:role_id(
+            id,
+            role,
+            role_name,
+            description,
+            permissions:role_permissions(
+              permission:permission_id(
+                id,
+                name,
+                category,
+                description
+              )
+            )
+          )
+        )
+      `)
+      .eq('employee_id', employee_id)
+      .single(); 
+
+    if (error || !data) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch employee details.',
+        error: error?.message ?? 'No data returned',
+      });
+    }
+
+    // 🧠 Flatten permissions
+    const permissions = data.roles
+        ?.flatMap((r: any) => r.role.permissions.map((p: any) => p.permission))
+      .filter(Boolean) ?? [];
+
+    // 🧠 Flatten roles (just the role object)
+    const roles = data.roles?.map((r: any) => r.role) ?? [];
+
+    // ✅ Final structured response
+    const employee = {
+      id: data.id,
+      employee_id: data.employee_id,
+      first_name: data.first_name,
+      last_name: data.last_name,
+      department: data.department,
+      roles,
+      permissions,
+    };
+
+    return res.json({
+      success: true,
+      message: 'Employee details fetched successfully.',
+      data: employee,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error.',
+      error: error as string,
+    });
+  }
+};
+
+
+

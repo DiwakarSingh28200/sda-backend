@@ -39,3 +39,5 @@ export const getEmployeeById = async (req: Request, res: Response<ApiResponse<an
     return res.status(500).json({ success: false, message: "Internal server error.", error: error instanceof Error ? error.message : "Unknown error" });
   }
 };
+
+

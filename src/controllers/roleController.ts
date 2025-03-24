@@ -3,40 +3,40 @@ import { db } from "../config/db";
 import { ApiResponse } from "../types/apiResponse";
 
 // Get all roles
-export const getAllRoles = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
-  try {
-    const { data: roles, error } = await db
-      .from("roles")
-      .select(`
-    id, 
-    role, 
-    role_name, 
-    description,
-    departments(id,name), 
-    created_by:employees!roles_created_by_fkey(id, first_name, last_name)
-  `)
+// export const getAllRoles = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+//   try {
+//     const { data: roles, error } = await db
+//       .from("roles")
+//       .select(`
+//     id, 
+//     role, 
+//     role_name, 
+//     description,
+//     departments(id,name), 
+//     created_by:employees!roles_created_by_fkey(id, first_name, last_name)
+//   `)
 
 
-    if (error || !roles) {
-      return res.status(500).json({success: false, message: "Failed to fetch roles.", error: error.message  });
-    }
+//     if (error || !roles) {
+//       return res.status(500).json({success: false, message: "Failed to fetch roles.", error: error.details,data: roles  });
+//     }
 
-    // Transform the data
-    const transformedRoles = roles.map((role) => ({
-      id: role.id,
-      role: role.role,
-      role_name: role.role_name,
-      description: role.description,
-      department: role.departments, 
-      created_by: role.created_by, 
-    }));
+//     // Transform the data
+//     const transformedRoles = roles.map((role) => ({
+//       id: role.id,
+//       role: role.role,
+//       role_name: role.role_name,
+//       description: role.description,
+//       department: role.departments, 
+//       created_by: role.created_by, 
+//     }));
 
 
-    return res.json({ success: true, message: "Roles fetched successfully.", data: transformedRoles });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
-  }
-};
+//     return res.json({ success: true, message: "Roles fetched successfully.", data: transformedRoles });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+//   }
+// };
 
 // Get a specific role by ID
 export const getRoleById = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
@@ -143,5 +143,102 @@ export const deleteRole = async (req: Request, res: Response<ApiResponse<any>>):
     return res.json({ success: true, message: "Role deleted successfully." });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+  }
+};
+// export const getRolesWithPermissions = async (
+//   req: Request,
+//   res: Response<ApiResponse<any>>
+// ): Promise<Response> => {
+//   try {
+//     // const { data, error } = await db
+//     //   .from("roles")
+//     //   .select(`
+//     //     id,
+//     //     role,
+//     //     role_name,
+//     //     description,
+//     //   `);
+
+//     // if (error) {
+//     //   return res.status(500).json({
+//     //     success: false,
+//     //     message: "Failed to fetch roles with permissions.",
+//     //     error: error.message,
+//     //   });
+//     // }
+
+//     // const transformed = data.map((role) => ({
+//     //   id: role.id,
+//     //   role: role.role,
+//     //   role_name: role.role_name,
+//     //   description: role.description,
+//     //   department: role.departments, // alias for department name
+//     //   permissions: role.role_permissions.map((rp) => rp.permissions),
+//     // }));
+
+//     return res.json({
+//       success: true,
+//       message: "Roles with permissions heelo retrieved successfully.",
+//       data: [],
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal server error.",
+//       error: error as string,
+//     });
+//   }
+// };
+
+
+export const getAllRoles = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
+  try {
+    const { data: roles, error } = await db
+      .from("roles")
+      .select(`
+        id,
+        role,
+        role_name,
+        description,
+        departments(id, name),
+        created_by:employees!roles_created_by_fkey(id, first_name, last_name),
+        role_permissions:role_permissions(
+          permissions(id, name, description, category)
+        )
+      `);
+
+    if (error || !roles) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch roles.",
+        error: error.details,
+        data: roles,
+      });
+    }
+
+    const transformedRoles = roles.map((role) => ({
+      id: role.id,
+      role: role.role,
+      role_name: role.role_name,
+      description: role.description,
+      department: role.departments,
+      created_by: role.created_by,
+      permissions: role.role_permissions.map((rp) => rp.permissions),
+    }));
+
+    return res.json({
+      success: true,
+      message: "Roles fetched successfully.",
+      data: transformedRoles,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error as string,
+    });
   }
 };

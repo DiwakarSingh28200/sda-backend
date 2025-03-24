@@ -8,6 +8,7 @@ import rolePermissionRoutes from "./rolePermissionRoutes";
 // import employeeRoutes from "./employeeRoutes";
 import employeesRoutes from "./employeesRoutes";
 import approvalsRoutes from "./approvalsRoutes";
+import auditLogsRoutes from "./auditLogsRoutes";
 
 
 
@@ -21,6 +22,7 @@ router.use("/role-permissions", rolePermissionRoutes);
 router.use("/employees", employeesRoutes);
 router.use("/approvals", approvalsRoutes);
 router.use("/auth", authRoutes);
+router.use("/audit-logs", auditLogsRoutes);
 // router.use("/dealers", dealerRoutes); // Future
 // router.use("/customers", customerRoutes); // Future
 
