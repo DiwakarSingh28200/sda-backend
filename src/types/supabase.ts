@@ -348,6 +348,7 @@ export type Database = {
           employee_id: string | null
           id: string
           role_id: string | null
+          updated_at: string | null
         }
         Insert: {
           assigned_by: string
@@ -355,6 +356,7 @@ export type Database = {
           employee_id?: string | null
           id?: string
           role_id?: string | null
+          updated_at?: string | null
         }
         Update: {
           assigned_by?: string
@@ -362,6 +364,7 @@ export type Database = {
           employee_id?: string | null
           id?: string
           role_id?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
