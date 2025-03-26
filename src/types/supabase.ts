@@ -9,6 +9,150 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      approval_flows: {
+        Row: {
+          approval_type_id: string
+          created_at: string | null
+          id: string
+          is_final: boolean | null
+          role_required: string
+          step_name: string | null
+          step_number: number
+        }
+        Insert: {
+          approval_type_id: string
+          created_at?: string | null
+          id?: string
+          is_final?: boolean | null
+          role_required: string
+          step_name?: string | null
+          step_number: number
+        }
+        Update: {
+          approval_type_id?: string
+          created_at?: string | null
+          id?: string
+          is_final?: boolean | null
+          role_required?: string
+          step_name?: string | null
+          step_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_flows_approval_type_id_fkey"
+            columns: ["approval_type_id"]
+            isOneToOne: false
+            referencedRelation: "approval_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_instances: {
+        Row: {
+          approval_type_id: string | null
+          created_at: string | null
+          current_step: number | null
+          id: string
+          metadata: Json | null
+          reference_id: string
+          requested_by: string | null
+          status: string | null
+        }
+        Insert: {
+          approval_type_id?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          metadata?: Json | null
+          reference_id: string
+          requested_by?: string | null
+          status?: string | null
+        }
+        Update: {
+          approval_type_id?: string | null
+          created_at?: string | null
+          current_step?: number | null
+          id?: string
+          metadata?: Json | null
+          reference_id?: string
+          requested_by?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_instances_approval_type_id_fkey"
+            columns: ["approval_type_id"]
+            isOneToOne: false
+            referencedRelation: "approval_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_instances_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approval_steps: {
+        Row: {
+          assigned_to: string | null
+          comment: string | null
+          id: string
+          instance_id: string | null
+          performed_at: string | null
+          performed_by: string | null
+          role: string | null
+          status: string | null
+          step_number: number | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          comment?: string | null
+          id?: string
+          instance_id?: string | null
+          performed_at?: string | null
+          performed_by?: string | null
+          role?: string | null
+          status?: string | null
+          step_number?: number | null
+        }
+        Update: {
+          assigned_to?: string | null
+          comment?: string | null
+          id?: string
+          instance_id?: string | null
+          performed_at?: string | null
+          performed_by?: string | null
+          role?: string | null
+          status?: string | null
+          step_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_steps_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_steps_instance_id_fkey"
+            columns: ["instance_id"]
+            isOneToOne: false
+            referencedRelation: "approval_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_steps_performed_by_fkey"
+            columns: ["performed_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       approval_types: {
         Row: {
           created_at: string | null
@@ -38,9 +182,11 @@ export type Database = {
           created_at: string | null
           id: string
           is_archived: boolean | null
+          metadata: Json | null
           reference_id: string
           request_type_id: string
           requested_by: string
+          step_number: number | null
           updated_at: string | null
         }
         Insert: {
@@ -50,9 +196,11 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_archived?: boolean | null
+          metadata?: Json | null
           reference_id: string
           request_type_id: string
           requested_by: string
+          step_number?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -62,9 +210,11 @@ export type Database = {
           created_at?: string | null
           id?: string
           is_archived?: boolean | null
+          metadata?: Json | null
           reference_id?: string
           request_type_id?: string
           requested_by?: string
+          step_number?: number | null
           updated_at?: string | null
         }
         Relationships: [
