@@ -12,8 +12,14 @@ import auditLogsRoutes from "./auditLogsRoutes"
 import notificationRoutes from "./notificationRoutes"
 import approvalActionsRoutes from "./approvalActions"
 import approvalInstanceRoutes from "./approvalInstanceRoutes"
+import { authenticateEmployee } from "../../middleware/authMeddleware"
+import { asyncHandler } from "../../middleware/asyncHandler"
 
 const router = Router()
+router.use("/auth", authRoutes)
+
+// Apply middleware to all routes below
+router.use(asyncHandler(authenticateEmployee))
 
 router.use("/departments", departmentRoutes)
 router.use("/roles", roleRoutes)
@@ -22,7 +28,7 @@ router.use("/employee-roles", employeeRoleRoutes)
 router.use("/role-permissions", rolePermissionRoutes)
 router.use("/employees", employeesRoutes)
 router.use("/approvals", approvalsRoutes)
-router.use("/auth", authRoutes)
+
 router.use("/audit-logs", auditLogsRoutes)
 router.use("/notifications", notificationRoutes)
 router.use("/approval-actions", approvalActionsRoutes)

@@ -1,85 +1,119 @@
-import { Request, Response } from "express";
-import { db } from "../config/db";
-import { ApiResponse } from "../types/apiResponse"; 
+import { Request, Response } from "express"
+import { db } from "../config/db"
+import { ApiResponse } from "../types/apiResponse"
 
 // ✅ Get all permissions
-export const getAllPermissions = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+export const getAllPermissions = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
   try {
+    //  new record first
     const { data: permissions, error } = await db
       .from("permissions")
-      .select("id, name, description, category, created_by:created_by(id, first_name, last_name)");
-      
+      .select(
+        "id, name, description, category, created_by:created_by(id, first_name, last_name), created_at"
+      )
+      .order("created_at", { ascending: false })
 
     if (error || !permissions) {
-      return res.status(500).json({ success: false, message: "Failed to fetch permissions.", error: error.message });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to fetch permissions.", error: error.message })
     }
-   
 
-    return res.json({ success: true, message: "Permissions retrieved successfully.", data: permissions });
+    return res.json({
+      success: true,
+      message: "Permissions retrieved successfully.",
+      data: permissions,
+    })
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error.", error: error as string })
   }
-};
+}
 
 // ✅ Get a specific permission by ID
-export const getPermissionById = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+export const getPermissionById = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
     const { data: permission, error } = await db
       .from("permissions")
-      .select(`
+      .select(
+        `
         id, 
         name, 
         description, 
         category, 
         created_by:created_by(id, first_name, last_name)
-      `)
+      `
+      )
       .eq("id", id)
-      .single();
+      .single()
 
     if (error || !permission) {
-      return res.status(404).json({ success: false, message: "Permission not found." });
+      return res.status(404).json({ success: false, message: "Permission not found." })
     }
 
-    return res.json({ success: true, message: "Permission retrieved successfully.", data: permission });
+    return res.json({
+      success: true,
+      message: "Permission retrieved successfully.",
+      data: permission,
+    })
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error.", error: error as string })
   }
-};
+}
 
 // Create a new permission
-export const createPermission = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+export const createPermission = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
   try {
-    const { name, description, category } = req.body;
-    const user = req.user;
+    const { name, description, category } = req.body
+    const user = req.user
 
     if (!name || !description || !category) {
-      return res.status(400).json({ success: false, message: "All fields are required." });
+      return res.status(400).json({ success: false, message: "All fields are required." })
     }
 
     const { error } = await db
       .from("permissions")
-      .insert({ name, description, category, created_by: user?.id! });
+      .insert({ name, description, category, created_by: user?.id! })
 
     if (error) {
-      return res.status(500).json({ success: false, message: "Failed to create permission.", error: error.message });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to create permission.", error: error.message })
     }
 
-    return res.json({ success: true, message: "Permission created successfully." });
+    return res.json({ success: true, message: "Permission created successfully." })
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error.", error: error as string })
   }
-};
+}
 
 // ✅ Update an existing permission
-export const updatePermission = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+export const updatePermission = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
   try {
-    const { id } = req.params;
-    const { name, description, category } = req.body;
+    const { id } = req.params
+    const { name, description, category } = req.body
 
     if (!name || !description || !category) {
-      return res.status(400).json({ success: false, message: "All fields are required." });
+      return res.status(400).json({ success: false, message: "All fields are required." })
     }
 
     // Add role base validation only admin can update the permissions
@@ -89,27 +123,33 @@ export const updatePermission = async (req: Request, res: Response<ApiResponse<a
     // We need to get the role of the user from the database
     // We need to get the permissions of the role from the database
     // We need to check if the user has the permission to update the permission
-    
 
     const { error } = await db
       .from("permissions")
       .update({ name, description, category })
-      .eq("id", id);
+      .eq("id", id)
 
     if (error) {
-      return res.status(500).json({ success: false, message: "Failed to update permission.", error: error.message });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to update permission.", error: error.message })
     }
 
-    return res.json({ success: true, message: "Permission updated successfully." });
+    return res.json({ success: true, message: "Permission updated successfully." })
   } catch (error) {
-      return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error.", error: error as string })
   }
-};
+}
 
 // Delete a permission
-export const deletePermission = async (req: Request, res: Response<ApiResponse<any>>): Promise<Response> => {
+export const deletePermission = async (
+  req: Request,
+  res: Response<ApiResponse<any>>
+): Promise<Response> => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
     // Add role base validation only admin can delete the permissions
     // We need to get the role of the user and check if the user has the permission to delete the permission
@@ -118,18 +158,19 @@ export const deletePermission = async (req: Request, res: Response<ApiResponse<a
     // We need to get the role of the user from the database
     // We need to get the permissions of the role from the database
     // We need to check if the user has the permission to delete the permission
-    
-    const { error } = await db
-      .from("permissions")
-      .delete()
-      .eq("id", id);
+
+    const { error } = await db.from("permissions").delete().eq("id", id)
 
     if (error) {
-      return res.status(500).json({ success: false, message: "Failed to delete permission.", error: error.message });
+      return res
+        .status(500)
+        .json({ success: false, message: "Failed to delete permission.", error: error.message })
     }
 
-    return res.json({ success: true, message: "Permission deleted successfully." });
+    return res.json({ success: true, message: "Permission deleted successfully." })
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error.", error: error as string });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error.", error: error as string })
   }
-};
+}

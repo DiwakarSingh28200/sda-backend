@@ -1,29 +1,30 @@
-import express from "express";
+import express from "express"
 import {
   getAllPermissions,
   createPermission,
   updatePermission,
   deletePermission,
   getPermissionById,
-} from "../../controllers/permissionController";
+} from "../../controllers/permissionController"
 
-import { asyncHandler } from "../../middleware/asyncHandler";
+import { asyncHandler } from "../../middleware/asyncHandler"
+import { authenticateEmployee } from "../../middleware/authMeddleware"
 
-const router = express.Router();
+const router = express.Router()
 
 // Get all permissions
-router.get("/", asyncHandler(getAllPermissions));
+router.get("/", asyncHandler(getAllPermissions))
 
 // Get permission by ID
-router.get("/:id", asyncHandler(getPermissionById));
+router.get("/:id", asyncHandler(getPermissionById))
 
 // Create a new permission
-router.post("/", asyncHandler(createPermission));
+router.post("/", asyncHandler(authenticateEmployee), asyncHandler(createPermission))
 
 // Update an existing permission
-router.put("/:id", asyncHandler(updatePermission));
+router.put("/:id", asyncHandler(authenticateEmployee), asyncHandler(updatePermission))
 
 // Delete a permission
-router.delete("/:id", asyncHandler(deletePermission));
+router.delete("/:id", asyncHandler(authenticateEmployee), asyncHandler(deletePermission))
 
-export default router;
+export default router
