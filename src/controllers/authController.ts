@@ -199,7 +199,7 @@ export const getLoggedInUser = async (
     }
 
     const roleIds = roles.map((r: any) => r.role_id)
-    const roleNames = roles.map((r: any) => r.roles.role_name)
+    const roleNames = roles.map((r: any) => r.roles.role_name.toLowerCase().split(" ").join("_"))
 
     // Step 4: Fetch Permissions Based on Roles (Using `role_id`)
     const { data: permissions, error: permissionsError } = await db
