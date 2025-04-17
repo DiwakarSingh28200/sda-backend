@@ -309,6 +309,371 @@ export type Database = {
         }
         Relationships: []
       }
+      dealer_documents: {
+        Row: {
+          additional_docs: Json | null
+          address_proof: string | null
+          dealer_id: string | null
+          gst_certificate: string | null
+          id: string
+          incorporation_certificate: string | null
+          pan_card_file: string | null
+        }
+        Insert: {
+          additional_docs?: Json | null
+          address_proof?: string | null
+          dealer_id?: string | null
+          gst_certificate?: string | null
+          id?: string
+          incorporation_certificate?: string | null
+          pan_card_file?: string | null
+        }
+        Update: {
+          additional_docs?: Json | null
+          address_proof?: string | null
+          dealer_id?: string | null
+          gst_certificate?: string | null
+          id?: string
+          incorporation_certificate?: string | null
+          pan_card_file?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_documents_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_employees: {
+        Row: {
+          contact_number: string | null
+          created_at: string | null
+          dealer_id: string
+          email: string | null
+          id: string
+          login_enabled: boolean | null
+          name: string
+          password: string
+          role: string | null
+          username: string
+        }
+        Insert: {
+          contact_number?: string | null
+          created_at?: string | null
+          dealer_id: string
+          email?: string | null
+          id?: string
+          login_enabled?: boolean | null
+          name: string
+          password: string
+          role?: string | null
+          username: string
+        }
+        Update: {
+          contact_number?: string | null
+          created_at?: string | null
+          dealer_id?: string
+          email?: string | null
+          id?: string
+          login_enabled?: boolean | null
+          name?: string
+          password?: string
+          role?: string | null
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_employees_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_finance_info: {
+        Row: {
+          account_number: string | null
+          bank_name: string | null
+          cancelled_cheque_file: string | null
+          dealer_id: string | null
+          finance_contact_email: string | null
+          finance_contact_name: string | null
+          finance_contact_phone: string | null
+          id: string
+          ifsc_code: string | null
+        }
+        Insert: {
+          account_number?: string | null
+          bank_name?: string | null
+          cancelled_cheque_file?: string | null
+          dealer_id?: string | null
+          finance_contact_email?: string | null
+          finance_contact_name?: string | null
+          finance_contact_phone?: string | null
+          id?: string
+          ifsc_code?: string | null
+        }
+        Update: {
+          account_number?: string | null
+          bank_name?: string | null
+          cancelled_cheque_file?: string | null
+          dealer_id?: string | null
+          finance_contact_email?: string | null
+          finance_contact_name?: string | null
+          finance_contact_phone?: string | null
+          id?: string
+          ifsc_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_finance_info_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_oems: {
+        Row: {
+          dealer_id: string | null
+          id: string
+          oem_name: string | null
+          vehicle_segment: string | null
+        }
+        Insert: {
+          dealer_id?: string | null
+          id?: string
+          oem_name?: string | null
+          vehicle_segment?: string | null
+        }
+        Update: {
+          dealer_id?: string | null
+          id?: string
+          oem_name?: string | null
+          vehicle_segment?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_oems_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_services: {
+        Row: {
+          available_days: string[] | null
+          dealer_id: string | null
+          fixed_distance_charge: number | null
+          id: string
+          is_24x7: boolean | null
+          night_price: number | null
+          operation_location: string | null
+          price_list_file: string | null
+          price_per_km: number | null
+          price_per_service: number | null
+          repair_on_site: boolean | null
+          repair_price: number | null
+          rsa_support: boolean | null
+          service_name: string | null
+          time_end: string | null
+          time_start: string | null
+        }
+        Insert: {
+          available_days?: string[] | null
+          dealer_id?: string | null
+          fixed_distance_charge?: number | null
+          id?: string
+          is_24x7?: boolean | null
+          night_price?: number | null
+          operation_location?: string | null
+          price_list_file?: string | null
+          price_per_km?: number | null
+          price_per_service?: number | null
+          repair_on_site?: boolean | null
+          repair_price?: number | null
+          rsa_support?: boolean | null
+          service_name?: string | null
+          time_end?: string | null
+          time_start?: string | null
+        }
+        Update: {
+          available_days?: string[] | null
+          dealer_id?: string | null
+          fixed_distance_charge?: number | null
+          id?: string
+          is_24x7?: boolean | null
+          night_price?: number | null
+          operation_location?: string | null
+          price_list_file?: string | null
+          price_per_km?: number | null
+          price_per_service?: number | null
+          repair_on_site?: boolean | null
+          repair_price?: number | null
+          rsa_support?: boolean | null
+          service_name?: string | null
+          time_end?: string | null
+          time_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_services_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_sub_dealerships: {
+        Row: {
+          address: string | null
+          contact: string | null
+          dealer_id: string | null
+          gst_copy: string | null
+          gstin: string | null
+          id: string
+          location: string | null
+          name: string | null
+          oem: string | null
+        }
+        Insert: {
+          address?: string | null
+          contact?: string | null
+          dealer_id?: string | null
+          gst_copy?: string | null
+          gstin?: string | null
+          id?: string
+          location?: string | null
+          name?: string | null
+          oem?: string | null
+        }
+        Update: {
+          address?: string | null
+          contact?: string | null
+          dealer_id?: string | null
+          gst_copy?: string | null
+          gstin?: string | null
+          id?: string
+          location?: string | null
+          name?: string | null
+          oem?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_sub_dealerships_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealers: {
+        Row: {
+          annual_revenue: string | null
+          city: string | null
+          created_at: string | null
+          created_by: string | null
+          dealership_name: string | null
+          dealership_type: string | null
+          email: string | null
+          escalation_contact: string | null
+          escalation_email: string | null
+          escalation_name: string | null
+          gps_location: string | null
+          gst_number: string | null
+          id: string
+          login_enabled: boolean | null
+          operations_contact_alt: string | null
+          operations_contact_name: string | null
+          operations_contact_phone: string | null
+          owner_contact: string | null
+          owner_email: string | null
+          owner_name: string | null
+          pan_number: string | null
+          password: string | null
+          pincode: string | null
+          registered_address: string | null
+          state: string | null
+          support_contact: string | null
+          username: string | null
+        }
+        Insert: {
+          annual_revenue?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealership_name?: string | null
+          dealership_type?: string | null
+          email?: string | null
+          escalation_contact?: string | null
+          escalation_email?: string | null
+          escalation_name?: string | null
+          gps_location?: string | null
+          gst_number?: string | null
+          id?: string
+          login_enabled?: boolean | null
+          operations_contact_alt?: string | null
+          operations_contact_name?: string | null
+          operations_contact_phone?: string | null
+          owner_contact?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          pan_number?: string | null
+          password?: string | null
+          pincode?: string | null
+          registered_address?: string | null
+          state?: string | null
+          support_contact?: string | null
+          username?: string | null
+        }
+        Update: {
+          annual_revenue?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          dealership_name?: string | null
+          dealership_type?: string | null
+          email?: string | null
+          escalation_contact?: string | null
+          escalation_email?: string | null
+          escalation_name?: string | null
+          gps_location?: string | null
+          gst_number?: string | null
+          id?: string
+          login_enabled?: boolean | null
+          operations_contact_alt?: string | null
+          operations_contact_name?: string | null
+          operations_contact_phone?: string | null
+          owner_contact?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          pan_number?: string | null
+          password?: string | null
+          pincode?: string | null
+          registered_address?: string | null
+          state?: string | null
+          support_contact?: string | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       departments: {
         Row: {
           created_at: string | null
@@ -743,27 +1108,29 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -771,20 +1138,22 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -792,20 +1161,22 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -813,21 +1184,23 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
     | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
+    | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
@@ -836,6 +1209,16 @@ export type CompositeTypes<
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      employment_type_enum: ["full_time", "part_time", "contractor"],
+      gender_enum: ["male", "female", "other"],
+      status_enum: ["pending", "approved", "rejected"],
+    },
+  },
+} as const

@@ -12,6 +12,7 @@ import auditLogsRoutes from "./auditLogsRoutes"
 import notificationRoutes from "./notificationRoutes"
 import approvalActionsRoutes from "./approvalActions"
 import approvalInstanceRoutes from "./approvalInstanceRoutes"
+import dealerRoutes from "./dealerRoutes"
 import { authenticateEmployee } from "../../middleware/authMeddleware"
 import { asyncHandler } from "../../middleware/asyncHandler"
 
@@ -34,7 +35,7 @@ router.use("/notifications", notificationRoutes)
 router.use("/approval-actions", approvalActionsRoutes)
 router.use("/approval-instances", approvalInstanceRoutes)
 
-// router.use("/dealers", dealerRoutes); // Future
+router.use("/dealers", dealerRoutes)
 // router.use("/customers", customerRoutes); // Future
 
 export default router
