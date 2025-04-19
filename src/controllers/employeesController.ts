@@ -641,3 +641,33 @@ export const getEmployeeById = async (
     })
   }
 }
+
+export const getEmployeeIdByRoleAndDepartment = async (role: string, department: string) => {
+  // 1. Get the role ID
+  const { data: roleData } = await db.from("roles").select("id").eq("role", role).single()
+
+  if (!roleData) throw new Error(`Role '${role}' not found`)
+
+  // 2. Get the department ID
+  const { data: deptData } = await db
+    .from("departments")
+    .select("id")
+    .eq("name", department)
+    .single()
+
+  if (!deptData) throw new Error(`Department '${department}' not found`)
+
+  // 3. Get employee with matching role_id + department_id
+  const { data: employee, error } = await db
+    .from("employees")
+    .select("id")
+    .eq("role_id", roleData.id)
+    .eq("department_id", deptData.id)
+    .limit(1)
+    .single()
+
+  if (error) throw new Error(`Failed to find employee: ${error.message}`)
+  if (!employee) throw new Error(`No employee found with role '${role}' in '${department}'`)
+
+  return employee.id
+}

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import { db } from "../config/db"
 import { DealerOnboardingPayload } from "../types/dealer.type"
 import { generateDealerEmployeeId, generateDealerId } from "../utils/idGenerators"
+import { getEmployeeIdByRoleAndDepartment } from "./employeesController"
 
 export const onboardDealer = async (
   req: Request<{}, {}, DealerOnboardingPayload>,
@@ -21,7 +22,6 @@ export const onboardDealer = async (
       "pincode",
       "operations_contact_name",
       "operations_contact_phone",
-      "operations_contact_alt",
       "email",
       "owner_name",
       "owner_contact",
@@ -57,6 +57,23 @@ export const onboardDealer = async (
     const username = generateDealerId()
     const dealerNumeric = username.replace("DLR", "")
     const hashedPassword = await bcrypt.hash(defaultPassword, 10)
+
+    // Check for duplicate dealer by name + location
+    const { data: existingDealer } = await db
+      .from("dealers")
+      .select("id")
+      .ilike("dealership_name", dealer.dealership_name!) // case-insensitive
+      .eq("city", dealer.city!)
+      .eq("state", dealer.state!)
+      .single()
+
+    if (existingDealer) {
+      return res.status(409).json({
+        success: false,
+        message: "A dealer with the same name and location already exists",
+        error: "Duplicate dealer entry",
+      })
+    }
 
     const { error: dealerError, data: insertedDealer } = await db
       .from("dealers")
@@ -126,45 +143,49 @@ export const onboardDealer = async (
         .insert(sub_dealerships.map((s) => ({ ...s, dealer_id: dealerId })))
     }
 
-    // ✅ Approval: Fetch flow
-    const { data: flow } = await db
-      .from("approval_flows")
+    // 🔁 Get approval type (based on name, not code)
+    const { data: approvalType } = await db
+      .from("approval_types")
       .select("id")
       .eq("name", "dealer_onboarding")
       .single()
 
-    if (!flow) throw new Error("Dealer approval flow not found")
+    if (!approvalType) {
+      throw new Error("Approval type 'Dealer Onboarding' not found")
+    }
 
-    // ✅ Approver: Regional Sales Lead
-    const { data: approver } = await db
-      .from("employees")
-      .select("id")
-      .eq("role", "regional_sales_lead")
-      .eq("department", "sales")
+    // 🔁 Get approval flow step
+    const { data: flow } = await db
+      .from("approval_flows")
+      .select("*")
+      .eq("approval_type_id", approvalType.id)
+      .eq("step_number", 1)
       .single()
 
-    if (!approver) throw new Error("Regional Sales Lead not found")
+    if (!flow) {
+      throw new Error("Dealer approval flow not found")
+    }
 
-    // // ✅ Create approval instance
-    // const { data: instance } = await db
-    //   .from("approval_instances")
-    //   .insert({
-    //     approval_type_id: "ab381f9d-dbb3-4ffc-a855-7be9300c6b7b",
-    //     reference_id: dealerId,
-    //     current_step: 1,
-    //     flow_id: flow.id,
-    //     requested_by: createdBy,
-    //   })
-    //   .select()
+    // // ✅ Approver: Regional Sales Lead
+    // const { data: approver } = await db
+    //   .from("employees")
+    //   .select("id, roles!inner(role), departments!inner(name)")
+    //   .eq("roles.role", "regional_sales_lead")
+    //   .eq("departments.name", "sales")
     //   .single()
 
+    // console.log("approver: ", approver)
+
+    const approverId = await getEmployeeIdByRoleAndDepartment("regional_sales_lead", "sales")
+    console.log("approverId: ", approverId)
+    if (!approverId) throw new Error("Regional Sales Lead not found")
+
     // ✅ Create approval instance
-    const { data: instance } = await db
+    const { data: instance, error: intanceError } = await db
       .from("approval_instances")
       .insert({
         approval_type_id: "ab381f9d-dbb3-4ffc-a855-7be9300c6b7b",
         reference_id: dealerId,
-        flow_id: flow.id,
         requested_by: createdBy,
         current_step: 1,
         status: "pending",
@@ -177,19 +198,20 @@ export const onboardDealer = async (
       .select()
       .single()
 
-    if (!instance) throw new Error("Instance not inserted")
+    if (!instance) throw new Error(`Instance not inserted`)
+
     // ✅ Create approval step
     await db.from("approval_steps").insert({
       instance_id: instance.id!,
       step_number: 1,
       role: "regional_sales_lead",
-      assigned_to: approver.id,
+      assigned_to: approverId!,
       status: "pending",
     })
 
     // ✅ Notify approver
     await db.from("notifications").insert({
-      recipient_id: approver.id,
+      recipient_id: approverId!,
       sender_id: createdBy,
       type: "approval",
       reference_id: dealerId,
@@ -220,6 +242,37 @@ export const onboardDealer = async (
     return res.status(500).json({
       success: false,
       message: "Dealer onboarding failed",
+      error: err.message,
+    })
+  }
+}
+
+export const getAllDealers = async (req: Request, res: Response) => {
+  try {
+    const { data, error } = await db
+      .from("dealers")
+      .select(
+        "id, dealership_name, dealership_type, city, state, owner_name, operations_contact_phone, email,login_enabled,created_at"
+      )
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch dealers",
+        error: error.message,
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Dealer list fetched successfully",
+      data,
+    })
+  } catch (err: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
       error: err.message,
     })
   }
