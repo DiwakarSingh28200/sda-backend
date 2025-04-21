@@ -77,7 +77,13 @@ export const onboardDealer = async (
 
     const { error: dealerError, data: insertedDealer } = await db
       .from("dealers")
-      .insert({ ...dealer, created_by: createdBy, username, password: hashedPassword })
+      .insert({
+        ...dealer,
+        created_by: createdBy,
+        username,
+        password: hashedPassword,
+        login_enabled: true,
+      })
       .select()
       .single()
 
@@ -143,28 +149,28 @@ export const onboardDealer = async (
         .insert(sub_dealerships.map((s) => ({ ...s, dealer_id: dealerId })))
     }
 
-    // 🔁 Get approval type (based on name, not code)
-    const { data: approvalType } = await db
-      .from("approval_types")
-      .select("id")
-      .eq("name", "dealer_onboarding")
-      .single()
+    // // 🔁 Get approval type (based on name, not code)
+    // const { data: approvalType } = await db
+    //   .from("approval_types")
+    //   .select("id")
+    //   .eq("name", "dealer_onboarding")
+    //   .single()
 
-    if (!approvalType) {
-      throw new Error("Approval type 'Dealer Onboarding' not found")
-    }
+    // if (!approvalType) {
+    //   throw new Error("Approval type 'Dealer Onboarding' not found")
+    // }
 
-    // 🔁 Get approval flow step
-    const { data: flow } = await db
-      .from("approval_flows")
-      .select("*")
-      .eq("approval_type_id", approvalType.id)
-      .eq("step_number", 1)
-      .single()
+    // // 🔁 Get approval flow step
+    // const { data: flow } = await db
+    //   .from("approval_flows")
+    //   .select("*")
+    //   .eq("approval_type_id", approvalType.id)
+    //   .eq("step_number", 1)
+    //   .single()
 
-    if (!flow) {
-      throw new Error("Dealer approval flow not found")
-    }
+    // if (!flow) {
+    //   throw new Error("Dealer approval flow not found")
+    // }
 
     // // ✅ Approver: Regional Sales Lead
     // const { data: approver } = await db
@@ -176,53 +182,53 @@ export const onboardDealer = async (
 
     // console.log("approver: ", approver)
 
-    const approverId = await getEmployeeIdByRoleAndDepartment("regional_sales_lead", "sales")
-    console.log("approverId: ", approverId)
-    if (!approverId) throw new Error("Regional Sales Lead not found")
+    // const approverId = await getEmployeeIdByRoleAndDepartment("regional_sales_lead", "sales")
+    // console.log("approverId: ", approverId)
+    // if (!approverId) throw new Error("Regional Sales Lead not found")
 
     // ✅ Create approval instance
-    const { data: instance, error: intanceError } = await db
-      .from("approval_instances")
-      .insert({
-        approval_type_id: "ab381f9d-dbb3-4ffc-a855-7be9300c6b7b",
-        reference_id: dealerId,
-        requested_by: createdBy,
-        current_step: 1,
-        status: "pending",
-        metadata: {
-          dealer_name: dealer.dealership_name,
-          city: dealer.city,
-          state: dealer.state,
-        },
-      })
-      .select()
-      .single()
+    // const { data: instance, error: intanceError } = await db
+    //   .from("approval_instances")
+    //   .insert({
+    //     approval_type_id: "ab381f9d-dbb3-4ffc-a855-7be9300c6b7b",
+    //     reference_id: dealerId,
+    //     requested_by: createdBy,
+    //     current_step: 1,
+    //     status: "pending",
+    //     metadata: {
+    //       dealer_name: dealer.dealership_name,
+    //       city: dealer.city,
+    //       state: dealer.state,
+    //     },
+    //   })
+    //   .select()
+    //   .single()
 
-    if (!instance) throw new Error(`Instance not inserted`)
+    // if (!instance) throw new Error(`Instance not inserted`)
 
     // ✅ Create approval step
-    await db.from("approval_steps").insert({
-      instance_id: instance.id!,
-      step_number: 1,
-      role: "regional_sales_lead",
-      assigned_to: approverId!,
-      status: "pending",
-    })
+    // await db.from("approval_steps").insert({
+    //   instance_id: instance.id!,
+    //   step_number: 1,
+    //   role: "regional_sales_lead",
+    //   assigned_to: approverId!,
+    //   status: "pending",
+    // })
 
     // ✅ Notify approver
-    await db.from("notifications").insert({
-      recipient_id: approverId!,
-      sender_id: createdBy,
-      type: "approval",
-      reference_id: dealerId,
-      message: `New dealer onboarding request: ${dealer.dealership_name}`,
-      metadata: {
-        module: "dealer",
-        reference_id: dealerId,
-        action: "dealer_onboarding_requested",
-        label: dealer.dealership_name,
-      },
-    })
+    // await db.from("notifications").insert({
+    //   recipient_id: approverId!,
+    //   sender_id: createdBy,
+    //   type: "approval",
+    //   reference_id: dealerId,
+    //   message: `New dealer onboarding request: ${dealer.dealership_name}`,
+    //   metadata: {
+    //     module: "dealer",
+    //     reference_id: dealerId,
+    //     action: "dealer_onboarding_requested",
+    //     label: dealer.dealership_name,
+    //   },
+    // })
 
     // ✅ Log audit
     await db.from("audit_logs").insert({
@@ -252,7 +258,7 @@ export const getAllDealers = async (req: Request, res: Response) => {
     const { data, error } = await db
       .from("dealers")
       .select(
-        "id, dealership_name, dealership_type, city, state, owner_name, operations_contact_phone, email,login_enabled,created_at"
+        "id, dealership_name, dealership_type, city, state, owner_name, operations_contact_phone, username, email,login_enabled,created_at"
       )
       .order("created_at", { ascending: false })
 
