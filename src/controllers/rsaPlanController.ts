@@ -14,7 +14,7 @@ export const getAllPlans = async (
         description,
         price,
         validity,
-        rsa_plan_features (
+        features:rsa_plan_features (
           rsa_features (id,name,description)
         )
       `)
@@ -26,11 +26,19 @@ export const getAllPlans = async (
         error: error?.message,
       })
     }
+    const formattedPlans = plans.map((plan: any) => ({
+      id: plan.id,
+      name: plan.name,
+      description: plan.description,
+      price: plan.price,
+      validity: plan.validity,
+      features: plan.features.map((f: any) => f.rsa_features),
+    }))
 
     return res.json({
       success: true,
       message: "Plans with features retrieved successfully.",
-      data: plans,
+      data: formattedPlans,
     })
   } catch (error) {
     return res.status(500).json({
