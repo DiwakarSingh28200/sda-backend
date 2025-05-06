@@ -3,6 +3,6 @@ import { asyncHandler } from "../../middleware/asyncHandler"
 import { getAllPlans } from "../../controllers/rsaPlanController"
 const router: Router = Router()
 
-router.get("/all", asyncHandler(getAllPlans))
+router.get("/", asyncHandler(getAllPlans))
 
 export default router

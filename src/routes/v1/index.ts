@@ -19,10 +19,10 @@ import { asyncHandler } from "../../middleware/asyncHandler"
 
 const router = Router()
 router.use("/auth", authRoutes)
+router.use("/rsa-plans", rsaPlanRoutes)
 
 // Apply middleware to all routes below
 router.use(asyncHandler(authenticateEmployee))
-
 router.use("/departments", departmentRoutes)
 router.use("/roles", roleRoutes)
 router.use("/permissions", permissionRoutes)
@@ -38,6 +38,5 @@ router.use("/approval-instances", approvalInstanceRoutes)
 
 router.use("/dealers", dealerRoutes)
 // router.use("/customers", customerRoutes); // Future
-router.use("/rsa-plan", rsaPlanRoutes)
 
 export default router
