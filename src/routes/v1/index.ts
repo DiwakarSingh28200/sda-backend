@@ -13,6 +13,7 @@ import notificationRoutes from "./notificationRoutes"
 import approvalActionsRoutes from "./approvalActions"
 import approvalInstanceRoutes from "./approvalInstanceRoutes"
 import dealerRoutes from "./dealerRoutes"
+import rsaPlanRoutes from "./rsaPlanRoutes"
 import { authenticateEmployee } from "../../middleware/authMeddleware"
 import { asyncHandler } from "../../middleware/asyncHandler"
 
@@ -37,5 +38,6 @@ router.use("/approval-instances", approvalInstanceRoutes)
 
 router.use("/dealers", dealerRoutes)
 // router.use("/customers", customerRoutes); // Future
+router.use("/rsa-plan", rsaPlanRoutes)
 
 export default router
