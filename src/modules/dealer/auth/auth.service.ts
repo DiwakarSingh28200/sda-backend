@@ -1,0 +1,87 @@
+import { db } from "../../../config/db"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import { Response } from "express"
+import { DealerLoginInput } from "./auth.types"
+
+export const loginDealerService = async (body: DealerLoginInput) => {
+  const { dealer_id, password } = body
+
+  const { data: dealer } = await db
+    .from("dealers")
+    .select("id, dealer_id, dealership_name, password, is_sub_dealer")
+    .eq("dealer_id", dealer_id)
+    .single()
+
+  if (!dealer || !dealer.password) {
+    return {
+      status: 401,
+      success: false,
+      message: "Invalid dealer ID or password",
+    }
+  }
+
+  const isMatch = await bcrypt.compare(password, dealer.password)
+  if (!isMatch) {
+    return {
+      status: 401,
+      success: false,
+      message: "Invalid dealer ID or password",
+    }
+  }
+
+  const token = jwt.sign(
+    {
+      id: dealer.id,
+      dealer_id: dealer.dealer_id,
+      is_sub_dealer: dealer.is_sub_dealer,
+    },
+    process.env.JWT_SECRET!,
+    { expiresIn: "30d" }
+  )
+
+  return {
+    status: 200,
+    success: true,
+    message: "Login successful",
+    token: token,
+    data: {
+      id: dealer.id,
+      dealer_id: dealer.dealer_id,
+      dealership_name: dealer.dealership_name,
+      is_sub_dealer: dealer.is_sub_dealer,
+    },
+  }
+}
+
+export const getLoggedInDealerService = async (dealerId: string) => {
+  const { data: dealer } = await db
+    .from("dealers")
+    .select("id, dealer_id, dealership_name, is_sub_dealer")
+    .eq("id", dealerId)
+    .single()
+
+  if (!dealer) {
+    return {
+      status: 404,
+      success: false,
+      message: "Dealer not found",
+    }
+  }
+
+  return {
+    status: 200,
+    success: true,
+    message: "Dealer profile loaded",
+    data: dealer,
+  }
+}
+
+export const logoutDealerService = async (res: Response) => {
+  res.clearCookie("access_token")
+  return {
+    status: 200,
+    success: true,
+    message: "Logout successful",
+  }
+}
