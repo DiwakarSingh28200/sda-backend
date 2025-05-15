@@ -7,7 +7,7 @@ import {
   CustomerLoginInsert,
   CustomerOnboardInput,
 } from "./customers.types"
-import { STATE_CODE_MAP } from "@utils/generateDealerId"
+import { STATE_CODE_MAP } from "../../../utils/generateDealerId"
 
 const generatePolicyNumber = (
   state: string,
@@ -36,20 +36,47 @@ export const createCustomerService = async (
   let vehicle_id: string | null = null
 
   try {
+    // check if customer already exists and the buy the same plan send error
+    const { data: existingCustomer } = await db
+      .from("customers")
+      .select("id")
+      .eq("phone", customer.phone)
+      .single()
+
+    if (existingCustomer?.id) {
+      const { data: customerCurrentPlan } = await db
+        .from("rsa_plan_sales")
+        .select("id, vehicle_id, plan_id, vehicles!inner(customer_id)")
+        .eq("vehicles.customer_id", existingCustomer.id)
+        .eq("plan_id", rsa_plan.plan_id)
+        .maybeSingle()
+
+      if (customerCurrentPlan) {
+        return {
+          status: 400,
+          success: false,
+          message: "Customer already purchased this plan",
+        }
+      }
+    }
+
+    const { data: employee, error: empErr } = await db
+      .from("dealer_employees")
+      .select("dealer_id, id")
+      .eq("id", dealerEmployeeId)
+      .single()
+    if (empErr || !employee) throw new Error("Dealer employee not found")
+
     const { data: cust, error: customerErr } = await db
       .from("customers")
-      .insert([customer])
+      .insert({
+        ...customer,
+        dealer_id: employee.dealer_id,
+      })
       .select()
       .single()
     if (customerErr) throw new Error("Customer insert failed: " + customerErr.message)
     customer_id = cust.id
-
-    const { data: employee, error: empErr } = await db
-      .from("dealer_employees")
-      .select("dealer_id")
-      .eq("id", dealerEmployeeId)
-      .single()
-    if (empErr || !employee) throw new Error("Dealer employee not found")
 
     const vehiclePayload = { ...vehicle, customer_id, dealer_id: employee.dealer_id }
     const { data: veh, error: vehicleErr } = await db
@@ -72,26 +99,19 @@ export const createCustomerService = async (
     const planCodeMap = { standard: "S", premium: "P", elite: "E" }
     const planCode = planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
 
-    const policyNumber = generatePolicyNumber(
-      customer.state.slice(0, 2).toUpperCase(),
-      oemCode,
-      serialNumber,
-      planCode
-    )
-
-    const endDate = new Date(rsa_plan.start_date)
-    endDate.setFullYear(endDate.getFullYear() + rsa_plan.plan_duration_years)
+    const policyNumber = generatePolicyNumber(customer.state, oemCode, serialNumber, planCode)
 
     const rsaPayload: RsaPlanSaleInsert = {
       vehicle_id,
       plan_id: rsa_plan.plan_id,
-      plan_duration_years: rsa_plan.plan_duration_years,
+      plan_duration_years: Number(rsa_plan.plan_duration_years),
       start_date: rsa_plan.start_date,
-      end_date: endDate.toISOString().slice(0, 10),
-      paid_amount: rsa_plan.plan_price,
+      end_date: rsa_plan.end_date,
+      paid_amount: Number(rsa_plan.paid_amount),
       policy_number: policyNumber,
       dealer_id: employee.dealer_id,
-      sales_by: dealerEmployeeId,
+      sales_by: employee.id,
+      status: "active",
     }
 
     const { error: planErr } = await db.from("rsa_plan_sales").insert([rsaPayload])

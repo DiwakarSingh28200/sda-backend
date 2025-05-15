@@ -1272,6 +1272,7 @@ export type Database = {
           policy_number: string
           sales_by: string
           start_date: string
+          status: string | null
           updated_at: string | null
           vehicle_id: string
         }
@@ -1286,6 +1287,7 @@ export type Database = {
           policy_number: string
           sales_by: string
           start_date: string
+          status?: string | null
           updated_at?: string | null
           vehicle_id: string
         }
@@ -1300,6 +1302,7 @@ export type Database = {
           policy_number?: string
           sales_by?: string
           start_date?: string
+          status?: string | null
           updated_at?: string | null
           vehicle_id?: string
         }
