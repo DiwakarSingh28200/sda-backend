@@ -36,8 +36,14 @@ export const createCustomerHandler = async (req: Request, res: Response) => {
 }
 
 export const getAllCustomersHandler = async (req: Request, res: Response) => {
+  const id = req.dealerEmployee?.dealer_id
+  // console.log("dealer", id, req.dealerEmployee)
+  if (!id)
+    return res
+      .status(400)
+      .json({ success: false, message: "Dealer Id is required" })
   try {
-    const customers = await getAllCustomersService()
+    const customers = await getAllCustomersService(id)
     return res.status(200).json({ success: true, data: customers })
   } catch (error) {
     console.error(error)

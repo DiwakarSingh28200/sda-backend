@@ -169,9 +169,12 @@ export const createCustomerService = async (
   }
 }
 
-export const getAllCustomersService = async () => {
+export const getAllCustomersService = async (id: string) => {
   try {
-    const { data, error } = await db.from("customers").select("*")
+    const { data, error } = await db
+      .from("customers")
+      .select("*")
+      .eq("dealer_id", id)
     if (error) throw new Error("Customers fetch failed: " + error.message)
     return data
   } catch (error: any) {
