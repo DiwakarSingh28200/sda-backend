@@ -1,5 +1,8 @@
 import { Request, Response } from "express"
-import { createCustomerService } from "./customers.service"
+import {
+  createCustomerService,
+  getAllCustomersService,
+} from "./customers.service"
 import { CustomerOnboardSchema } from "./customers.schema"
 
 export const createCustomerHandler = async (req: Request, res: Response) => {
@@ -29,5 +32,17 @@ export const createCustomerHandler = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
     })
+  }
+}
+
+export const getAllCustomersHandler = async (req: Request, res: Response) => {
+  try {
+    const customers = await getAllCustomersService()
+    return res.status(200).json({ success: true, data: customers })
+  } catch (error) {
+    console.error(error)
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch customers" })
   }
 }

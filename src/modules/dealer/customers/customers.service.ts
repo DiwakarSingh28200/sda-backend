@@ -21,7 +21,7 @@ const generatePolicyNumber = (
     .trim()
     .replace(/\s+/g, " ")
     .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+    .replace(/\b\w/g, c => c.toUpperCase())
 
   const stateCode = STATE_CODE_MAP[normalizedState]
   return `${stateCode}${oemCode}${serialStr}${year}${planCode}`
@@ -30,7 +30,12 @@ const generatePolicyNumber = (
 export const createCustomerService = async (
   input: CustomerOnboardInput,
   dealerEmployeeId: string
-): Promise<{ status: number; success: boolean; message: string; data?: any }> => {
+): Promise<{
+  status: number
+  success: boolean
+  message: string
+  data?: any
+}> => {
   const { customer, vehicle, rsa_plan } = input
   let customer_id: string | null = null
   let vehicle_id: string | null = null
@@ -75,16 +80,22 @@ export const createCustomerService = async (
       })
       .select()
       .single()
-    if (customerErr) throw new Error("Customer insert failed: " + customerErr.message)
+    if (customerErr)
+      throw new Error("Customer insert failed: " + customerErr.message)
     customer_id = cust.id
 
-    const vehiclePayload = { ...vehicle, customer_id, dealer_id: employee.dealer_id }
+    const vehiclePayload = {
+      ...vehicle,
+      customer_id,
+      dealer_id: employee.dealer_id,
+    }
     const { data: veh, error: vehicleErr } = await db
       .from("vehicles")
       .insert([vehiclePayload])
       .select()
       .single()
-    if (vehicleErr) throw new Error("Vehicle insert failed: " + vehicleErr.message)
+    if (vehicleErr)
+      throw new Error("Vehicle insert failed: " + vehicleErr.message)
     vehicle_id = veh.id
 
     const serialNumber = Math.floor(Math.random() * 1000000)
@@ -97,9 +108,15 @@ export const createCustomerService = async (
       .single()
 
     const planCodeMap = { standard: "S", premium: "P", elite: "E" }
-    const planCode = planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
+    const planCode =
+      planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
 
-    const policyNumber = generatePolicyNumber(customer.state, oemCode, serialNumber, planCode)
+    const policyNumber = generatePolicyNumber(
+      customer.state,
+      oemCode,
+      serialNumber,
+      planCode
+    )
 
     const rsaPayload: RsaPlanSaleInsert = {
       vehicle_id,
@@ -114,7 +131,9 @@ export const createCustomerService = async (
       status: "active",
     }
 
-    const { error: planErr } = await db.from("rsa_plan_sales").insert([rsaPayload])
+    const { error: planErr } = await db
+      .from("rsa_plan_sales")
+      .insert([rsaPayload])
     if (planErr) throw new Error("RSA Plan insert failed: " + planErr.message)
 
     const hashedPassword = await bcrypt.hash("Welcome@123", 10)
@@ -125,7 +144,9 @@ export const createCustomerService = async (
       otp_verified: false,
     }
 
-    const { error: loginErr } = await db.from("customer_logins").insert([loginPayload])
+    const { error: loginErr } = await db
+      .from("customer_logins")
+      .insert([loginPayload])
     if (loginErr) throw new Error("Login insert failed: " + loginErr.message)
 
     return {
@@ -144,6 +165,20 @@ export const createCustomerService = async (
       status: 500,
       success: false,
       message: "Onboarding failed: " + err.message,
+    }
+  }
+}
+
+export const getAllCustomersService = async () => {
+  try {
+    const { data, error } = await db.from("customers").select("*")
+    if (error) throw new Error("Customers fetch failed: " + error.message)
+    return data
+  } catch (error: any) {
+    return {
+      status: 500,
+      success: false,
+      message: "Getting Data failed: " + error.message,
     }
   }
 }
