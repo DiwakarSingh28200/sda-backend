@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { onboardDealerHandler, getAllDealersHandler } from "./dealer.controller";
-import { asyncHandler } from "@/middleware/asyncHandler";
+import { Router } from "express"
+import { onboardDealerHandler, getAllDealersHandler } from "./dealer.controller"
+import { asyncHandler } from "../../../utils/asyncHandler"
 
-const router = Router();
+const router = Router()
 
-router.post("/onboard", asyncHandler(onboardDealerHandler));
-router.get("/all", asyncHandler(getAllDealersHandler));
+router.post("/onboard", asyncHandler(onboardDealerHandler))
+router.get("/all", asyncHandler(getAllDealersHandler))
 
-export default router;
+export default router
