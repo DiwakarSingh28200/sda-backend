@@ -46,7 +46,7 @@ export const loginDealerService = async (body: DealerLoginInput) => {
     message: "Login successful",
     token: token,
     data: {
-      id: dealer.dealer_id,
+      id: dealer.id,
       name: dealer.dealership_name,
       dealer_id: dealer.dealer_id,
       dealership_name: dealer.dealership_name,
@@ -77,7 +77,7 @@ export const getLoggedInDealerService = async (dealerId: string) => {
     success: true,
     message: "Dealer profile loaded",
     data: {
-      id: dealer.dealer_id,
+      id: dealer.id,
       name: dealer.dealership_name,
       dealer_id: dealer.dealer_id,
       dealership_name: dealer.dealership_name,

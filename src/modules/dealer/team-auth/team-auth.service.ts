@@ -46,7 +46,8 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
     message: "Login successful",
     token: token,
     data: {
-      id: emp.employee_id,
+      id: emp.id,
+      employee_id: emp.employee_id,
       name: emp.name,
       dealer_id: emp.dealer.id,
       dealership_name: emp.dealer.dealership_name,
@@ -77,7 +78,8 @@ export const getLoggedInDealerEmployeeService = async (id: string) => {
     success: true,
     message: "Employee profile loaded",
     data: {
-      id: emp.employee_id,
+      id: emp.id,
+      employee_id: emp.employee_id,
       name: emp.name,
       dealer_id: emp.dealer.id,
       dealership_name: emp.dealer.dealership_name,
