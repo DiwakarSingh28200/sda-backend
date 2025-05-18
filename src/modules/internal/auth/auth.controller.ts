@@ -35,6 +35,7 @@ export const getAllEmployeesHandler = async (_req: Request, res: Response) => {
 }
 
 export const getLoggedInUserHandler = async (req: Request, res: Response) => {
+  console.log("getLoggedInUserHandler running")
   const result = await getLoggedInUserService(req.user!.id)
   return res.status(result.status).json(result)
 }

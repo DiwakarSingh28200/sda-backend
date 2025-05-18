@@ -16,7 +16,7 @@ export const authenticateDealerEmployee = (
   next: NextFunction
 ): void => {
   try {
-    const token = req.cookies.access_token
+    const token = req.cookies.dealer_employee_token
     if (!token) {
       res.status(401).json({ success: false, message: "Unauthorized: No token" })
       return
