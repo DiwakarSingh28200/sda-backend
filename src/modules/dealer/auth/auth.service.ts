@@ -89,7 +89,7 @@ export const getLoggedInDealerService = async (dealerId: string) => {
 }
 
 export const logoutDealerService = async (res: Response) => {
-  res.clearCookie("access_token")
+  res.clearCookie("dealer_token")
   return {
     status: 200,
     success: true,

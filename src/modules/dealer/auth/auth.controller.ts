@@ -5,7 +5,7 @@ export const loginDealerHandler = async (req: Request, res: Response) => {
   const result = await loginDealerService(req.body)
   if (result.token) {
     return res
-      .cookie("access_token", result.token, {
+      .cookie("dealer_token", result.token, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",

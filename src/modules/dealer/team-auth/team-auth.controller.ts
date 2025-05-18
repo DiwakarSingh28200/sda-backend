@@ -10,7 +10,7 @@ export const loginDealerEmployeeHandler = async (req: Request, res: Response) =>
 
   if (result.token) {
     return res
-      .cookie("access_token", result.token, {
+      .cookie("dealer_employee_token", result.token, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",

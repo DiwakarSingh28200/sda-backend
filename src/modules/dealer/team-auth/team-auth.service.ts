@@ -91,7 +91,7 @@ export const getLoggedInDealerEmployeeService = async (id: string) => {
 }
 
 export const logoutDealerEmployeeService = async (res: Response) => {
-  res.clearCookie("access_token")
+  res.clearCookie("dealer_employee_token")
   return {
     status: 200,
     success: true,
