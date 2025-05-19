@@ -34,7 +34,16 @@ export const getLoggedInDealerEmployeeHandler = async (req: Request, res: Respon
 }
 
 export const logoutDealerEmployeeHandler = async (_req: Request, res: Response) => {
-  return res.clearCookie("dealer_employee_token").json({
+  const cookieName = "dealer_employee_token"
+  const cookieOptions = {
+    domain: process.env.COOKIE_DOMAIN,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+  }
+  res.clearCookie(cookieName, cookieOptions)
+  return res.status(200).json({
     status: 200,
     success: true,
     message: "Logout successful",
