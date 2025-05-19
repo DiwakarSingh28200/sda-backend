@@ -28,6 +28,9 @@ export const getLoggedInDealerHandler = async (req: Request, res: Response) => {
 }
 
 export const logoutDealerHandler = async (_req: Request, res: Response) => {
-  const result = await logoutDealerService(res)
-  return res.status(result.status).json(result)
+  return res.clearCookie("dealer_token").json({
+    status: 200,
+    success: true,
+    message: "Logout successful",
+  })
 }

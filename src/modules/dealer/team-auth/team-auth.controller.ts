@@ -34,6 +34,9 @@ export const getLoggedInDealerEmployeeHandler = async (req: Request, res: Respon
 }
 
 export const logoutDealerEmployeeHandler = async (_req: Request, res: Response) => {
-  const result = await logoutDealerEmployeeService(res)
-  return res.status(result.status).json(result)
+  return res.clearCookie("dealer_employee_token").json({
+    status: 200,
+    success: true,
+    message: "Logout successful",
+  })
 }
