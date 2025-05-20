@@ -173,14 +173,27 @@ import { onboardDealerService } from "../services/dealerService"
 //   }
 // }
 
+const humanizeKey = (path: string[]) => {
+  const field = path[path.length - 1]
+  return field
+    .replace(/_/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/\b\w/g, (l) => l.toUpperCase()) // capitalize
+}
+
 export const onboardDealerHandler = async (req: Request, res: Response) => {
   const parsed = DealerOnboardingSchema.safeParse(req.body)
 
   if (!parsed.success) {
+    const messages: string[] = []
+    for (const issue of parsed.error.issues) {
+      const label = humanizeKey(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
     return res.status(400).json({
       success: false,
-      message: "Validation failed",
-      error: parsed.error.flatten().fieldErrors,
+      message: messages.join(", "),
     })
   }
   const createdBy = (req as any).user?.id
