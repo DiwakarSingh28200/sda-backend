@@ -8,13 +8,7 @@ const router = Router()
 
 router.get(
   "/",
-  (req, res, next) => {
-    // ✅ Accept either middleware
-    authenticateDealer(req, res, (err) => {
-      if (!err && req.dealer) return next()
-      authenticateDealerEmployee(req, res, next)
-    })
-  },
+
   asyncHandler(getDealerSalesHandler)
 )
 

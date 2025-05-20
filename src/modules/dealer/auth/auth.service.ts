@@ -7,6 +7,8 @@ import { DealerLoginInput } from "./auth.types"
 export const loginDealerService = async (body: DealerLoginInput) => {
   const { dealer_id, password } = body
 
+  console.log(dealer_id, password)
+
   const { data: dealer } = await db
     .from("dealers")
     .select("id, dealer_id, dealership_name, email, password, is_sub_dealer")
@@ -35,6 +37,8 @@ export const loginDealerService = async (body: DealerLoginInput) => {
       id: dealer.id,
       dealer_id: dealer.dealer_id,
       is_sub_dealer: dealer.is_sub_dealer,
+      roles: ["admin"],
+      permissions: ["*"],
     },
     process.env.JWT_SECRET!,
     { expiresIn: "30d" }
@@ -46,13 +50,17 @@ export const loginDealerService = async (body: DealerLoginInput) => {
     message: "Login successful",
     token: token,
     data: {
-      id: dealer.id,
-      name: dealer.dealership_name,
-      dealer_id: dealer.dealer_id,
-      dealership_name: dealer.dealership_name,
-      role: "admin",
-      email: dealer.email || null,
-      type: "admin",
+      user: {
+        id: dealer.id,
+        name: dealer.dealership_name,
+        dealer_id: dealer.dealer_id,
+        dealership_name: dealer.dealership_name,
+        role: "admin",
+        email: dealer.email || null,
+        type: "admin",
+      },
+      roles: ["admin"],
+      permissions: ["*"],
     },
   }
 }
@@ -77,13 +85,17 @@ export const getLoggedInDealerService = async (dealerId: string) => {
     success: true,
     message: "Dealer profile loaded",
     data: {
-      id: dealer.id,
-      name: dealer.dealership_name,
-      dealer_id: dealer.dealer_id,
-      dealership_name: dealer.dealership_name,
-      role: "admin",
-      email: dealer.email || null,
-      type: "admin",
+      user: {
+        id: dealer.id,
+        name: dealer.dealership_name,
+        dealer_id: dealer.dealer_id,
+        dealership_name: dealer.dealership_name,
+        role: "admin",
+        email: dealer.email || null,
+        type: "admin",
+      },
+      roles: ["admin"],
+      permissions: ["*"],
     },
   }
 }

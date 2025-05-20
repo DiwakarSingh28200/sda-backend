@@ -6,6 +6,8 @@ declare module "express-serve-static-core" {
     dealerEmployee?: {
       id: string
       dealer_id: string
+      roles: string[]
+      permissions: string[]
     }
   }
 }
@@ -25,6 +27,8 @@ export const authenticateDealerEmployee = (
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
       id: string
       dealer_id: string
+      roles: string[]
+      permissions: string[]
     }
 
     req.dealerEmployee = decoded

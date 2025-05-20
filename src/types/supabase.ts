@@ -1429,7 +1429,29 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_monthly_sales_chart: {
+        Args: { input_dealer_id: string }
+        Returns: {
+          day: string
+          count: number
+        }[]
+      }
+      get_plan_type_stats: {
+        Args: { dealer_input: string }
+        Returns: {
+          name: string
+          count: number
+          percentage: number
+        }[]
+      }
+      get_top_dealer_employees: {
+        Args: { dealer_input: string }
+        Returns: {
+          name: string
+          total_customers: number
+          total_revenue: number
+        }[]
+      }
     }
     Enums: {
       employment_type_enum: "full_time" | "part_time" | "contractor"

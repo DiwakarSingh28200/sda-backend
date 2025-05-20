@@ -35,6 +35,8 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
       id: emp.id,
       dealer_id: emp.dealer.id,
       is_dealer_employee: true,
+      roles: ["employee"],
+      permissions: [],
     },
     process.env.JWT_SECRET!,
     { expiresIn: "30d" }
@@ -46,14 +48,18 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
     message: "Login successful",
     token: token,
     data: {
-      id: emp.id,
-      employee_id: emp.employee_id,
-      name: emp.name,
-      dealer_id: emp.dealer.id,
-      dealership_name: emp.dealer.dealership_name,
-      role: emp.role || "employee",
-      email: emp.email || null,
-      type: "employee",
+      user: {
+        id: emp.id,
+        employee_id: emp.employee_id,
+        name: emp.name,
+        dealer_id: emp.dealer.id,
+        dealership_name: emp.dealer.dealership_name,
+        role: emp.role || "employee",
+        email: emp.email || null,
+        type: "employee",
+      },
+      roles: ["employee"],
+      permissions: [],
     },
   }
 }
@@ -78,14 +84,18 @@ export const getLoggedInDealerEmployeeService = async (id: string) => {
     success: true,
     message: "Employee profile loaded",
     data: {
-      id: emp.id,
-      employee_id: emp.employee_id,
-      name: emp.name,
-      dealer_id: emp.dealer.id,
-      dealership_name: emp.dealer.dealership_name,
-      role: emp.role || "employee",
-      email: emp.email || null,
-      type: "employee",
+      user: {
+        id: emp.id,
+        employee_id: emp.employee_id,
+        name: emp.name,
+        dealer_id: emp.dealer.id,
+        dealership_name: emp.dealer.dealership_name,
+        role: emp.role || "employee",
+        type: "employee",
+        email: emp.email || null,
+      },
+      roles: ["employee"],
+      permissions: [],
     },
   }
 }

@@ -5,6 +5,8 @@ export const getDealerSalesHandler = async (req: Request, res: Response) => {
   const dealer_id = req.query.dealer_id as string
   const employee_id = req.query.employee_id as string
 
+  console.log(req.query)
+
   if (!dealer_id) {
     return res.status(400).json({
       success: false,

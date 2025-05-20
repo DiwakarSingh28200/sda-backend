@@ -7,6 +7,8 @@ declare module "express-serve-static-core" {
       id: string
       dealer_id: string
       is_sub_dealer: boolean
+      roles: string[]
+      permissions: string[]
     }
   }
 }
@@ -23,6 +25,8 @@ export const authenticateDealer = (req: Request, res: Response, next: NextFuncti
       id: string
       dealer_id: string
       is_sub_dealer: boolean
+      roles: string[]
+      permissions: string[]
     }
 
     req.dealer = decoded
