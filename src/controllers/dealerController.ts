@@ -229,6 +229,7 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
         "id, dealer_id,dealership_name,dealership_type,city,state,owner_name,operations_contact_phone,email,created_at"
       )
       .eq("dealer_id", dealer_id)
+      .single()
     if (error) {
       return res.status(500).json({
         success: false,
