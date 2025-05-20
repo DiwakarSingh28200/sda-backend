@@ -14,9 +14,9 @@ export interface DealerOnboardingPayload {
     "id" | "created_by" | "password" | "login_enabled" | "created_at" | "dealer_id"
   >
 
-  finance_info: Omit<FinanceInfo, "id" | "dealer_id">
+  finance_info: Omit<FinanceInfo, "id">
 
-  documents: Omit<Documents, "id" | "dealer_id" | "additional_docs">
+  documents: Omit<Documents, "id" | "additional_docs">
 
   employees?: Array<
     Omit<
@@ -25,7 +25,7 @@ export interface DealerOnboardingPayload {
     >
   >
 
-  services?: Array<Omit<Service, "id" | "dealer_id">>
+  services?: Array<Omit<Service, "id">>
 
-  sub_dealerships?: Array<Omit<SubDealership, "id" | "dealer_id" | "created_by" | "created_at">>
+  sub_dealerships?: Array<Omit<SubDealership, "id" | "created_by" | "created_at">>
 }

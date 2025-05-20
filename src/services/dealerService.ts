@@ -8,12 +8,14 @@ export const onboardDealerService = async (
   createdBy: string
 ) => {
   try {
+    console.log("payload: ", payload)
     const { dealer, finance_info, documents, employees, services, sub_dealerships } = payload
-
+    const oems = dealer.oems?.map((oem) => oem.toUpperCase())
     const dealer_id = await generateDealerId({
       state: dealer.state!,
-      oemCode: dealer.oems![0]!.substring(0, 3),
-      isSubDealer: false,
+      oemCode: oems![0]!.substring(0, 3),
+      isSubDealer: dealer.is_sub_dealer!,
+      parentDealerId: dealer.parent_dealer_id!,
     })
 
     // const tempPassword = crypto.randomBytes(6).toString("base64")
@@ -59,7 +61,6 @@ export const onboardDealerService = async (
         gst_number: dealer.gst_number,
         password: hashedPassword,
         login_enabled: true,
-        support_contact: dealer.support_contact,
         parent_dealer_id: dealer.parent_dealer_id,
         is_sub_dealer: dealer.is_sub_dealer,
         is_master_dealer: dealer.is_master_dealer,
@@ -114,38 +115,35 @@ export const onboardDealerService = async (
     }
 
     if (services?.length) {
-      await db.from("dealer_services").insert(
-        services.map((s) => ({
-          dealer_id: dealerId,
-          rsa_support: true,
-          operation_location: s.operation_location,
-          service_name: s.service_name,
-          price_per_service: Number(s.price_per_service) || 0,
-          price_per_km: Number(s.price_per_km) || 0,
-          repair_on_site: s.repair_on_site,
-          repair_price: Number(s.repair_price) || 0,
-          night_price: Number(s.night_price) || 0,
-          price_list_file: s.price_list_file,
-          fixed_distance_charge: Number(s.fixed_distance_charge) || 0,
-          is_24x7: s.is_24x7,
-          time_start: s.time_start,
-          time_end: s.time_end,
-          available_days: s.available_days,
-        }))
-      )
+      const serviceRecords = services.map((s) => ({
+        dealer_id: dealerId,
+        operation_location: s.operation_location || "Main Office",
+        service_name: s.service_name || "General Service",
+        price_per_service: Number(s.price_per_service) || 0,
+        price_per_km: Number(s.price_per_km) || 0,
+        repair_on_site: s.repair_on_site,
+        repair_price: Number(s.repair_price) || 0,
+        night_price: Number(s.night_price) || 0,
+        price_list_file: s.price_list_file,
+        fixed_distance_charge: Number(s.fixed_distance_charge) || 0,
+        is_24x7: s.is_24x7,
+        time_start: s.time_start || null,
+        time_end: s.time_end || null,
+        available_days: s.available_days,
+      }))
+
+      await db.from("dealer_services").insert(serviceRecords)
     }
 
     if (sub_dealerships?.length) {
-      const subDealerRecords = await Promise.all(
-        sub_dealerships.map((sub, i) => ({
-          dealer_id: dealer_id,
-          name: sub.name,
-          contact: sub.contact,
-          oem: sub.oems,
-          address: sub.address,
-        }))
-      )
-      await db.from("dealers").insert(subDealerRecords)
+      const subDealerRecords = sub_dealerships.map((sub) => ({
+        dealer_id: dealerId,
+        name: sub.name,
+        contact: sub.contact,
+        oems: sub.oems,
+        address: sub.address,
+      }))
+      await db.from("dealer_sub_dealerships").insert(subDealerRecords)
     }
 
     await db.from("audit_logs").insert({

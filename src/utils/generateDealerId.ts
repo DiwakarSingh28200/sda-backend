@@ -24,8 +24,13 @@ export async function generateDealerId({
 
   if (isSubDealer) {
     if (!parentDealerId) throw new Error("Parent dealer ID is required for sub-dealer")
+    const { data: parentDealer, error: parentDealerError } = await db
+      .from("dealers")
+      .select("dealer_id")
+      .eq("id", parentDealerId)
+      .single()
 
-    const masterIdPrefix = parentDealerId.replace(/M$/, "")
+    const masterIdPrefix = parentDealer?.dealer_id?.replace(/M$/, "")
 
     // Get existing sub-dealers under this master dealer
     const { data: existingSubs, error } = await db

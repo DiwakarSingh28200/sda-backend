@@ -587,7 +587,6 @@ export type Database = {
           price_per_service: number | null
           repair_on_site: boolean | null
           repair_price: number | null
-          rsa_support: boolean | null
           service_name: string | null
           time_end: string | null
           time_start: string | null
@@ -605,7 +604,6 @@ export type Database = {
           price_per_service?: number | null
           repair_on_site?: boolean | null
           repair_price?: number | null
-          rsa_support?: boolean | null
           service_name?: string | null
           time_end?: string | null
           time_start?: string | null
@@ -623,7 +621,6 @@ export type Database = {
           price_per_service?: number | null
           repair_on_site?: boolean | null
           repair_price?: number | null
-          rsa_support?: boolean | null
           service_name?: string | null
           time_end?: string | null
           time_start?: string | null
@@ -675,7 +672,6 @@ export type Database = {
       }
       dealers: {
         Row: {
-          annual_revenue: string | null
           city: string | null
           created_at: string | null
           created_by: string | null
@@ -695,7 +691,6 @@ export type Database = {
           is_sub_dealer: boolean | null
           login_enabled: boolean | null
           oems: string[] | null
-          operations_contact_alt: string | null
           operations_contact_name: string | null
           operations_contact_phone: string | null
           owner_contact: string | null
@@ -707,11 +702,9 @@ export type Database = {
           pincode: string | null
           registered_address: string | null
           state: string | null
-          support_contact: string | null
           vehicle_types: string[] | null
         }
         Insert: {
-          annual_revenue?: string | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -731,7 +724,6 @@ export type Database = {
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
           oems?: string[] | null
-          operations_contact_alt?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
           owner_contact?: string | null
@@ -743,11 +735,9 @@ export type Database = {
           pincode?: string | null
           registered_address?: string | null
           state?: string | null
-          support_contact?: string | null
           vehicle_types?: string[] | null
         }
         Update: {
-          annual_revenue?: string | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -767,7 +757,6 @@ export type Database = {
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
           oems?: string[] | null
-          operations_contact_alt?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
           owner_contact?: string | null
@@ -779,7 +768,6 @@ export type Database = {
           pincode?: string | null
           registered_address?: string | null
           state?: string | null
-          support_contact?: string | null
           vehicle_types?: string[] | null
         }
         Relationships: [

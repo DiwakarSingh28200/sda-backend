@@ -18,7 +18,7 @@ export const DealerSchema = z.object({
   escalation_name: z.string().optional(),
   escalation_contact: z.string().optional(),
   escalation_email: z.string().optional(),
-  pan_number: z.string().min(10, "PAN number must be 10 characters"),
+  pan_number: z.string().min(6, "PAN number must be 6 characters"),
   gst_number: z.string().min(1),
   vehicle_types: z.array(z.string()).optional(),
   is_rsa_support: z.boolean().optional(),
@@ -27,6 +27,7 @@ export const DealerSchema = z.object({
   is_master_dealer: z.boolean().optional(),
   is_email_verified: z.boolean().optional(),
   is_contact_verified: z.boolean().optional(),
+  oems: z.array(z.string()).optional(),
 })
 
 // 🔹 Services
@@ -75,7 +76,7 @@ export const SubDealershipSchema = z.object({
   name: z.string().min(1),
   contact: z.string().min(10),
   address: z.string().min(1),
-  oem: z.array(z.string().min(1)).min(1),
+  oems: z.array(z.string().min(1)).min(1),
 })
 
 // 🔹 Employees
