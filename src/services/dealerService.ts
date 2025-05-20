@@ -8,11 +8,11 @@ export const onboardDealerService = async (
   createdBy: string
 ) => {
   try {
-    const { dealer, finance_info, documents, oems, employees, services, sub_dealerships } = payload
+    const { dealer, finance_info, documents, employees, services, sub_dealerships } = payload
 
     const dealer_id = await generateDealerId({
       state: dealer.state!,
-      oemCode: oems[0].oem_name!.substring(0, 3),
+      oemCode: dealer.oems![0]!.substring(0, 3),
       isSubDealer: false,
     })
 
@@ -60,14 +60,15 @@ export const onboardDealerService = async (
         password: hashedPassword,
         login_enabled: true,
         support_contact: dealer.support_contact,
-        parent_dealer_id: null,
-        is_sub_dealer: false,
-        is_master_dealer: true,
-        is_email_verified: false,
-        is_contact_verified: false,
+        parent_dealer_id: dealer.parent_dealer_id,
+        is_sub_dealer: dealer.is_sub_dealer,
+        is_master_dealer: dealer.is_master_dealer,
+        is_email_verified: dealer.is_email_verified,
+        is_contact_verified: dealer.is_contact_verified,
         dealer_id,
+        oems: dealer.oems,
+        vehicle_types: dealer.vehicle_types,
         created_by: createdBy,
-        // is_sub_dealer: false,
       })
       .select()
       .single()
@@ -93,14 +94,8 @@ export const onboardDealerService = async (
       ...finance_info,
     })
 
-    await db.from("dealer_oems").insert(
-      oems.map((oem) => ({
-        dealer_id: dealerId,
-        oem_name: oem.oem_name,
-        vehicle_segment: oem.vehicle_segment,
-      }))
-    )
-
+    const dealerEmpEmpPassword = "Dealer@1234"
+    const dealerHashedPassword = await bcrypt.hash(dealerEmpEmpPassword, 10)
     if (employees?.length) {
       const employeeRecords = await Promise.all(
         employees.map(async (emp) => {
@@ -110,7 +105,7 @@ export const onboardDealerService = async (
             name: `${emp.name}`,
             employee_id: empId,
             dealer_id: dealerId,
-            password: "DealerEmp@1234",
+            password: dealerHashedPassword,
             login_enabled: false,
           }
         })
@@ -121,13 +116,21 @@ export const onboardDealerService = async (
     if (services?.length) {
       await db.from("dealer_services").insert(
         services.map((s) => ({
-          ...s,
           dealer_id: dealerId,
+          rsa_support: true,
+          operation_location: s.operation_location,
+          service_name: s.service_name,
           price_per_service: Number(s.price_per_service) || 0,
           price_per_km: Number(s.price_per_km) || 0,
+          repair_on_site: s.repair_on_site,
           repair_price: Number(s.repair_price) || 0,
           night_price: Number(s.night_price) || 0,
+          price_list_file: s.price_list_file,
           fixed_distance_charge: Number(s.fixed_distance_charge) || 0,
+          is_24x7: s.is_24x7,
+          time_start: s.time_start,
+          time_end: s.time_end,
+          available_days: s.available_days,
         }))
       )
     }
@@ -135,13 +138,11 @@ export const onboardDealerService = async (
     if (sub_dealerships?.length) {
       const subDealerRecords = await Promise.all(
         sub_dealerships.map((sub, i) => ({
-          ...sub,
-          dealer_id: `${dealer_id}S${String(i + 1).padStart(3, "0")}`,
-          parent_dealer_id: dealerId,
-          is_sub_dealer: true,
-          created_by: createdBy,
-          login_enabled: false,
-          password: hashedPassword,
+          dealer_id: dealer_id,
+          name: sub.name,
+          contact: sub.contact,
+          oem: sub.oems,
+          address: sub.address,
         }))
       )
       await db.from("dealers").insert(subDealerRecords)

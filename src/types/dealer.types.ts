@@ -11,21 +11,12 @@ export type SubDealership = Database["public"]["Tables"]["dealer_sub_dealerships
 export interface DealerOnboardingPayload {
   dealer: Omit<
     Dealer,
-    | "id"
-    | "created_by"
-    | "password"
-    | "login_enabled"
-    | "created_at"
-    | "dealer_id"
-    | "is_sub_dealer"
-    | "parent_dealer_id"
+    "id" | "created_by" | "password" | "login_enabled" | "created_at" | "dealer_id"
   >
 
   finance_info: Omit<FinanceInfo, "id" | "dealer_id">
 
   documents: Omit<Documents, "id" | "dealer_id" | "additional_docs">
-
-  oems: Array<Omit<OEM, "id" | "dealer_id" | "vehicle_segments">>
 
   employees?: Array<
     Omit<

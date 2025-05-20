@@ -645,7 +645,7 @@ export type Database = {
           dealer_id: string | null
           id: string
           name: string | null
-          oem: string[] | null
+          oems: string[] | null
         }
         Insert: {
           address?: string | null
@@ -653,7 +653,7 @@ export type Database = {
           dealer_id?: string | null
           id?: string
           name?: string | null
-          oem?: string[] | null
+          oems?: string[] | null
         }
         Update: {
           address?: string | null
@@ -661,7 +661,7 @@ export type Database = {
           dealer_id?: string | null
           id?: string
           name?: string | null
-          oem?: string[] | null
+          oems?: string[] | null
         }
         Relationships: [
           {
@@ -694,6 +694,7 @@ export type Database = {
           is_master_dealer: boolean | null
           is_sub_dealer: boolean | null
           login_enabled: boolean | null
+          oems: string[] | null
           operations_contact_alt: string | null
           operations_contact_name: string | null
           operations_contact_phone: string | null
@@ -707,6 +708,7 @@ export type Database = {
           registered_address: string | null
           state: string | null
           support_contact: string | null
+          vehicle_types: string[] | null
         }
         Insert: {
           annual_revenue?: string | null
@@ -728,6 +730,7 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
+          oems?: string[] | null
           operations_contact_alt?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
@@ -741,6 +744,7 @@ export type Database = {
           registered_address?: string | null
           state?: string | null
           support_contact?: string | null
+          vehicle_types?: string[] | null
         }
         Update: {
           annual_revenue?: string | null
@@ -762,6 +766,7 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
+          oems?: string[] | null
           operations_contact_alt?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
@@ -775,6 +780,7 @@ export type Database = {
           registered_address?: string | null
           state?: string | null
           support_contact?: string | null
+          vehicle_types?: string[] | null
         }
         Relationships: [
           {

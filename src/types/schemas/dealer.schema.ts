@@ -22,6 +22,11 @@ export const DealerSchema = z.object({
   gst_number: z.string().min(1),
   vehicle_types: z.array(z.string()).optional(),
   is_rsa_support: z.boolean().optional(),
+  parent_dealer_id: z.string().optional(),
+  is_sub_dealer: z.boolean().optional(),
+  is_master_dealer: z.boolean().optional(),
+  is_email_verified: z.boolean().optional(),
+  is_contact_verified: z.boolean().optional(),
 })
 
 // 🔹 Services
@@ -87,7 +92,6 @@ export const DealerOnboardingSchema = z.object({
   services: z.array(ServiceSchema).optional(),
   documents: DocumentsSchema,
   finance_info: FinanceInfoSchema,
-  oems: z.array(OemSchema).min(1, "At least one OEM is required"),
   sub_dealerships: z.array(SubDealershipSchema).optional(),
   employees: z.array(EmployeeSchema).optional(),
 })

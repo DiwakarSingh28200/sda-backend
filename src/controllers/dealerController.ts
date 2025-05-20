@@ -219,3 +219,34 @@ export const getAllDealers = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const getDealerByDealerID = async (req: Request, res: Response) => {
+  try {
+    const { dealer_id } = req.params
+    const { data, error } = await db
+      .from("dealers")
+      .select(
+        "id, dealer_id,dealership_name,dealership_type,city,state,owner_name,operations_contact_phone,email,created_at"
+      )
+      .eq("dealer_id", dealer_id)
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch dealer",
+        error: error.message,
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Dealer fetched successfully",
+      data,
+    })
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    })
+  }
+}
