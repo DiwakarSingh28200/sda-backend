@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+      }
+      h1 {
+        color: #1e3a8a;
+      }
+      .section {
+        margin-bottom: 1.5rem;
+      }
+      .label {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SureDrive RSA Policy Certificate</h1>
+    <div class="section">
+      <div><span class="label">Policy No:</span> {{policy_number}}</div>
+      <div><span class="label">Plan:</span> {{plan_name}} ({{plan_duration}} years)</div>
+      <div><span class="label">Start Date:</span> {{start_date}}</div>
+      <div><span class="label">End Date:</span> {{end_date}}</div>
+    </div>
+    <div class="section">
+      <div><span class="label">Customer:</span> {{customer_name}}</div>
+      <div><span class="label">Phone:</span> {{phone}}</div>
+      <div><span class="label">Address:</span> {{address}}</div>
+    </div>
+    <div class="section">
+      <div><span class="label">Vehicle:</span> {{vehicle_model}} - {{vehicle_number}}</div>
+      <div><span class="label">Chassis:</span> {{chassis_number}}</div>
+      <div><span class="label">Engine:</span> {{engine_number}}</div>
+    </div>
+    <div class="section">
+      <div><span class="label">Issued By:</span> SureDrive Assist</div>
+    </div>
+  </body>
+</html>

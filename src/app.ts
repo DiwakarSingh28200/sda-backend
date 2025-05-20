@@ -33,6 +33,7 @@ app.use(
 )
 app.use(helmet())
 app.use(compression())
+
 app.use((req, res, next) => {
   const start = Date.now()
   res.on("finish", () => {

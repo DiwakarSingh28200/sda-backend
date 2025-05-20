@@ -309,6 +309,112 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_logins: {
+        Row: {
+          created_at: string | null
+          customer_id: string
+          id: string
+          otp_verified: boolean
+          password_hash: string
+          phone: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id: string
+          id?: string
+          otp_verified?: boolean
+          password_hash: string
+          phone: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string
+          id?: string
+          otp_verified?: boolean
+          password_hash?: string
+          phone?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_logins_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          address: string | null
+          agreed_terms: boolean
+          authorized_data_sharing: boolean
+          city: string | null
+          consent_service_updates: boolean
+          created_at: string | null
+          dealer_id: string | null
+          district: string | null
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string
+          phone: string
+          postcode: string | null
+          preferred_communication: string[] | null
+          state: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          agreed_terms?: boolean
+          authorized_data_sharing?: boolean
+          city?: string | null
+          consent_service_updates?: boolean
+          created_at?: string | null
+          dealer_id?: string | null
+          district?: string | null
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          phone: string
+          postcode?: string | null
+          preferred_communication?: string[] | null
+          state?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          agreed_terms?: boolean
+          authorized_data_sharing?: boolean
+          city?: string | null
+          consent_service_updates?: boolean
+          created_at?: string | null
+          dealer_id?: string | null
+          district?: string | null
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone?: string
+          postcode?: string | null
+          preferred_communication?: string[] | null
+          state?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customers_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_documents: {
         Row: {
           additional_docs: Json | null
@@ -353,36 +459,36 @@ export type Database = {
           created_at: string | null
           dealer_id: string
           email: string | null
+          employee_id: string
           id: string
           login_enabled: boolean | null
           name: string
           password: string
           role: string | null
-          username: string
         }
         Insert: {
           contact_number?: string | null
           created_at?: string | null
           dealer_id: string
           email?: string | null
+          employee_id: string
           id?: string
           login_enabled?: boolean | null
           name: string
           password: string
           role?: string | null
-          username: string
         }
         Update: {
           contact_number?: string | null
           created_at?: string | null
           dealer_id?: string
           email?: string | null
+          employee_id?: string
           id?: string
           login_enabled?: boolean | null
           name?: string
           password?: string
           role?: string | null
-          username?: string
         }
         Relationships: [
           {
@@ -537,34 +643,25 @@ export type Database = {
           address: string | null
           contact: string | null
           dealer_id: string | null
-          gst_copy: string | null
-          gstin: string | null
           id: string
-          location: string | null
           name: string | null
-          oem: string | null
+          oem: string[] | null
         }
         Insert: {
           address?: string | null
           contact?: string | null
           dealer_id?: string | null
-          gst_copy?: string | null
-          gstin?: string | null
           id?: string
-          location?: string | null
           name?: string | null
-          oem?: string | null
+          oem?: string[] | null
         }
         Update: {
           address?: string | null
           contact?: string | null
           dealer_id?: string | null
-          gst_copy?: string | null
-          gstin?: string | null
           id?: string
-          location?: string | null
           name?: string | null
-          oem?: string | null
+          oem?: string[] | null
         }
         Relationships: [
           {
@@ -582,6 +679,7 @@ export type Database = {
           city: string | null
           created_at: string | null
           created_by: string | null
+          dealer_id: string | null
           dealership_name: string | null
           dealership_type: string | null
           email: string | null
@@ -591,6 +689,10 @@ export type Database = {
           gps_location: string | null
           gst_number: string | null
           id: string
+          is_contact_verified: boolean | null
+          is_email_verified: boolean | null
+          is_master_dealer: boolean | null
+          is_sub_dealer: boolean | null
           login_enabled: boolean | null
           operations_contact_alt: string | null
           operations_contact_name: string | null
@@ -599,18 +701,19 @@ export type Database = {
           owner_email: string | null
           owner_name: string | null
           pan_number: string | null
+          parent_dealer_id: string | null
           password: string | null
           pincode: string | null
           registered_address: string | null
           state: string | null
           support_contact: string | null
-          username: string | null
         }
         Insert: {
           annual_revenue?: string | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
+          dealer_id?: string | null
           dealership_name?: string | null
           dealership_type?: string | null
           email?: string | null
@@ -620,6 +723,10 @@ export type Database = {
           gps_location?: string | null
           gst_number?: string | null
           id?: string
+          is_contact_verified?: boolean | null
+          is_email_verified?: boolean | null
+          is_master_dealer?: boolean | null
+          is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
           operations_contact_alt?: string | null
           operations_contact_name?: string | null
@@ -628,18 +735,19 @@ export type Database = {
           owner_email?: string | null
           owner_name?: string | null
           pan_number?: string | null
+          parent_dealer_id?: string | null
           password?: string | null
           pincode?: string | null
           registered_address?: string | null
           state?: string | null
           support_contact?: string | null
-          username?: string | null
         }
         Update: {
           annual_revenue?: string | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
+          dealer_id?: string | null
           dealership_name?: string | null
           dealership_type?: string | null
           email?: string | null
@@ -649,6 +757,10 @@ export type Database = {
           gps_location?: string | null
           gst_number?: string | null
           id?: string
+          is_contact_verified?: boolean | null
+          is_email_verified?: boolean | null
+          is_master_dealer?: boolean | null
+          is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
           operations_contact_alt?: string | null
           operations_contact_name?: string | null
@@ -657,12 +769,12 @@ export type Database = {
           owner_email?: string | null
           owner_name?: string | null
           pan_number?: string | null
+          parent_dealer_id?: string | null
           password?: string | null
           pincode?: string | null
           registered_address?: string | null
           state?: string | null
           support_contact?: string | null
-          username?: string | null
         }
         Relationships: [
           {
@@ -670,6 +782,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealers_parent_dealer_id_fkey"
+            columns: ["parent_dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
             referencedColumns: ["id"]
           },
         ]
@@ -1090,12 +1209,249 @@ export type Database = {
           },
         ]
       }
+      rsa_features: {
+        Row: {
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
+      rsa_plan_features: {
+        Row: {
+          feature_id: string
+          plan_id: string
+        }
+        Insert: {
+          feature_id: string
+          plan_id: string
+        }
+        Update: {
+          feature_id?: string
+          plan_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsa_plan_features_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_features"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rsa_plan_features_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rsa_plan_sales: {
+        Row: {
+          created_at: string | null
+          dealer_id: string
+          end_date: string
+          id: string
+          paid_amount: number
+          plan_duration_years: number
+          plan_id: string
+          policy_number: string
+          sales_by: string
+          start_date: string
+          status: string | null
+          updated_at: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dealer_id: string
+          end_date: string
+          id?: string
+          paid_amount: number
+          plan_duration_years: number
+          plan_id: string
+          policy_number: string
+          sales_by: string
+          start_date: string
+          status?: string | null
+          updated_at?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dealer_id?: string
+          end_date?: string
+          id?: string
+          paid_amount?: number
+          plan_duration_years?: number
+          plan_id?: string
+          policy_number?: string
+          sales_by?: string
+          start_date?: string
+          status?: string | null
+          updated_at?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsa_plan_sales_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rsa_plan_sales_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rsa_plan_sales_sales_by_fkey"
+            columns: ["sales_by"]
+            isOneToOne: false
+            referencedRelation: "dealer_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rsa_plan_sales_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rsa_plans: {
+        Row: {
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number
+          validity: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price: number
+          validity: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number
+          validity?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          chassis_number: string
+          created_at: string | null
+          customer_id: string
+          dealer_id: string
+          engine_number: string
+          fuel_type: string
+          id: string
+          updated_at: string | null
+          vehicle_category: string
+          vehicle_company: string
+          vehicle_model: string
+          vehicle_registration_number: string
+        }
+        Insert: {
+          chassis_number: string
+          created_at?: string | null
+          customer_id: string
+          dealer_id: string
+          engine_number: string
+          fuel_type: string
+          id?: string
+          updated_at?: string | null
+          vehicle_category: string
+          vehicle_company: string
+          vehicle_model: string
+          vehicle_registration_number: string
+        }
+        Update: {
+          chassis_number?: string
+          created_at?: string | null
+          customer_id?: string
+          dealer_id?: string
+          engine_number?: string
+          fuel_type?: string
+          id?: string
+          updated_at?: string | null
+          vehicle_category?: string
+          vehicle_company?: string
+          vehicle_model?: string
+          vehicle_registration_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicles_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_monthly_sales_chart: {
+        Args: { input_dealer_id: string }
+        Returns: {
+          day: string
+          count: number
+        }[]
+      }
+      get_plan_type_stats: {
+        Args: { dealer_input: string }
+        Returns: {
+          name: string
+          count: number
+          percentage: number
+        }[]
+      }
+      get_top_dealer_employees: {
+        Args: { dealer_input: string }
+        Returns: {
+          name: string
+          total_customers: number
+          total_revenue: number
+        }[]
+      }
     }
     Enums: {
       employment_type_enum: "full_time" | "part_time" | "contractor"

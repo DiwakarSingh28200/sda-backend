@@ -14,12 +14,16 @@ import approvalActionsRoutes from "./approvalActions"
 import approvalInstanceRoutes from "./approvalInstanceRoutes"
 import dealerRoutes from "./dealerRoutes"
 import rsaPlanRoutes from "./rsaPlanRoutes"
+import customerRoutes from "./customerRoutes"
 import { authenticateEmployee } from "../../middleware/authMeddleware"
 import { asyncHandler } from "../../middleware/asyncHandler"
+import policyRoutes from "./policyRoutes"
 
 const router = Router()
 router.use("/auth", authRoutes)
 router.use("/rsa-plans", rsaPlanRoutes)
+router.use("/customers", customerRoutes)
+router.use("/policies", policyRoutes)
 
 // Apply middleware to all routes below
 router.use(asyncHandler(authenticateEmployee))
@@ -37,6 +41,5 @@ router.use("/approval-actions", approvalActionsRoutes)
 router.use("/approval-instances", approvalInstanceRoutes)
 
 router.use("/dealers", dealerRoutes)
-// router.use("/customers", customerRoutes); // Future
 
 export default router
