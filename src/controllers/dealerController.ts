@@ -178,7 +178,7 @@ const humanizeKey = (path: string[]) => {
   return field
     .replace(/_/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, (l) => l.toUpperCase()) // capitalize
+    .replace(/\b\w/g, l => l.toUpperCase()) // capitalize
 }
 
 export const onboardDealerHandler = async (req: Request, res: Response) => {
@@ -256,6 +256,75 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
       message: "Dealer fetched successfully",
       data,
     })
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    })
+  }
+}
+export const getDealerProfileById = async (req: Request, res: Response) => {
+  const { dealer_id } = req.params
+  console.log(dealer_id)
+  try {
+    const { data: dealer, error } = await db
+      .from("dealers")
+      .select("*")
+      .eq("dealer_id", dealer_id)
+      .single()
+
+    if (!dealer?.id) {
+      return res.status(200).json({
+        success: false,
+        message: "Dealer not found",
+        data: null,
+      })
+    }
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch dealer",
+        error: "Unknown error occurred",
+      })
+    }
+
+    if (dealer?.id) {
+      const { data, error } = await db
+        .from("dealers")
+        .select(
+          `
+          *,
+          documents:dealer_documents(*),
+          employees:dealer_employees(*),
+          finance_info:dealer_finance_info(*),
+          services:dealer_services(*),
+          sub_dealerships:dealer_sub_dealerships(*)
+        `
+        )
+        .eq("id", dealer?.id)
+        .single()
+
+      const result = {
+        dealer: {
+          ...data,
+        },
+      }
+
+      if (error) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to fetch dealer",
+          error: error.message,
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Dealer fetched successfully",
+        data: result,
+      })
+    }
   } catch (error: any) {
     return res.status(500).json({
       success: false,
