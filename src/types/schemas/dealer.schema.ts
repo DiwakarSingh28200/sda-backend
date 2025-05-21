@@ -8,7 +8,7 @@ export const DealerSchema = z.object({
   city: z.string().min(1),
   state: z.string().min(1),
   pincode: z.string().min(1),
-  gps_location: z.string().url().optional(),
+  gps_location: z.string().optional(),
   operations_contact_name: z.string().min(1),
   operations_contact_phone: z.string().min(10),
   email: z.string().email("Invalid email"),

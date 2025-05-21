@@ -8,7 +8,6 @@ export const onboardDealerService = async (
   createdBy: string
 ) => {
   try {
-    console.log("payload: ", payload)
     const { dealer, finance_info, documents, employees, services, sub_dealerships } = payload
     const oems = dealer.oems?.map((oem) => oem.toUpperCase())
     const dealer_id = await generateDealerId({
