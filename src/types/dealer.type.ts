@@ -2,7 +2,6 @@ import { Database } from "../types/supabase"
 
 type Dealer = Database["public"]["Tables"]["dealers"]["Insert"]
 type FinanceInfo = Database["public"]["Tables"]["dealer_finance_info"]["Insert"]
-type OEM = Database["public"]["Tables"]["dealer_oems"]["Insert"]
 type Employee = Database["public"]["Tables"]["dealer_employees"]["Insert"]
 type Service = Database["public"]["Tables"]["dealer_services"]["Insert"]
 type SubDealership = Database["public"]["Tables"]["dealer_sub_dealerships"]["Insert"]
@@ -15,8 +14,6 @@ export interface DealerOnboardingPayload {
   }
 
   documents: Omit<Documents, "additional_docs">
-
-  oems: Array<Omit<OEM, "id" | "dealer_id">>
 
   employees?: Array<
     Omit<Employee, "id" | "dealer_id" | "password" | "username" | "login_enabled" | "created_at">

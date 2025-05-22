@@ -2,7 +2,6 @@ import { Database } from "./supabase"
 
 export type Dealer = Database["public"]["Tables"]["dealers"]["Insert"]
 export type FinanceInfo = Database["public"]["Tables"]["dealer_finance_info"]["Insert"]
-export type OEM = Database["public"]["Tables"]["dealer_oems"]["Insert"]
 export type Employee = Database["public"]["Tables"]["dealer_employees"]["Insert"]
 export type Service = Database["public"]["Tables"]["dealer_services"]["Insert"]
 export type Documents = Database["public"]["Tables"]["dealer_documents"]["Insert"]
