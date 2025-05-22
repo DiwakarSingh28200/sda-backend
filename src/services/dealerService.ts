@@ -113,6 +113,8 @@ export const onboardDealerService = async (
       await db.from("dealer_employees").insert(employeeRecords)
     }
 
+    // if new dealer is sub dealer, then we need to update the master dealer sub dealers table entry status to obnoard
+
     if (services?.length) {
       const serviceRecords = services.map((s) => ({
         dealer_id: dealerId,

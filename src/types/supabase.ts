@@ -544,35 +544,6 @@ export type Database = {
           },
         ]
       }
-      dealer_oems: {
-        Row: {
-          dealer_id: string | null
-          id: string
-          oem_name: string | null
-          vehicle_segment: string | null
-        }
-        Insert: {
-          dealer_id?: string | null
-          id?: string
-          oem_name?: string | null
-          vehicle_segment?: string | null
-        }
-        Update: {
-          dealer_id?: string | null
-          id?: string
-          oem_name?: string | null
-          vehicle_segment?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "dealer_oems_dealer_id_fkey"
-            columns: ["dealer_id"]
-            isOneToOne: false
-            referencedRelation: "dealers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       dealer_services: {
         Row: {
           available_days: string[] | null
@@ -643,6 +614,7 @@ export type Database = {
           id: string
           name: string | null
           oems: string[] | null
+          status: string | null
         }
         Insert: {
           address?: string | null
@@ -651,6 +623,7 @@ export type Database = {
           id?: string
           name?: string | null
           oems?: string[] | null
+          status?: string | null
         }
         Update: {
           address?: string | null
@@ -659,6 +632,7 @@ export type Database = {
           id?: string
           name?: string | null
           oems?: string[] | null
+          status?: string | null
         }
         Relationships: [
           {
@@ -1417,6 +1391,303 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      vendor_contacts: {
+        Row: {
+          finance_contact_email: string | null
+          finance_contact_name: string | null
+          finance_contact_number: string | null
+          id: string
+          prefers_email: boolean | null
+          prefers_sms: boolean | null
+          support_contact_email: string | null
+          support_contact_number: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          finance_contact_email?: string | null
+          finance_contact_name?: string | null
+          finance_contact_number?: string | null
+          id?: string
+          prefers_email?: boolean | null
+          prefers_sms?: boolean | null
+          support_contact_email?: string | null
+          support_contact_number?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          finance_contact_email?: string | null
+          finance_contact_name?: string | null
+          finance_contact_number?: string | null
+          id?: string
+          prefers_email?: boolean | null
+          prefers_sms?: boolean | null
+          support_contact_email?: string | null
+          support_contact_number?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_contacts_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_documents: {
+        Row: {
+          address_proof_file_path: string | null
+          cancelled_cheque_file_path: string | null
+          gst_certificate_file_path: string | null
+          gst_number: string | null
+          id: string
+          pan_card_file_path: string | null
+          pan_number: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          address_proof_file_path?: string | null
+          cancelled_cheque_file_path?: string | null
+          gst_certificate_file_path?: string | null
+          gst_number?: string | null
+          id?: string
+          pan_card_file_path?: string | null
+          pan_number?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          address_proof_file_path?: string | null
+          cancelled_cheque_file_path?: string | null
+          gst_certificate_file_path?: string | null
+          gst_number?: string | null
+          id?: string
+          pan_card_file_path?: string | null
+          pan_number?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_documents_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_operating_areas: {
+        Row: {
+          city: string
+          id: string
+          latitude: number
+          longitude: number
+          region: string
+          vendor_id: string | null
+        }
+        Insert: {
+          city: string
+          id?: string
+          latitude: number
+          longitude: number
+          region: string
+          vendor_id?: string | null
+        }
+        Update: {
+          city?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          region?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_operating_areas_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_operations: {
+        Row: {
+          available_days: string[] | null
+          certifications_file_path: string | null
+          coverage_km: number | null
+          estimated_arrival_time_minutes: number | null
+          id: string
+          is_24x7: boolean | null
+          response_time: string | null
+          service_description: string | null
+          time_end: string | null
+          time_start: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          available_days?: string[] | null
+          certifications_file_path?: string | null
+          coverage_km?: number | null
+          estimated_arrival_time_minutes?: number | null
+          id?: string
+          is_24x7?: boolean | null
+          response_time?: string | null
+          service_description?: string | null
+          time_end?: string | null
+          time_start?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          available_days?: string[] | null
+          certifications_file_path?: string | null
+          coverage_km?: number | null
+          estimated_arrival_time_minutes?: number | null
+          id?: string
+          is_24x7?: boolean | null
+          response_time?: string | null
+          service_description?: string | null
+          time_end?: string | null
+          time_start?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_operations_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_pricing: {
+        Row: {
+          id: string
+          night_charges: number | null
+          night_charges_towing: number | null
+          notes: string | null
+          price_list_file_path: string | null
+          price_per_additional_km: number
+          price_per_service: number
+          repair_on_site_price: number | null
+          vendor_id: string | null
+        }
+        Insert: {
+          id?: string
+          night_charges?: number | null
+          night_charges_towing?: number | null
+          notes?: string | null
+          price_list_file_path?: string | null
+          price_per_additional_km: number
+          price_per_service: number
+          repair_on_site_price?: number | null
+          vendor_id?: string | null
+        }
+        Update: {
+          id?: string
+          night_charges?: number | null
+          night_charges_towing?: number | null
+          notes?: string | null
+          price_list_file_path?: string | null
+          price_per_additional_km?: number
+          price_per_service?: number
+          repair_on_site_price?: number | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_pricing_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_services: {
+        Row: {
+          category: string
+          id: string
+          repair_on_site: boolean | null
+          vendor_id: string | null
+        }
+        Insert: {
+          category: string
+          id?: string
+          repair_on_site?: boolean | null
+          vendor_id?: string | null
+        }
+        Update: {
+          category?: string
+          id?: string
+          repair_on_site?: boolean | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_services_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendors: {
+        Row: {
+          address: string
+          city: string
+          created_at: string | null
+          id: string
+          latitude: number
+          longitude: number
+          name: string
+          pincode: string
+          primary_contact_name: string
+          primary_contact_number: string
+          primary_email: string
+          state: string
+          status: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string | null
+          id?: string
+          latitude: number
+          longitude: number
+          name: string
+          pincode: string
+          primary_contact_name: string
+          primary_contact_number: string
+          primary_email: string
+          state: string
+          status?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          pincode?: string
+          primary_contact_name?: string
+          primary_contact_number?: string
+          primary_email?: string
+          state?: string
+          status?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

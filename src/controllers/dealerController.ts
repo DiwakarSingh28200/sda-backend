@@ -178,7 +178,7 @@ const humanizeKey = (path: string[]) => {
   return field
     .replace(/_/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/\b\w/g, l => l.toUpperCase()) // capitalize
+    .replace(/\b\w/g, (l) => l.toUpperCase()) // capitalize
 }
 
 export const onboardDealerHandler = async (req: Request, res: Response) => {
@@ -236,12 +236,15 @@ export const getAllDealers = async (req: Request, res: Response) => {
 export const getDealerByDealerID = async (req: Request, res: Response) => {
   try {
     const { dealer_id } = req.params
+
+    // only get dealer detailes if the dealer is master dealer
     const { data, error } = await db
       .from("dealers")
       .select(
         "id, dealer_id,dealership_name,dealership_type,city,state,owner_name,operations_contact_phone,email,created_at"
       )
       .eq("dealer_id", dealer_id)
+      .eq("is_master_dealer", true)
       .single()
     if (error) {
       return res.status(500).json({
@@ -251,10 +254,19 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
       })
     }
 
+    // also share the sub dealerships with the dealer
+    const { data: subDealerships, error: subDealershipsError } = await db
+      .from("dealer_sub_dealerships")
+      .select("id, name, contact, oems, address")
+      .eq("dealer_id", data.id)
+
     return res.status(200).json({
       success: true,
       message: "Dealer fetched successfully",
-      data,
+      data: {
+        ...data,
+        sub_dealerships: subDealerships,
+      },
     })
   } catch (error: any) {
     return res.status(500).json({
@@ -264,6 +276,7 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
     })
   }
 }
+
 export const getDealerProfileById = async (req: Request, res: Response) => {
   const { dealer_id } = req.params
   try {
@@ -340,6 +353,37 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: error.message,
+    })
+  }
+}
+
+export const getSubDealerLeads = async (req: Request, res: Response) => {
+  try {
+    console.log("getSubDealerLeads running")
+    const { data, error } = await db
+      .from("dealer_sub_dealerships")
+      .select(
+        "id, name, contact, oems, address, master_dealer:dealer_id(id, dealer_id,dealership_name) status"
+      )
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch sub dealers",
+        error: error,
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Sub dealers fetched successfully",
+      data,
+    })
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error,
     })
   }
 }
