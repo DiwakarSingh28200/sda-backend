@@ -266,65 +266,75 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
 }
 export const getDealerProfileById = async (req: Request, res: Response) => {
   const { dealer_id } = req.params
-  console.log(dealer_id)
   try {
-    const { data: dealer, error } = await db
+    const { data: dealerData, error } = await db
       .from("dealers")
-      .select("*")
+      .select(
+        `
+        *,
+        documents:dealer_documents(*),
+        employees:dealer_employees(name, role, contact_number, email),
+        finance_info:dealer_finance_info(*),
+        services:dealer_services(*),
+        sub_dealerships:dealer_sub_dealerships(*)
+      `
+      )
       .eq("dealer_id", dealer_id)
       .single()
 
-    if (!dealer?.id) {
-      return res.status(200).json({
+    if (!dealerData && error) {
+      return res.status(404).json({
         success: false,
         message: "Dealer not found",
-        data: null,
-      })
-    }
-    if (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Failed to fetch dealer",
-        error: "Unknown error occurred",
       })
     }
 
-    if (dealer?.id) {
-      const { data, error } = await db
-        .from("dealers")
-        .select(
-          `
-          *,
-          documents:dealer_documents(*),
-          employees:dealer_employees(*),
-          finance_info:dealer_finance_info(*),
-          services:dealer_services(*),
-          sub_dealerships:dealer_sub_dealerships(*)
-        `
-        )
-        .eq("id", dealer?.id)
-        .single()
-
-      const result = {
-        dealer: {
-          ...data,
-        },
-      }
-
-      if (error) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to fetch dealer",
-          error: error.message,
-        })
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Dealer fetched successfully",
-        data: result,
-      })
+    // Restructure the response
+    const response = {
+      dealer: {
+        id: dealerData.id,
+        dealership_type: dealerData.dealership_type,
+        dealership_name: dealerData.dealership_name,
+        registered_address: dealerData.registered_address,
+        city: dealerData.city,
+        state: dealerData.state,
+        pincode: dealerData.pincode,
+        gps_location: dealerData.gps_location,
+        operations_contact_name: dealerData.operations_contact_name,
+        operations_contact_phone: dealerData.operations_contact_phone,
+        email: dealerData.email,
+        owner_name: dealerData.owner_name,
+        owner_contact: dealerData.owner_contact,
+        owner_email: dealerData.owner_email,
+        escalation_name: dealerData.escalation_name,
+        escalation_contact: dealerData.escalation_contact,
+        escalation_email: dealerData.escalation_email,
+        pan_number: dealerData.pan_number,
+        gst_number: dealerData.gst_number,
+        dealer_id: dealerData.dealer_id,
+        login_enabled: dealerData.login_enabled,
+        created_by: dealerData.created_by,
+        created_at: dealerData.created_at,
+        parent_dealer_id: dealerData.parent_dealer_id,
+        is_sub_dealer: dealerData.is_sub_dealer,
+        is_master_dealer: dealerData.is_master_dealer,
+        is_email_verified: dealerData.is_email_verified,
+        is_contact_verified: dealerData.is_contact_verified,
+        vehicle_types: dealerData.vehicle_types,
+        oems: dealerData.oems,
+      },
+      documents: dealerData?.documents[0],
+      finance_info: dealerData.finance_info[0],
+      employees: dealerData.employees,
+      sub_dealerships: dealerData.sub_dealerships,
+      oems: dealerData.oems,
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Dealer found",
+      data: response,
+    })
   } catch (error: any) {
     return res.status(500).json({
       success: false,
