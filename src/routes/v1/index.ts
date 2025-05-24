@@ -18,6 +18,7 @@ import customerRoutes from "./customerRoutes"
 import { authenticateEmployee } from "../../middleware/authMeddleware"
 import { asyncHandler } from "../../middleware/asyncHandler"
 import policyRoutes from "./policyRoutes"
+import vendorRoutes from "./vendorRoutes"
 
 const router = Router()
 router.use("/auth", authRoutes)
@@ -41,5 +42,6 @@ router.use("/approval-actions", approvalActionsRoutes)
 router.use("/approval-instances", approvalInstanceRoutes)
 
 router.use("/dealers", dealerRoutes)
+router.use("/vendors", vendorRoutes)
 
 export default router
