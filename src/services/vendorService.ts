@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import { generateVendorId } from "../utils/idGenerators"
 
 export const createVendor = async (input: VendorOnboardingPayload, createdBy: string) => {
-  const { vendor, services, operatingAreas, pricing, operations, contacts, documents, bank_info } =
+  const { vendor, services, operatingAreas, pricing, operations, contacts, documents, bankInfo } =
     input
 
   // check if vendor already exists
@@ -88,7 +88,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
   // Insert bank info
   const { error: bankInfoError } = await db
     .from("vendor_bank_info")
-    .insert([{ ...bank_info, vendor_id }])
+    .insert([{ ...bankInfo, vendor_id }])
   if (bankInfoError) throw bankInfoError
 
   // Insert operations

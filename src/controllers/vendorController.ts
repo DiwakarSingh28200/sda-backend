@@ -28,10 +28,12 @@ export const handleCreateVendor = async (req: Request, res: Response) => {
   try {
     const createdBy = (req as any).user?.id
     const result = await createVendor(parsed.data, createdBy)
-    res.status(201).json({ success: true, data: result })
+    res.status(201).json({ success: true, message: "Vendor created successfully", data: result })
   } catch (err: any) {
     console.error(err)
-    res.status(500).json({ success: false, error: err.message })
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to create vendor", error: err.message })
   }
 }
 

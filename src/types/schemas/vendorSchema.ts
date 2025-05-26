@@ -79,7 +79,7 @@ export const CreateVendorSchema = z.object({
   services: z.array(ServiceSchema),
   operatingAreas: z.array(LocationSchema),
   pricing: PricingSchema,
-  bank_info: BankInfoSchema,
+  bankInfo: BankInfoSchema,
   operations: OperationSchema,
   contacts: ContactSchema,
   documents: DocumentSchema,

@@ -14,7 +14,7 @@ export interface VendorOnboardingPayload {
   services: Omit<VendorService, "id" | "created_by" | "created_at">[]
   operatingAreas: Omit<VendorOperatingArea, "id" | "created_by" | "created_at">[]
   pricing: Omit<VendorPricing, "id" | "vendor_id" | "created_by" | "created_at">
-  bank_info: Omit<VendorBankInfo, "id" | "vendor_id" | "created_by" | "created_at">
+  bankInfo: Omit<VendorBankInfo, "id" | "vendor_id" | "created_by" | "created_at">
   operations: Omit<VendorOperations, "id" | "vendor_id" | "created_by" | "created_at">
   contacts: Omit<VendorContacts, "id" | "vendor_id" | "created_by" | "created_at">
   documents: Omit<VendorDocuments, "id" | "vendor_id" | "created_by" | "created_at">
