@@ -1544,7 +1544,7 @@ export type Database = {
           available_days: string[] | null
           certifications_file_path: string | null
           coverage_km: number | null
-          estimated_arrival_time_minutes: number | null
+          estimated_arrival_time_minutes: string | null
           id: string
           is_24x7: boolean | null
           response_time: string | null
@@ -1557,7 +1557,7 @@ export type Database = {
           available_days?: string[] | null
           certifications_file_path?: string | null
           coverage_km?: number | null
-          estimated_arrival_time_minutes?: number | null
+          estimated_arrival_time_minutes?: string | null
           id?: string
           is_24x7?: boolean | null
           response_time?: string | null
@@ -1570,7 +1570,7 @@ export type Database = {
           available_days?: string[] | null
           certifications_file_path?: string | null
           coverage_km?: number | null
-          estimated_arrival_time_minutes?: number | null
+          estimated_arrival_time_minutes?: string | null
           id?: string
           is_24x7?: boolean | null
           response_time?: string | null

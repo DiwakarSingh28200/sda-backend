@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { CreateVendorSchema } from "../types/schemas/vendorSchema"
-import { createVendor } from "../services/vendorService"
+import { createVendor, getAllVendors, getVendorById } from "../services/vendorService"
 
 const humanizeKey = (path: string[]) => {
   const field = path[path.length - 1]
@@ -33,4 +33,15 @@ export const handleCreateVendor = async (req: Request, res: Response) => {
     console.error(err)
     res.status(500).json({ success: false, error: err.message })
   }
+}
+
+export const handleGetVendorById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const result = await getVendorById(id)
+  res.status(200).json({ success: true, data: result })
+}
+
+export const handleGetAllVendors = async (req: Request, res: Response) => {
+  const result = await getAllVendors()
+  res.status(200).json({ success: true, data: result })
 }

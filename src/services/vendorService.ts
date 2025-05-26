@@ -114,3 +114,21 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   return { vendor_id }
 }
+
+export const getVendorById = async (id: string) => {
+  const { data, error } = await db.from("vendors").select("*").eq("id", id).single()
+  if (error) throw error
+  return data
+}
+
+export const getAllVendors = async () => {
+  console.log("getAllVendors")
+  const { data, error } = await db
+    .from("vendors")
+    // .select("id, vendor_id, name, city, state, status, location_url, created_by(id, name), created_at")
+    .select("*")
+    .order("created_at", { ascending: false })
+  if (error) throw error
+  console.log("getAllVendors", data)
+  return data
+}
