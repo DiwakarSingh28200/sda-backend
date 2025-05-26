@@ -4,7 +4,8 @@ import bcrypt from "bcrypt"
 import { generateVendorId } from "../utils/idGenerators"
 
 export const createVendor = async (input: VendorOnboardingPayload, createdBy: string) => {
-  const { vendor, services, operatingAreas, pricing, operations, contacts, documents } = input
+  const { vendor, services, operatingAreas, pricing, operations, contacts, documents, bank_info } =
+    input
 
   // check if vendor already exists
   const { data: existingVendor } = await db
@@ -46,7 +47,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   // Insert services
   if (services.length) {
-    const servicePayload = services.map(s => ({
+    const servicePayload = services.map((s) => ({
       vendor_id,
       category: s.category,
       repair_on_site: s.repair_on_site,
@@ -57,7 +58,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   // Insert operating areas
   if (operatingAreas.length) {
-    const areaPayload = operatingAreas.map(a => ({
+    const areaPayload = operatingAreas.map((a) => ({
       vendor_id,
       region: a.region,
       city: a.city,
@@ -83,6 +84,12 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
     },
   ])
   if (pricingError) throw pricingError
+
+  // Insert bank info
+  const { error: bankInfoError } = await db
+    .from("vendor_bank_info")
+    .insert([{ ...bank_info, vendor_id }])
+  if (bankInfoError) throw bankInfoError
 
   // Insert operations
   const { error: opsError } = await db
@@ -177,7 +184,7 @@ export const getVendorById = async (id: string) => {
       },
     },
     coverage: {
-      operating_areas: data.operating_areas.map(area => ({
+      operating_areas: data.operating_areas.map((area) => ({
         city: area.city,
         region: area.region,
         location: area.location,
@@ -215,7 +222,7 @@ export const getVendorById = async (id: string) => {
       notes: data.pricing[0]?.notes,
       price_list_file: data.pricing[0]?.price_list_file_path,
     },
-    services: data.services.map(service => ({
+    services: data.services.map((service) => ({
       category: service.category,
       repair_on_site: service.repair_on_site,
     })),

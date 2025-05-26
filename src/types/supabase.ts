@@ -1416,6 +1416,47 @@ export type Database = {
           },
         ]
       }
+      vendor_bank_info: {
+        Row: {
+          account_holder_name: string
+          account_number: string
+          bank_name: string
+          cancelled_cheque_file_path: string | null
+          created_at: string | null
+          id: string
+          ifsc_code: string
+          vendor_id: string | null
+        }
+        Insert: {
+          account_holder_name: string
+          account_number: string
+          bank_name: string
+          cancelled_cheque_file_path?: string | null
+          created_at?: string | null
+          id?: string
+          ifsc_code: string
+          vendor_id?: string | null
+        }
+        Update: {
+          account_holder_name?: string
+          account_number?: string
+          bank_name?: string
+          cancelled_cheque_file_path?: string | null
+          created_at?: string | null
+          id?: string
+          ifsc_code?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_bank_info_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendor_contacts: {
         Row: {
           finance_contact_email: string | null

@@ -54,6 +54,14 @@ const DocumentSchema = z.object({
   cancelled_cheque_file_path: z.string(),
 })
 
+const BankInfoSchema = z.object({
+  bank_name: z.string(),
+  account_number: z.string(),
+  account_holder_name: z.string(),
+  ifsc_code: z.string(),
+  cancelled_cheque_file_path: z.string().nullable(),
+})
+
 export const CreateVendorSchema = z.object({
   vendor: z.object({
     type: z.string(),
@@ -71,6 +79,7 @@ export const CreateVendorSchema = z.object({
   services: z.array(ServiceSchema),
   operatingAreas: z.array(LocationSchema),
   pricing: PricingSchema,
+  bank_info: BankInfoSchema,
   operations: OperationSchema,
   contacts: ContactSchema,
   documents: DocumentSchema,
