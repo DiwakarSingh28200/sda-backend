@@ -133,7 +133,8 @@ export const getVendorById = async (id: string) => {
       operating_areas:vendor_operating_areas(*),
       operations:vendor_operations(*),
       pricing:vendor_pricing(*),
-      services:vendor_services(*)
+      services:vendor_services(*),
+      bank_info:vendor_bank_info(*)
     `
     )
     .eq("vendor_id", id)
@@ -226,6 +227,13 @@ export const getVendorById = async (id: string) => {
       category: service.category,
       repair_on_site: service.repair_on_site,
     })),
+    bank_info: {
+      bank_name: data.bank_info[0]?.bank_name,
+      account_number: data.bank_info[0]?.account_number,
+      account_holder_name: data.bank_info[0]?.account_holder_name,
+      ifsc_code: data.bank_info[0]?.ifsc_code,
+      cancelled_cheque: data.bank_info[0]?.cancelled_cheque_file_path,
+    },
   }
 }
 
