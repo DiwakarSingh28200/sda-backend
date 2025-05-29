@@ -546,55 +546,31 @@ export type Database = {
       }
       dealer_services: {
         Row: {
-          available_days: string[] | null
+          additional_price: boolean | null
+          day_charge: number | null
           dealer_id: string | null
           fixed_distance_charge: number | null
           id: string
-          is_24x7: boolean | null
-          night_price: number | null
-          operation_location: string | null
-          price_list_file: string | null
-          price_per_km: number | null
-          price_per_service: number | null
-          repair_on_site: boolean | null
-          repair_price: number | null
+          night_charge: string | null
           service_name: string | null
-          time_end: string | null
-          time_start: string | null
         }
         Insert: {
-          available_days?: string[] | null
+          additional_price?: boolean | null
+          day_charge?: number | null
           dealer_id?: string | null
           fixed_distance_charge?: number | null
           id?: string
-          is_24x7?: boolean | null
-          night_price?: number | null
-          operation_location?: string | null
-          price_list_file?: string | null
-          price_per_km?: number | null
-          price_per_service?: number | null
-          repair_on_site?: boolean | null
-          repair_price?: number | null
+          night_charge?: string | null
           service_name?: string | null
-          time_end?: string | null
-          time_start?: string | null
         }
         Update: {
-          available_days?: string[] | null
+          additional_price?: boolean | null
+          day_charge?: number | null
           dealer_id?: string | null
           fixed_distance_charge?: number | null
           id?: string
-          is_24x7?: boolean | null
-          night_price?: number | null
-          operation_location?: string | null
-          price_list_file?: string | null
-          price_per_km?: number | null
-          price_per_service?: number | null
-          repair_on_site?: boolean | null
-          repair_price?: number | null
+          night_charge?: string | null
           service_name?: string | null
-          time_end?: string | null
-          time_start?: string | null
         }
         Relationships: [
           {
@@ -613,7 +589,7 @@ export type Database = {
           dealer_id: string | null
           id: string
           name: string | null
-          oems: string[] | null
+          oem: string | null
           status: string | null
         }
         Insert: {
@@ -622,7 +598,7 @@ export type Database = {
           dealer_id?: string | null
           id?: string
           name?: string | null
-          oems?: string[] | null
+          oem?: string | null
           status?: string | null
         }
         Update: {
@@ -631,7 +607,7 @@ export type Database = {
           dealer_id?: string | null
           id?: string
           name?: string | null
-          oems?: string[] | null
+          oem?: string | null
           status?: string | null
         }
         Relationships: [
@@ -646,6 +622,7 @@ export type Database = {
       }
       dealers: {
         Row: {
+          available_days: string[] | null
           city: string | null
           created_at: string | null
           created_by: string | null
@@ -664,7 +641,8 @@ export type Database = {
           is_master_dealer: boolean | null
           is_sub_dealer: boolean | null
           login_enabled: boolean | null
-          oems: string[] | null
+          oem: string | null
+          operation_location: string | null
           operations_contact_name: string | null
           operations_contact_phone: string | null
           owner_contact: string | null
@@ -674,11 +652,16 @@ export type Database = {
           parent_dealer_id: string | null
           password: string | null
           pincode: string | null
+          price_list_file: string | null
           registered_address: string | null
+          repair_on_site: boolean | null
           state: string | null
+          time_end: string | null
+          time_start: string | null
           vehicle_types: string[] | null
         }
         Insert: {
+          available_days?: string[] | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -697,7 +680,8 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
-          oems?: string[] | null
+          oem?: string | null
+          operation_location?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
           owner_contact?: string | null
@@ -707,11 +691,16 @@ export type Database = {
           parent_dealer_id?: string | null
           password?: string | null
           pincode?: string | null
+          price_list_file?: string | null
           registered_address?: string | null
+          repair_on_site?: boolean | null
           state?: string | null
+          time_end?: string | null
+          time_start?: string | null
           vehicle_types?: string[] | null
         }
         Update: {
+          available_days?: string[] | null
           city?: string | null
           created_at?: string | null
           created_by?: string | null
@@ -730,7 +719,8 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
-          oems?: string[] | null
+          oem?: string | null
+          operation_location?: string | null
           operations_contact_name?: string | null
           operations_contact_phone?: string | null
           owner_contact?: string | null
@@ -740,8 +730,12 @@ export type Database = {
           parent_dealer_id?: string | null
           password?: string | null
           pincode?: string | null
+          price_list_file?: string | null
           registered_address?: string | null
+          repair_on_site?: boolean | null
           state?: string | null
+          time_end?: string | null
+          time_start?: string | null
           vehicle_types?: string[] | null
         }
         Relationships: [

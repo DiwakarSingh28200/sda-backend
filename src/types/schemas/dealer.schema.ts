@@ -20,31 +20,34 @@ export const DealerSchema = z.object({
   escalation_email: z.string().optional(),
   pan_number: z.string().min(6, "PAN number must be 6 characters"),
   gst_number: z.string().min(1),
+  dealer_id: z.string().optional(),
+  password: z.string().optional(),
+  login_enabled: z.boolean().optional().default(false),
+  created_by: z.string().uuid().optional(),
+  created_at: z.string().datetime().optional(),
+  parent_dealer_id: z.string().uuid().optional(),
+  is_sub_dealer: z.boolean().optional().default(false),
+  is_master_dealer: z.boolean().optional().default(false),
+  is_email_verified: z.boolean().optional().default(false),
+  is_contact_verified: z.boolean().optional().default(false),
   vehicle_types: z.array(z.string()).optional(),
-  is_rsa_support: z.boolean().optional(),
-  parent_dealer_id: z.string().optional(),
-  is_sub_dealer: z.boolean().optional(),
-  is_master_dealer: z.boolean().optional(),
-  is_email_verified: z.boolean().optional(),
-  is_contact_verified: z.boolean().optional(),
-  oems: z.array(z.string()).optional(),
+  available_days: z.array(z.string()).optional(),
+  operation_location: z.string().optional(),
+  time_start: z.string().optional(),
+  time_end: z.string().optional(),
+  price_list_file: z.string().optional(),
+  repair_on_site: z.boolean().optional(),
+  oem: z.string().optional(),
 })
 
 // 🔹 Services
 export const ServiceSchema = z.object({
-  rsa_support: z.boolean().optional(),
-  operation_location: z.string().optional(),
-  price_per_service: z.number().optional(),
-  price_per_km: z.number().optional(),
-  repair_on_site: z.boolean().optional(),
-  repair_price: z.number().optional(),
-  night_price: z.number().optional(),
-  price_list_file: z.string().optional(),
+  dealer_id: z.string().uuid().optional(),
+  service_name: z.string().optional(),
+  night_charge: z.string().optional(),
+  day_charge: z.number().optional(),
   fixed_distance_charge: z.number().optional(),
-  is_24x7: z.boolean().optional(),
-  time_start: z.string().optional(),
-  time_end: z.string().optional(),
-  available_days: z.array(z.string()).optional(),
+  additional_price: z.boolean().optional(),
 })
 
 // 🔹 OEMs (vehicle_segment is optional as per frontend)
@@ -76,7 +79,7 @@ export const SubDealershipSchema = z.object({
   name: z.string().min(1),
   contact: z.string().min(10),
   address: z.string().min(1),
-  oems: z.array(z.string().min(1)).min(1),
+  oem: z.string().min(1),
 })
 
 // 🔹 Employees

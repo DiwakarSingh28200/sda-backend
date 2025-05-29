@@ -9,10 +9,10 @@ export const onboardDealerService = async (
 ) => {
   try {
     const { dealer, finance_info, documents, employees, services, sub_dealerships } = payload
-    const oems = dealer.oems?.map((oem) => oem.toUpperCase())
+    const oem = dealer.oem?.toUpperCase()
     const dealer_id = await generateDealerId({
       state: dealer.state!,
-      oemCode: oems![0]!.substring(0, 3),
+      oemCode: oem?.substring(0, 3) || "DFL",
       isSubDealer: dealer.is_sub_dealer!,
       parentDealerId: dealer.parent_dealer_id!,
     })
@@ -66,8 +66,14 @@ export const onboardDealerService = async (
         is_email_verified: dealer.is_email_verified,
         is_contact_verified: dealer.is_contact_verified,
         dealer_id,
-        oems: dealer.oems,
+        oem: oem,
         vehicle_types: dealer.vehicle_types,
+        available_days: dealer.available_days,
+        operation_location: dealer.operation_location,
+        time_start: dealer.time_start,
+        time_end: dealer.time_end,
+        price_list_file: dealer.price_list_file,
+        repair_on_site: dealer.repair_on_site,
         created_by: createdBy,
       })
       .select()
@@ -118,21 +124,12 @@ export const onboardDealerService = async (
     if (services?.length) {
       const serviceRecords = services.map((s) => ({
         dealer_id: dealerId,
-        operation_location: s.operation_location || "Main Office",
-        service_name: s.service_name || "General Service",
-        price_per_service: Number(s.price_per_service) || 0,
-        price_per_km: Number(s.price_per_km) || 0,
-        repair_on_site: s.repair_on_site,
-        repair_price: Number(s.repair_price) || 0,
-        night_price: Number(s.night_price) || 0,
-        price_list_file: s.price_list_file,
-        fixed_distance_charge: Number(s.fixed_distance_charge) || 0,
-        is_24x7: s.is_24x7,
-        time_start: s.time_start || null,
-        time_end: s.time_end || null,
-        available_days: s.available_days,
+        service_name: s.service_name,
+        night_charge: s.night_charge,
+        day_charge: s.day_charge,
+        fixed_distance_charge: s.fixed_distance_charge,
+        additional_price: s.additional_price,
       }))
-
       await db.from("dealer_services").insert(serviceRecords)
     }
 
@@ -141,7 +138,7 @@ export const onboardDealerService = async (
         dealer_id: dealerId,
         name: sub.name,
         contact: sub.contact,
-        oems: sub.oems,
+        oem: sub.oem,
         address: sub.address,
       }))
       await db.from("dealer_sub_dealerships").insert(subDealerRecords)

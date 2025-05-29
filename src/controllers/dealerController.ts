@@ -334,13 +334,13 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
         is_email_verified: dealerData.is_email_verified,
         is_contact_verified: dealerData.is_contact_verified,
         vehicle_types: dealerData.vehicle_types,
-        oems: dealerData.oems,
+        oems: [dealerData.oem],
       },
       documents: dealerData?.documents[0],
       finance_info: dealerData.finance_info[0],
       employees: dealerData.employees,
       sub_dealerships: dealerData.sub_dealerships,
-      oems: dealerData.oems,
+      oems: [dealerData.oem],
     }
 
     return res.status(200).json({
