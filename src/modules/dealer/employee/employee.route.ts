@@ -1,9 +1,24 @@
 import { Router } from "express"
-import { getDealerEmployeeByDealerIDHandler } from "./employee.controller"
+import {
+  addDealerEmployeeHandler,
+  deleteDealerEmployeeHandler,
+  getDealerEmployeeByDealerIDHandler,
+  updateDealerEmployeeHandler,
+} from "./employee.controller"
 import { asyncHandler } from "../../../utils/asyncHandler"
+import { authenticateDealer } from "../../../middleware/dealerAuth.middleware"
 
 const router = Router()
 
-router.get("/:dealer_id", asyncHandler(getDealerEmployeeByDealerIDHandler))
+// /employees/
 
+router.get("/:dealer_id", asyncHandler(getDealerEmployeeByDealerIDHandler))
+router.get("/:dealer_id/employees", asyncHandler(getDealerEmployeeByDealerIDHandler))
+router.post("/add", authenticateDealer, asyncHandler(addDealerEmployeeHandler))
+router.put("/update/:employee_id", authenticateDealer, asyncHandler(updateDealerEmployeeHandler))
+router.delete(
+  "/delete/:employee_id",
+  authenticateDealer,
+  asyncHandler(deleteDealerEmployeeHandler)
+)
 export default router

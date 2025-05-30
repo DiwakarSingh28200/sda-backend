@@ -9,7 +9,9 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
 
   const { data: emp } = await db
     .from("dealer_employees")
-    .select("id, name, employee_id, password, role, email, dealer:dealer_id(id, dealership_name)")
+    .select(
+      "id, name, employee_id, password, role, email, dealer:dealer_id(id, dealership_name, oem)"
+    )
     .eq("employee_id", employee_id)
     .single()
 
@@ -57,6 +59,7 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
         role: emp.role || "employee",
         email: emp.email || null,
         type: "employee",
+        oem: emp.dealer.oem,
       },
       roles: ["employee"],
       permissions: [],
@@ -67,7 +70,7 @@ export const loginDealerEmployeeService = async (body: DealerEmployeeLoginInput)
 export const getLoggedInDealerEmployeeService = async (id: string) => {
   const { data: emp } = await db
     .from("dealer_employees")
-    .select("id, name, employee_id, role, email, dealer:dealer_id(id, dealership_name)")
+    .select("id, name, employee_id, role, email, dealer:dealer_id(id, dealership_name, oem)")
     .eq("id", id)
     .single()
 
@@ -93,6 +96,7 @@ export const getLoggedInDealerEmployeeService = async (id: string) => {
         role: emp.role || "employee",
         type: "employee",
         email: emp.email || null,
+        oem: emp.dealer.oem,
       },
       roles: ["employee"],
       permissions: [],

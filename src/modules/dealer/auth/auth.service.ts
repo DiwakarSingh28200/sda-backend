@@ -11,7 +11,7 @@ export const loginDealerService = async (body: DealerLoginInput) => {
 
   const { data: dealer } = await db
     .from("dealers")
-    .select("id, dealer_id, dealership_name, email, password, is_sub_dealer")
+    .select("id, dealer_id, dealership_name, email, password, is_sub_dealer, oem")
     .eq("dealer_id", dealer_id)
     .single()
 
@@ -58,6 +58,7 @@ export const loginDealerService = async (body: DealerLoginInput) => {
         role: "admin",
         email: dealer.email || null,
         type: "admin",
+        oem: dealer.oem,
       },
       roles: ["admin"],
       permissions: ["*"],
@@ -68,7 +69,7 @@ export const loginDealerService = async (body: DealerLoginInput) => {
 export const getLoggedInDealerService = async (dealerId: string) => {
   const { data: dealer } = await db
     .from("dealers")
-    .select("id, dealer_id, dealership_name, email, is_sub_dealer")
+    .select("id, dealer_id, dealership_name, email, is_sub_dealer, oem")
     .eq("id", dealerId)
     .single()
 
@@ -93,6 +94,7 @@ export const getLoggedInDealerService = async (dealerId: string) => {
         role: "admin",
         email: dealer.email || null,
         type: "admin",
+        oem: dealer.oem,
       },
       roles: ["admin"],
       permissions: ["*"],

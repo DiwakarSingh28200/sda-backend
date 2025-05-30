@@ -9,7 +9,7 @@ export async function generateDealerId({
   state: string
   oemCode: string
   isSubDealer?: boolean
-  parentDealerId?: string // required for sub-dealer
+  parentDealerId?: string
 }): Promise<string> {
   const normalizedState = state
     .trim()
@@ -20,50 +20,66 @@ export async function generateDealerId({
   const stateCode = STATE_CODE_MAP[normalizedState]
   if (!stateCode) throw new Error(`State code not found for: ${state}`)
 
-  const prefix = `${stateCode}${oemCode.toUpperCase()}`
+  const basePrefix = `${stateCode}${oemCode.toUpperCase()}`
 
   if (isSubDealer) {
     if (!parentDealerId) throw new Error("Parent dealer ID is required for sub-dealer")
-
-    // Get all sub-dealers under parent
-    const { data: subs, error } = await db
+    const { data: parentDealer, error: parentDealerError } = await db
       .from("dealers")
       .select("dealer_id")
-      .eq("parent_dealer_id", parentDealerId)
+      .eq("id", parentDealerId)
+      .single()
 
-    if (error) throw new Error("Failed to count sub-dealers")
-    const subIndex = (subs?.length || 0) + 1
-    return `${prefix}${String(subIndex).padStart(3, "0")}S`
+    const masterIdPrefix = parentDealer?.dealer_id?.replace(/M$/, "")
+
+    // Get existing sub-dealers under this master dealer
+    const { data: existingSubs, error } = await db
+      .from("dealers")
+      .select("dealer_id")
+      .ilike("dealer_id", `${masterIdPrefix}S%`)
+
+    if (error) throw new Error("Failed to fetch sub-dealers")
+
+    const subIndex = (existingSubs?.length || 0) + 1
+    const subSuffix = String(subIndex).padStart(2, "0")
+    return `${masterIdPrefix}S${subSuffix}` // e.g. DLTVS001S01
   }
 
-  // For master dealer: get count of existing dealers in this STATE+OEM
-  const { data: existing, error } = await db
+  // For master dealers: Get next available sequence
+  const { data: existingMasters, error } = await db
     .from("dealers")
     .select("dealer_id")
-    .ilike("dealer_id", `${prefix}%`)
+    .ilike("dealer_id", `${basePrefix}%M`)
 
-  if (error) throw new Error("Failed to fetch existing dealers")
+  if (error) throw new Error("Failed to fetch master dealers")
 
-  const nextSeq = (existing?.length || 0) + 1
-  return `${prefix}${String(nextSeq).padStart(3, "0")}M`
+  const nextIndex = (existingMasters?.length || 0) + 1
+  const masterSuffix = String(nextIndex).padStart(3, "0")
+  return `${basePrefix}${masterSuffix}M` // e.g. DLTVS001M
 }
 
 // Example: dealerId is like "DLTVS005M"
 export async function generateDealerEmployeeId(dealerId: string): Promise<string> {
-  const base = dealerId.replace(/M$/, "") // remove trailing M if present
+  // Determine prefix
+  const isMasterDealer = dealerId.endsWith("M")
+  const baseId = isMasterDealer ? dealerId.replace(/M$/, "") : dealerId // DLTVS001 or DLTVS001S01
 
-  // Fetch existing employees for that dealer
-  const { data: employees, error } = await db
+  const prefix = `${baseId}E` // e.g. DLTVS001E or DLTVS001S01E
+
+  // Search for existing employees starting with this prefix
+  const { data: existingEmployees } = await db
     .from("dealer_employees")
-    .select("id")
-    .ilike("id", `${base}E%`)
+    .select("employee_id")
+    .ilike("employee_id", `${prefix}%`)
 
-  if (error) throw new Error("Failed to fetch employee count")
+  console.log("existingEmployees", existingEmployees)
 
-  const count = employees?.length || 0
-  const next = String(count + 1).padStart(3, "0")
+  const nextIndex = (existingEmployees?.length || 0) + 1
+  const padded = String(nextIndex).padStart(3, "0")
 
-  return `${base}E${next}` // e.g. DLTVS005E001
+  console.log("prefix", `${prefix}${padded}`)
+
+  return `${prefix}${padded}` // e.g. DLTVS001E001 or DLTVS001S01E001
 }
 
 export const STATE_CODE_MAP: Record<string, string> = {
