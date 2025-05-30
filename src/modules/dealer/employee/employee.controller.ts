@@ -19,8 +19,9 @@ export const getDealerEmployeeByDealerIDHandler = async (req: Request, res: Resp
 
 export const addDealerEmployeeHandler = async (req: Request, res: Response) => {
   const { name, email, role, contact_number } = req.body
-  const dealerId = req.dealer?.dealer_id
-  console.log("dealerId", dealerId)
+  const dealerId = req.dealer?.id
+  const dealer_id = req.dealer?.dealer_id
+
   if (!name || !email || !role || !contact_number) {
     return res.status(400).json({
       status: 400,
@@ -28,7 +29,14 @@ export const addDealerEmployeeHandler = async (req: Request, res: Response) => {
       message: "All fields are required",
     })
   }
-  const result = await addDealerEmployeeService(dealerId!, name, email, role, contact_number)
+  const result = await addDealerEmployeeService(
+    dealerId!,
+    dealer_id!,
+    name,
+    email,
+    role,
+    contact_number
+  )
   if (!result) {
     return res.status(400).json({
       status: 400,

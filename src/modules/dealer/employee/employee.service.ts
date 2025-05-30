@@ -17,6 +17,7 @@ export const getDealerEmployeeByDealerIDService = async (dealer_id: string) => {
 
 // Add dealer employee
 export const addDealerEmployeeService = async (
+  dealerId: string,
   dealer_id: string,
   name: string,
   email: string,
@@ -53,7 +54,7 @@ export const addDealerEmployeeService = async (
 
     if (empId) {
       const record = {
-        dealer_id,
+        dealer_id: dealerId,
         name,
         role,
         contact_number,
@@ -62,7 +63,7 @@ export const addDealerEmployeeService = async (
         password: dealerHashedPassword,
         login_enabled: true,
       }
-      console.log("record", record)
+
       const { data, error } = await db.from("dealer_employees").insert(record)
 
       if (error) {
