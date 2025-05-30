@@ -546,30 +546,30 @@ export type Database = {
       }
       dealer_services: {
         Row: {
-          additional_price: boolean | null
+          additional_price: number | null
           day_charge: number | null
           dealer_id: string | null
           fixed_distance_charge: number | null
           id: string
-          night_charge: string | null
+          night_charge: number | null
           service_name: string | null
         }
         Insert: {
-          additional_price?: boolean | null
+          additional_price?: number | null
           day_charge?: number | null
           dealer_id?: string | null
           fixed_distance_charge?: number | null
           id?: string
-          night_charge?: string | null
+          night_charge?: number | null
           service_name?: string | null
         }
         Update: {
-          additional_price?: boolean | null
+          additional_price?: number | null
           day_charge?: number | null
           dealer_id?: string | null
           fixed_distance_charge?: number | null
           id?: string
-          night_charge?: string | null
+          night_charge?: number | null
           service_name?: string | null
         }
         Relationships: [

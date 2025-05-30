@@ -44,10 +44,10 @@ export const DealerSchema = z.object({
 export const ServiceSchema = z.object({
   dealer_id: z.string().uuid().optional(),
   service_name: z.string().optional(),
-  night_charge: z.string().optional(),
+  night_charge: z.number().optional(),
   day_charge: z.number().optional(),
   fixed_distance_charge: z.number().optional(),
-  additional_price: z.boolean().optional(),
+  additional_price: z.number().optional(),
 })
 
 // 🔹 OEMs (vehicle_segment is optional as per frontend)
@@ -68,9 +68,9 @@ export const FinanceInfoSchema = z.object({
   bank_name: z.string().min(1),
   account_number: z.string().min(6),
   ifsc_code: z.string().min(6),
-  finance_contact_name: z.string().min(1),
-  finance_contact_email: z.string().email(),
-  finance_contact_phone: z.string().min(10),
+  finance_contact_name: z.string().optional(),
+  finance_contact_email: z.string().optional(),
+  finance_contact_phone: z.string().optional(),
   cancelled_cheque_file: z.string().url(),
 })
 
