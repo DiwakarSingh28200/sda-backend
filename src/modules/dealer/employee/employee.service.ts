@@ -98,33 +98,25 @@ export const updateDealerEmployeeService = async (
   role: string,
   contact_number: string
 ) => {
-  try {
-    const { data, error } = await db
-      .from("dealer_employees")
-      .update({ name, email, role, contact_number })
-      .eq("dealer_id", dealer_id)
-      .eq("employee_id", employee_id)
+  const { data, error } = await db
+    .from("dealer_employees")
+    .update({ name, email, role, contact_number })
+    .eq("id", employee_id)
+    .eq("dealer_id", dealer_id)
 
-    if (error) {
-      return {
-        status: 500,
-        success: false,
-        message: error.message,
-      }
-    }
-
-    return {
-      status: 200,
-      success: true,
-      message: "Employee updated successfully",
-      data: data,
-    }
-  } catch (error: any) {
+  if (error) {
     return {
       status: 500,
       success: false,
       message: error.message,
     }
+  }
+
+  return {
+    status: 200,
+    success: true,
+    message: "Employee updated successfully",
+    data: data,
   }
 }
 
@@ -132,8 +124,8 @@ export const deleteDealerEmployeeService = async (dealer_id: string, employee_id
   const { data, error } = await db
     .from("dealer_employees")
     .delete()
+    .eq("id", employee_id)
     .eq("dealer_id", dealer_id)
-    .eq("employee_id", employee_id)
 
   if (error) {
     return {

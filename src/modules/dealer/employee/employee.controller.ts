@@ -56,7 +56,11 @@ export const updateDealerEmployeeHandler = async (req: Request, res: Response) =
   const { employee_id } = req.params
   const { name, email, role, contact_number } = req.body
 
+  console.log("employee_id", employee_id)
+  console.log("Body", req.body)
+
   const dealerId = req.dealer?.id
+  console.log("dealerId", dealerId)
   if (!dealerId || !name || !email || !role || !contact_number || !employee_id) {
     return res.status(400).json({
       status: 400,
