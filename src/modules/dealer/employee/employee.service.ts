@@ -7,6 +7,7 @@ export const getDealerEmployeeByDealerIDService = async (dealer_id: string) => {
     .from("dealer_employees")
     .select("id, employee_id, name, email, role, contact_number, created_at")
     .eq("dealer_id", dealer_id)
+    .order("created_at", { ascending: false })
 
   if (error) {
     throw new Error(error.message)
