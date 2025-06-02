@@ -5,6 +5,7 @@ import {
   getTopEmployeesService,
   getPlanTypeStatsService,
 } from "./dashboard.service"
+import moment from "moment"
 
 export const getDealerMetricsHandler = async (req: Request, res: Response) => {
   const dealer_id = req.dealer?.id!
@@ -16,14 +17,55 @@ export const getDealerMetricsHandler = async (req: Request, res: Response) => {
   })
 }
 
+// export const getSalesChartHandler = async (req: Request, res: Response) => {
+//   const dealer_id = req.dealer?.id!
+//   const data = await getSalesChartService(dealer_id)
+//   return res.status(200).json({
+//     success: true,
+//     message: "Sales chart fetched successfully",
+//     data,
+//   })
+// }
+
 export const getSalesChartHandler = async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.id!
-  const data = await getSalesChartService(dealer_id)
-  return res.status(200).json({
-    success: true,
-    message: "Sales chart fetched successfully",
-    data,
-  })
+  const {
+    dealer_id,
+    range = "monthly",
+    month,
+    year,
+  } = req.query as {
+    dealer_id?: string
+    range?: "7d" | "monthly" | "quarterly" | "yearly"
+    month?: string
+    year?: string
+  }
+
+  if (!dealer_id) {
+    return res.status(400).json({
+      success: false,
+      message: "dealer_id is required",
+    })
+  }
+
+  try {
+    const data = await getSalesChartService({
+      dealer_id,
+      range,
+      month: month ? parseInt(month) : undefined,
+      year: year ? parseInt(year) : undefined,
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: "Sales chart fetched successfully",
+      data,
+    })
+  } catch (err: any) {
+    return res.status(500).json({
+      success: false,
+      message: err.message || "Failed to fetch sales chart",
+    })
+  }
 }
 
 export const getTopEmployeesHandler = async (req: Request, res: Response) => {
