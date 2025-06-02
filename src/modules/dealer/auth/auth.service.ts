@@ -32,6 +32,12 @@ export const loginDealerService = async (body: DealerLoginInput) => {
     }
   }
 
+  // lets find dealer has any sub dealer
+  const { data: subDealer } = await db
+    .from("dealers")
+    .select("id, dealer_id, dealership_name, email, password, is_sub_dealer, oem")
+    .eq("parent_dealer_id", dealer.id)
+
   const token = jwt.sign(
     {
       id: dealer.id,
@@ -43,6 +49,18 @@ export const loginDealerService = async (body: DealerLoginInput) => {
     process.env.JWT_SECRET!,
     { expiresIn: "30d" }
   )
+
+  const filteredSubDealer =
+    subDealer &&
+    subDealer.map((dealer) => ({
+      id: dealer.id,
+      name: dealer.dealership_name,
+      dealer_id: dealer.dealer_id,
+      role: "sub_dealer",
+      email: dealer.email,
+      type: "sub_dealer",
+      oem: dealer.oem,
+    }))
 
   return {
     status: 200,
@@ -60,6 +78,8 @@ export const loginDealerService = async (body: DealerLoginInput) => {
         type: "admin",
         oem: dealer.oem,
       },
+      dealer_id: dealer.id,
+      sub_dealers: filteredSubDealer,
       roles: ["admin"],
       permissions: ["*"],
     },
@@ -81,6 +101,24 @@ export const getLoggedInDealerService = async (dealerId: string) => {
     }
   }
 
+  // lets find dealer has any sub dealer
+  const { data: subDealer } = await db
+    .from("dealers")
+    .select("id, dealer_id, dealership_name, email, is_sub_dealer, oem")
+    .eq("parent_dealer_id", dealer.id)
+
+  const filteredSubDealer =
+    subDealer &&
+    subDealer.map((dealer) => ({
+      id: dealer.id,
+      name: dealer.dealership_name,
+      dealer_id: dealer.dealer_id,
+      role: "sub_dealer",
+      email: dealer.email,
+      type: "sub_dealer",
+      oem: dealer.oem,
+    }))
+
   return {
     status: 200,
     success: true,
@@ -96,6 +134,8 @@ export const getLoggedInDealerService = async (dealerId: string) => {
         type: "admin",
         oem: dealer.oem,
       },
+      dealer_id: dealer.id,
+      sub_dealers: filteredSubDealer,
       roles: ["admin"],
       permissions: ["*"],
     },

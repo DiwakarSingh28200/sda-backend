@@ -8,7 +8,7 @@ import {
 import moment from "moment"
 
 export const getDealerMetricsHandler = async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.id!
+  const { dealer_id } = req.params
   const data = await getDealerMetricsService(dealer_id)
   return res.status(200).json({
     success: true,
@@ -16,16 +16,6 @@ export const getDealerMetricsHandler = async (req: Request, res: Response) => {
     data,
   })
 }
-
-// export const getSalesChartHandler = async (req: Request, res: Response) => {
-//   const dealer_id = req.dealer?.id!
-//   const data = await getSalesChartService(dealer_id)
-//   return res.status(200).json({
-//     success: true,
-//     message: "Sales chart fetched successfully",
-//     data,
-//   })
-// }
 
 export const getSalesChartHandler = async (req: Request, res: Response) => {
   const {
@@ -69,8 +59,8 @@ export const getSalesChartHandler = async (req: Request, res: Response) => {
 }
 
 export const getTopEmployeesHandler = async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.id!
-  const data = await getTopEmployeesService(dealer_id)
+  const { dealer_id } = req.query as { dealer_id?: string }
+  const data = await getTopEmployeesService(dealer_id!)
   return res.status(200).json({
     success: true,
     message: "Top performing employees fetched successfully",
@@ -79,7 +69,7 @@ export const getTopEmployeesHandler = async (req: Request, res: Response) => {
 }
 
 export const getPlanTypeStatsHandler = async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.id!
+  const { dealer_id } = req.params
   const data = await getPlanTypeStatsService(dealer_id)
   return res.status(200).json({
     success: true,
