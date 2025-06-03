@@ -35,7 +35,7 @@ export const getDealerProfileService = async (dealer_id: string) => {
     dealer: safeDealer,
     documents: documents.data,
     finance_info: finance_info.data,
-    oems: safeDealer.oems,
+    oems: safeDealer.oem,
     sub_dealerships: sub_dealerships.data,
     employees: employees.data,
   }

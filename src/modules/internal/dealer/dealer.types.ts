@@ -2,7 +2,6 @@ import { Database } from "../../../types/supabase"
 
 export type Dealer = Database["public"]["Tables"]["dealers"]["Insert"]
 export type FinanceInfo = Database["public"]["Tables"]["dealer_finance_info"]["Insert"]
-export type OEM = Database["public"]["Tables"]["dealer_oems"]["Insert"]
 export type Employee = Database["public"]["Tables"]["dealer_employees"]["Insert"]
 export type Service = Database["public"]["Tables"]["dealer_services"]["Insert"]
 export type Documents = Database["public"]["Tables"]["dealer_documents"]["Insert"]
@@ -11,21 +10,12 @@ export type SubDealership = Database["public"]["Tables"]["dealer_sub_dealerships
 export interface DealerOnboardingPayload {
   dealer: Omit<
     Dealer,
-    | "id"
-    | "created_by"
-    | "password"
-    | "login_enabled"
-    | "created_at"
-    | "dealer_id"
-    | "is_sub_dealer"
-    | "parent_dealer_id"
+    "id" | "created_by" | "password" | "login_enabled" | "created_at" | "dealer_id"
   >
 
-  finance_info: Omit<FinanceInfo, "id" | "dealer_id">
+  finance_info: Omit<FinanceInfo, "id">
 
-  documents: Omit<Documents, "id" | "dealer_id" | "additional_docs">
-
-  oems: Array<Omit<OEM, "id" | "dealer_id" | "vehicle_segments">>
+  documents: Omit<Documents, "id" | "additional_docs">
 
   employees?: Array<
     Omit<
@@ -34,7 +24,7 @@ export interface DealerOnboardingPayload {
     >
   >
 
-  services?: Array<Omit<Service, "id" | "dealer_id">>
+  services?: Array<Omit<Service, "id">>
 
-  sub_dealerships?: Array<Omit<SubDealership, "id" | "dealer_id" | "created_by" | "created_at">>
+  sub_dealerships?: Array<Omit<SubDealership, "id" | "created_by" | "created_at">>
 }
