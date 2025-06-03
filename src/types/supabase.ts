@@ -1403,7 +1403,7 @@ export type Database = {
           vehicle_category: string
           vehicle_company: string
           vehicle_model: string
-          vehicle_registration_number: string
+          vehicle_registration_number?: string
         }
         Update: {
           chassis_number?: string
