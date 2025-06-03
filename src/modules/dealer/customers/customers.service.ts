@@ -21,7 +21,7 @@ const generatePolicyNumber = (
     .trim()
     .replace(/\s+/g, " ")
     .toLowerCase()
-    .replace(/\b\w/g, c => c.toUpperCase())
+    .replace(/\b\w/g, (c) => c.toUpperCase())
 
   const stateCode = STATE_CODE_MAP[normalizedState]
   return `${stateCode}${oemCode}${serialStr}${year}${planCode}`
@@ -80,13 +80,13 @@ export const createCustomerService = async (
       })
       .select()
       .single()
-    if (customerErr)
-      throw new Error("Customer insert failed: " + customerErr.message)
+    if (customerErr) throw new Error("Customer insert failed: " + customerErr.message)
     customer_id = cust.id
 
     const vehiclePayload = {
       ...vehicle,
       customer_id,
+      vehicle_registration_number: vehicle.vehicle_registration_number || "",
       dealer_id: employee.dealer_id,
     }
     const { data: veh, error: vehicleErr } = await db
@@ -94,8 +94,7 @@ export const createCustomerService = async (
       .insert([vehiclePayload])
       .select()
       .single()
-    if (vehicleErr)
-      throw new Error("Vehicle insert failed: " + vehicleErr.message)
+    if (vehicleErr) throw new Error("Vehicle insert failed: " + vehicleErr.message)
     vehicle_id = veh.id
 
     const serialNumber = Math.floor(Math.random() * 1000000)
@@ -108,15 +107,9 @@ export const createCustomerService = async (
       .single()
 
     const planCodeMap = { standard: "S", premium: "P", elite: "E" }
-    const planCode =
-      planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
+    const planCode = planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
 
-    const policyNumber = generatePolicyNumber(
-      customer.state,
-      oemCode,
-      serialNumber,
-      planCode
-    )
+    const policyNumber = generatePolicyNumber(customer.state, oemCode, serialNumber, planCode)
 
     const rsaPayload: RsaPlanSaleInsert = {
       vehicle_id,
@@ -131,9 +124,7 @@ export const createCustomerService = async (
       status: "active",
     }
 
-    const { error: planErr } = await db
-      .from("rsa_plan_sales")
-      .insert([rsaPayload])
+    const { error: planErr } = await db.from("rsa_plan_sales").insert([rsaPayload])
     if (planErr) throw new Error("RSA Plan insert failed: " + planErr.message)
 
     const hashedPassword = await bcrypt.hash("Welcome@123", 10)
@@ -144,9 +135,7 @@ export const createCustomerService = async (
       otp_verified: false,
     }
 
-    const { error: loginErr } = await db
-      .from("customer_logins")
-      .insert([loginPayload])
+    const { error: loginErr } = await db.from("customer_logins").insert([loginPayload])
     if (loginErr) throw new Error("Login insert failed: " + loginErr.message)
 
     return {
@@ -171,10 +160,7 @@ export const createCustomerService = async (
 
 export const getAllCustomersService = async (id: string) => {
   try {
-    const { data, error } = await db
-      .from("customers")
-      .select("*")
-      .eq("dealer_id", id)
+    const { data, error } = await db.from("customers").select("*").eq("dealer_id", id)
     if (error) throw new Error("Customers fetch failed: " + error.message)
     return data
   } catch (error: any) {

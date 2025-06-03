@@ -1,7 +1,6 @@
 import { Request, Response } from "express"
 import { createCustomerService, getAllCustomersService } from "./customers.service"
 import { CustomerOnboardSchema } from "./customers.schema"
-import { ZodError } from "zod"
 const humanizeKey = (path: string[]) => {
   const field = path[path.length - 1]
   return field
@@ -11,7 +10,6 @@ const humanizeKey = (path: string[]) => {
 }
 export const createCustomerHandler = async (req: Request, res: Response) => {
   try {
-    console.log("req.body", req.body)
     const parsed = CustomerOnboardSchema.safeParse(req.body)
 
     if (!parsed.success) {

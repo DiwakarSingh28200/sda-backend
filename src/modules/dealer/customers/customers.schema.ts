@@ -21,11 +21,12 @@ export const CustomerOnboardSchema = z.object({
   vehicle: z.object({
     vehicle_company: z.string().min(1),
     vehicle_model: z.string().min(1),
-    vehicle_registration_number: z.string().min(1),
+    vehicle_registration_number: z.string().optional(),
     chassis_number: z.string().min(1),
     engine_number: z.string().min(1),
     vehicle_category: z.string().min(1),
     fuel_type: z.string().min(1),
+    registration_type: z.string(),
     dealer_id: z.string().uuid().optional(),
   }),
 
