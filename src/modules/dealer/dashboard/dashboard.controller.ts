@@ -8,7 +8,14 @@ import {
 import moment from "moment"
 
 export const getDealerMetricsHandler = async (req: Request, res: Response) => {
-  const { dealer_id } = req.params
+  const { dealer_id } = req.query as { dealer_id?: string }
+
+  if (!dealer_id) {
+    return res.status(400).json({
+      success: false,
+      message: "dealer_id is required",
+    })
+  }
   const data = await getDealerMetricsService(dealer_id)
   return res.status(200).json({
     success: true,
@@ -60,6 +67,14 @@ export const getSalesChartHandler = async (req: Request, res: Response) => {
 
 export const getTopEmployeesHandler = async (req: Request, res: Response) => {
   const { dealer_id } = req.query as { dealer_id?: string }
+
+  if (!dealer_id) {
+    return res.status(400).json({
+      success: false,
+      message: "dealer_id is required",
+    })
+  }
+
   const data = await getTopEmployeesService(dealer_id!)
   return res.status(200).json({
     success: true,
@@ -69,7 +84,14 @@ export const getTopEmployeesHandler = async (req: Request, res: Response) => {
 }
 
 export const getPlanTypeStatsHandler = async (req: Request, res: Response) => {
-  const { dealer_id } = req.params
+  const { dealer_id } = req.query as { dealer_id?: string }
+
+  if (!dealer_id) {
+    return res.status(400).json({
+      success: false,
+      message: "dealer_id is required",
+    })
+  }
   const data = await getPlanTypeStatsService(dealer_id)
   return res.status(200).json({
     success: true,

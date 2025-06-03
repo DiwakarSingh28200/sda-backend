@@ -2293,13 +2293,9 @@ export type Database = {
           count: number
         }[]
       }
-      get_top_dealer_employees: {
-        Args: { dealer_input: string }
-        Returns: {
-          name: string
-          total_customers: number
-          total_revenue: number
-        }[]
+      get_top_employees_by_dealer: {
+        Args: { dealer_id: string }
+        Returns: Database["public"]["CompositeTypes"]["top_dealer_employee"][]
       }
       gettransactionid: {
         Args: Record<PropertyKey, never>
@@ -3612,6 +3608,11 @@ export type Database = {
       geometry_dump: {
         path: number[] | null
         geom: unknown | null
+      }
+      top_dealer_employee: {
+        name: string | null
+        total_customers: number | null
+        total_revenue: number | null
       }
       valid_detail: {
         valid: boolean | null

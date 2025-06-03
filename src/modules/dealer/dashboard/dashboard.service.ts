@@ -130,16 +130,55 @@ export const getSalesChartService = async ({
 
 // 🟨 3. Top Employees
 export const getTopEmployeesService = async (dealer_id: string) => {
-  const { data, error } = await db.rpc("get_top_dealer_employees", { dealer_input: dealer_id })
+  console.log("getTopEmployeesService dealer_id", dealer_id)
+
+  const { data, error } = await db
+    .from("rsa_plan_sales")
+    .select(
+      `
+      sales_by,
+      paid_amount,
+      dealer_employees!sales_by (
+        name
+      )
+    `
+    )
+    .eq("dealer_id", dealer_id)
 
   if (error) throw new Error(error.message)
 
-  return data.map((emp, index) => ({
-    rank: index + 1,
-    name: emp.name,
-    total_customers: emp.total_customers,
-    total_revenue: emp.total_revenue,
-  }))
+  // Aggregate by employee
+  const employeeStats: Record<
+    string,
+    { name: string; total_customers: number; total_revenue: number }
+  > = {}
+
+  for (const sale of data) {
+    const employeeId = sale.sales_by
+    const name = sale.dealer_employees?.name ?? "Unknown"
+
+    if (!employeeStats[employeeId]) {
+      employeeStats[employeeId] = {
+        name,
+        total_customers: 0,
+        total_revenue: 0,
+      }
+    }
+
+    employeeStats[employeeId].total_customers += 1
+    employeeStats[employeeId].total_revenue += Number(sale.paid_amount || 0)
+  }
+
+  // Convert to sorted array
+  const topEmployees = Object.values(employeeStats)
+    .sort((a, b) => b.total_customers - a.total_customers)
+    .slice(0, 4)
+    .map((emp, index) => ({
+      rank: index + 1,
+      ...emp,
+    }))
+
+  return topEmployees
 }
 
 // 🟪 4. Plan Type Breakdown
