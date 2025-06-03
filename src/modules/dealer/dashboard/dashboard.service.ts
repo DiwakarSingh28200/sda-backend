@@ -193,3 +193,97 @@ export const getPlanTypeStatsService = async (dealer_id: string) => {
     percentage: plan.percentage,
   }))
 }
+
+export const getEmployeeSalesStats = async (dealer_id: string, employee_id: string) => {
+  const { data, error } = await db
+    .from("rsa_plan_sales")
+    .select("*")
+    .eq("dealer_id", dealer_id)
+    .eq("sales_by", employee_id)
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  // We want data like plan sold, total amount and onboarded customers
+  const planSold = data.length
+  const totalAmount = data.reduce((acc, curr) => acc + curr.paid_amount, 0)
+  const onboardedCustomers = data.reduce((acc, curr) => acc + 1, 0)
+
+  return {
+    plan_sold: planSold,
+    total_amount: totalAmount,
+    onboarded_customers: onboardedCustomers,
+  }
+}
+
+type EmployeeSalesChartPayload = {
+  employee_id: string
+  range?: "7d" | "monthly" | "quarterly" | "yearly"
+  month?: number
+  year?: number
+}
+
+export const getEmployeeSalesChartService = async ({
+  employee_id,
+  range = "monthly",
+  month,
+  year,
+}: EmployeeSalesChartPayload) => {
+  const { data, error } = await db.rpc("get_employee_sales_chart", {
+    input_employee_id: employee_id,
+    range_type: range,
+    input_month: month ?? undefined,
+    input_year: year ?? undefined,
+  })
+
+  if (error) throw new Error(error.message)
+
+  let result: any = []
+
+  if (range === "7d") {
+    const last7Days = Array.from({ length: 7 }, (_, i) =>
+      moment()
+        .subtract(6 - i, "days")
+        .format("YYYY-MM-DD")
+    )
+
+    result = last7Days.map((day) => {
+      const found = data.find((d) => d.day === day)
+      return { day, count: found?.count || 0 }
+    })
+  } else if (range === "monthly") {
+    const selectedMonth = month ?? moment().month() + 1
+    const selectedYear = year ?? moment().year()
+    const daysInMonth = moment(`${selectedYear}-${selectedMonth}`, "YYYY-MM").daysInMonth()
+
+    result = Array.from({ length: daysInMonth }, (_, i) => {
+      const day = String(i + 1).padStart(2, "0")
+      const found = data.find((d) => d.day === day)
+      return { day, count: found?.count || 0 }
+    })
+  } else if (range === "yearly") {
+    result = Array.from({ length: 12 }, (_, i) => {
+      const monthStr = moment().month(i).format("YYYY-MM")
+      const found = data.find((d) => d.day === monthStr)
+      return { day: monthStr, count: found?.count || 0 }
+    })
+  } else if (range === "quarterly") {
+    const currentYear = year ?? moment().year()
+    const currentQuarter = Math.floor(moment().month() / 3) + 1
+    const startMonth = (currentQuarter - 1) * 3
+
+    const quarterMonths = Array.from({ length: 3 }, (_, i) =>
+      moment()
+        .year(currentYear)
+        .month(startMonth + i)
+        .format("YYYY-MM")
+    )
+
+    result = quarterMonths.map((monthStr) => {
+      const found = data.find((d) => d.day === monthStr)
+      return { day: monthStr, count: found?.count || 0 }
+    })
+  }
+
+  return result
+}

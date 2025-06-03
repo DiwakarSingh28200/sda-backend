@@ -2299,6 +2299,18 @@ export type Database = {
         Args: { "": string }
         Returns: unknown
       }
+      get_employee_sales_chart: {
+        Args: {
+          input_employee_id: string
+          range_type: string
+          input_month?: number
+          input_year?: number
+        }
+        Returns: {
+          day: string
+          count: number
+        }[]
+      }
       get_monthly_sales_chart: {
         Args: { input_dealer_id: string }
         Returns: {

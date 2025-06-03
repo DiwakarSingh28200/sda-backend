@@ -21,4 +21,5 @@ router.delete(
   authenticateDealer,
   asyncHandler(deleteDealerEmployeeHandler)
 )
+
 export default router
