@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { createCustomer } from "../services/customerService"
+import { createCustomer, getCustomerByPhoneNumber } from "../services/customerService"
 import { CustomerOnboardSchema } from "../types/schemas/customerOnboardSchema"
 import { successResponse, errorResponse } from "../utils/apiResponse"
 
@@ -24,5 +24,18 @@ export const createCustomerHandler = async (req: Request, res: Response) => {
     return res.status(201).json(successResponse("Customer onboarded successfully", result))
   } catch (err: any) {
     return res.status(500).json(errorResponse("Something went wrong", err.message))
+  }
+}
+
+export const getCustomerByPhoneNumberHandler = async (req: Request, res: Response) => {
+  const { phoneNumber } = req.params as { phoneNumber: string }
+  if (!phoneNumber) {
+    return res.status(400).json(errorResponse("Phone number is required"))
+  }
+  const customer = await getCustomerByPhoneNumber(phoneNumber)
+  if (customer !== null) {
+    return res.status(200).json(successResponse("Customer fetched successfully", customer))
+  } else {
+    return res.status(404).json(errorResponse("Customer not found"))
   }
 }

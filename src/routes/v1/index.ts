@@ -19,12 +19,14 @@ import { authenticateEmployee } from "../../middleware/authMeddleware"
 import { asyncHandler } from "../../middleware/asyncHandler"
 import policyRoutes from "./policyRoutes"
 import vendorRoutes from "./vendorRoutes"
+import operationsRoutes from "./operationsRoutes"
 
 const router = Router()
 router.use("/auth", authRoutes)
 router.use("/rsa-plans", rsaPlanRoutes)
 router.use("/customers", customerRoutes)
 router.use("/policies", policyRoutes)
+router.use("/operations", operationsRoutes)
 
 // Apply middleware to all routes below
 router.use(asyncHandler(authenticateEmployee))

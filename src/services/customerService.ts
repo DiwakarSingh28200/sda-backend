@@ -103,3 +103,15 @@ export const createCustomer = async (input: any) => {
     }
   }
 }
+
+export const getCustomerByPhoneNumber = async (phoneNumber: string) => {
+  const { data, error } = await db.from("customers").select("*").eq("phone", phoneNumber).single()
+
+  if (error) return null
+
+  if (data) {
+    return data
+  } else {
+    return null
+  }
+}

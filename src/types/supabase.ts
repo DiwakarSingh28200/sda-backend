@@ -2038,6 +2038,16 @@ export type Database = {
         Args: { geom1: unknown; geom2: unknown }
         Returns: boolean
       }
+      find_nearby_vendors: {
+        Args: { lat: number; lng: number; radius_m: number }
+        Returns: {
+          vendor_id: string
+          name: string
+          city: string
+          state: string
+          distance_meters: number
+        }[]
+      }
       geography: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
@@ -2281,13 +2291,21 @@ export type Database = {
         Args: { "": number }
         Returns: string
       }
-      get_top_dealer_employees: {
-        Args: { dealer_input: string }
+      get_sales_chart: {
+        Args: {
+          input_dealer_id: string
+          range_type: string
+          input_month?: number
+          input_year?: number
+        }
         Returns: {
-          name: string
-          total_customers: number
-          total_revenue: number
+          day: string
+          count: number
         }[]
+      }
+      get_top_employees_by_dealer: {
+        Args: { dealer_id: string }
+        Returns: Database["public"]["CompositeTypes"]["top_dealer_employee"][]
       }
       gettransactionid: {
         Args: Record<PropertyKey, never>
@@ -3600,6 +3618,11 @@ export type Database = {
       geometry_dump: {
         path: number[] | null
         geom: unknown | null
+      }
+      top_dealer_employee: {
+        name: string | null
+        total_customers: number | null
+        total_revenue: number | null
       }
       valid_detail: {
         valid: boolean | null

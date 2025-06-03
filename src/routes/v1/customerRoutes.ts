@@ -1,5 +1,8 @@
 import { Router } from "express"
-import { createCustomerHandler } from "../../controllers/customerController"
+import {
+  createCustomerHandler,
+  getCustomerByPhoneNumberHandler,
+} from "../../controllers/customerController"
 import { asyncHandler } from "../../middleware/asyncHandler"
 import { sendOtpHandler, verifyOtpHandler } from "../../controllers/customerOtpController"
 
@@ -13,5 +16,8 @@ router.post("/send-otp", asyncHandler(sendOtpHandler))
 
 // POST /api/customers/verify-otp → verifies code via Twilio
 router.post("/verify-otp", asyncHandler(verifyOtpHandler))
+
+// GET /api/customers/phone-number → get customer by phone number
+router.get("/:phoneNumber", asyncHandler(getCustomerByPhoneNumberHandler))
 
 export default router

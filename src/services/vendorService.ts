@@ -262,3 +262,23 @@ export const getAllVendors = async () => {
   if (error) throw error
   return data
 }
+
+export const getVendorsByLocation = async (lat: number, lng: number, radius_km: number) => {
+  console.log(lat, lng, radius_km)
+
+  const radiusKm = Number(radius_km) || 10
+  const radiusM = radiusKm * 1000
+
+  const { data, error } = await db.rpc("find_nearby_vendors", {
+    lat: lat,
+    lng: lng,
+    radius_m: radiusM,
+  })
+
+  if (error) throw error
+
+  return data.map((vendor) => ({
+    ...vendor,
+    distance_km: (vendor.distance_meters / 1000).toFixed(2),
+  }))
+}
