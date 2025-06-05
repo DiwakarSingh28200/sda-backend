@@ -4,8 +4,7 @@ import bcrypt from "bcrypt"
 import { generateVendorId } from "../utils/idGenerators"
 
 export const createVendor = async (input: VendorOnboardingPayload, createdBy: string) => {
-  const { vendor, services, operatingAreas, pricing, operations, contacts, documents, bankInfo } =
-    input
+  const { vendor, services, operatingAreas, contacts, documents, bankInfo } = input
 
   // check if vendor already exists
   const { data: existingVendor } = await db
@@ -34,6 +33,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
         vendor_id: vendorId,
         password: hashedPassword,
         login_enabled: true,
+        is_active: true,
         created_by: createdBy,
       },
     ])
@@ -47,12 +47,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   // Insert services
   if (services.length) {
-    const servicePayload = services.map((s) => ({
-      vendor_id,
-      category: s.category,
-      repair_on_site: s.repair_on_site,
-    }))
-    const { error: serviceError } = await db.from("vendor_services").insert(servicePayload)
+    const { error: serviceError } = await db.from("vendor_services").insert(services)
     if (serviceError) throw serviceError
   }
 
@@ -70,32 +65,11 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
     if (areaError) throw areaError
   }
 
-  // Insert pricing
-  const { error: pricingError } = await db.from("vendor_pricing").insert([
-    {
-      price_per_service: pricing.price_per_service,
-      price_per_additional_km: pricing.price_per_additional_km,
-      night_charges: pricing.night_charges,
-      night_charges_towing: pricing.night_charges_towing,
-      repair_on_site_price: pricing.repair_on_site_price,
-      price_list_file_path: pricing.price_list_file_path,
-      notes: pricing.notes,
-      vendor_id,
-    },
-  ])
-  if (pricingError) throw pricingError
-
   // Insert bank info
   const { error: bankInfoError } = await db
     .from("vendor_bank_info")
     .insert([{ ...bankInfo, vendor_id }])
   if (bankInfoError) throw bankInfoError
-
-  // Insert operations
-  const { error: opsError } = await db
-    .from("vendor_operations")
-    .insert([{ ...operations, vendor_id }])
-  if (opsError) throw opsError
 
   // Insert contacts
   const { error: contactError } = await db
@@ -144,7 +118,6 @@ export const getVendorById = async (id: string) => {
   return {
     vendor: {
       id: data.id,
-      type: data.type,
       name: data.name,
       address: data.address,
       city: data.city,
@@ -160,6 +133,11 @@ export const getVendorById = async (id: string) => {
       created_at: data.created_at,
       updated_at: data.updated_at,
       created_by: data.created_by,
+      price_list_file: data.price_list_file_path,
+      remark: data.remark,
+      repair_on_site: data.repair_on_site,
+      due_date: data.due_date,
+      is_active: data.is_active,
     },
     documents: {
       gst_number: data.documents[0]?.gst_number,
@@ -175,14 +153,6 @@ export const getVendorById = async (id: string) => {
         email: data.contacts[0]?.finance_contact_email,
         number: data.contacts[0]?.finance_contact_number,
       },
-      support: {
-        email: data.contacts[0]?.support_contact_email,
-        number: data.contacts[0]?.support_contact_number,
-      },
-      preferences: {
-        sms: data.contacts[0]?.prefers_sms,
-        email: data.contacts[0]?.prefers_email,
-      },
     },
     coverage: {
       operating_areas: data.operating_areas.map((area) => ({
@@ -197,35 +167,18 @@ export const getVendorById = async (id: string) => {
     },
     operations: {
       availability: {
-        is_24x7: data.operations[0]?.is_24x7,
-        time_start: data.operations[0]?.time_start,
-        time_end: data.operations[0]?.time_end,
-        available_days: data.operations[0]?.available_days,
+        is_24x7: data.is_24x7,
+        time_start: data.time_start,
+        time_end: data.time_end,
+        available_days: data.available_days,
       },
-      service: {
-        coverage_km: data.operations[0]?.coverage_km,
-        response_time: data.operations[0]?.response_time,
-        description: data.operations[0]?.service_description,
-        estimated_arrival_minutes: data.operations[0]?.estimated_arrival_time_minutes,
-        certifications_file: data.operations[0]?.certifications_file_path,
-      },
-    },
-    pricing: {
-      base: {
-        per_service: data.pricing[0]?.price_per_service,
-        per_additional_km: data.pricing[0]?.price_per_additional_km,
-        repair_on_site: data.pricing[0]?.repair_on_site_price,
-      },
-      additional: {
-        night_charges: data.pricing[0]?.night_charges,
-        night_charges_towing: data.pricing[0]?.night_charges_towing,
-      },
-      notes: data.pricing[0]?.notes,
-      price_list_file: data.pricing[0]?.price_list_file_path,
     },
     services: data.services.map((service) => ({
-      category: service.category,
-      repair_on_site: service.repair_on_site,
+      service_name: service.service_name,
+      night_charge: service.night_charge,
+      day_charge: service.day_charge,
+      fixed_distance_charge: service.fixed_distance_charge,
+      additional_price: service.additional_price,
     })),
     bank_info: {
       bank_name: data.bank_info[0]?.bank_name,

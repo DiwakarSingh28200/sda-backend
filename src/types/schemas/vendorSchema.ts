@@ -4,42 +4,20 @@ import { z } from "zod"
 const LocationSchema = z.object({
   region: z.string(),
   city: z.string(),
+  location: z.string(),
   latitude: z.number(),
   longitude: z.number(),
 })
 
 const ServiceSchema = z.object({
-  category: z.string(),
-  repair_on_site: z.boolean(),
-})
-
-const PricingSchema = z.object({
-  price_per_service: z.number(),
-  price_per_additional_km: z.number(),
-  repair_on_site_price: z.number().nullable(),
-  night_charges: z.number(),
-  night_charges_towing: z.number().optional(),
-  price_list_file_path: z.string().optional(),
-  notes: z.string().optional(),
-})
-
-const OperationSchema = z.object({
-  service_description: z.string(),
-  response_time: z.string(),
-  certifications_file_path: z.string().optional(),
-  coverage_km: z.number(),
-  estimated_arrival_time_minutes: z.string(),
-  is_24x7: z.boolean().optional(),
-  time_start: z.string(),
-  time_end: z.string(),
-  available_days: z.array(z.string()),
+  service_name: z.string(),
+  night_charge: z.number().optional(),
+  day_charge: z.number().optional(),
+  fixed_distance_charge: z.number().optional(),
+  additional_price: z.number().optional(),
 })
 
 const ContactSchema = z.object({
-  support_contact_number: z.string(),
-  support_contact_email: z.string().optional(),
-  prefers_email: z.boolean().optional(),
-  prefers_sms: z.boolean().optional(),
   finance_contact_name: z.string().optional(),
   finance_contact_email: z.string().optional(),
   finance_contact_number: z.string().optional(),
@@ -59,12 +37,11 @@ const BankInfoSchema = z.object({
   account_number: z.string(),
   account_holder_name: z.string(),
   ifsc_code: z.string(),
-  cancelled_cheque_file_path: z.string().nullable(),
+  cancelled_cheque_file_path: z.string(),
 })
 
 export const CreateVendorSchema = z.object({
   vendor: z.object({
-    type: z.string(),
     name: z.string(),
     address: z.string(),
     city: z.string(),
@@ -73,14 +50,19 @@ export const CreateVendorSchema = z.object({
     primary_contact_name: z.string(),
     primary_contact_number: z.string(),
     primary_email: z.string().email(),
-    status: z.string().default("approved"),
     location_url: z.string(),
+    is_24x7: z.boolean().optional(),
+    time_start: z.string().optional(),
+    time_end: z.string().optional(),
+    available_days: z.array(z.string()),
+    price_list_file_path: z.string().optional(),
+    repair_on_site: z.boolean(),
+    remark: z.string().optional(),
+    due_date: z.string().optional(),
   }),
   services: z.array(ServiceSchema),
   operatingAreas: z.array(LocationSchema),
-  pricing: PricingSchema,
   bankInfo: BankInfoSchema,
-  operations: OperationSchema,
   contacts: ContactSchema,
   documents: DocumentSchema,
 })

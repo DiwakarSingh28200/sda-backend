@@ -279,6 +279,30 @@ export type Database = {
           },
         ]
       }
+      bike_models: {
+        Row: {
+          brand: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          model_name: string
+        }
+        Insert: {
+          brand: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          model_name: string
+        }
+        Update: {
+          brand?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          model_name?: string
+        }
+        Relationships: []
+      }
       contact: {
         Row: {
           created_at: string
@@ -1359,6 +1383,7 @@ export type Database = {
           engine_number: string
           fuel_type: string
           id: string
+          registration_type: string | null
           updated_at: string | null
           vehicle_category: string
           vehicle_company: string
@@ -1373,11 +1398,12 @@ export type Database = {
           engine_number: string
           fuel_type: string
           id?: string
+          registration_type?: string | null
           updated_at?: string | null
           vehicle_category: string
           vehicle_company: string
           vehicle_model: string
-          vehicle_registration_number: string
+          vehicle_registration_number?: string
         }
         Update: {
           chassis_number?: string
@@ -1387,6 +1413,7 @@ export type Database = {
           engine_number?: string
           fuel_type?: string
           id?: string
+          registration_type?: string | null
           updated_at?: string | null
           vehicle_category?: string
           vehicle_company?: string
@@ -1457,10 +1484,6 @@ export type Database = {
           finance_contact_name: string | null
           finance_contact_number: string | null
           id: string
-          prefers_email: boolean | null
-          prefers_sms: boolean | null
-          support_contact_email: string | null
-          support_contact_number: string | null
           vendor_id: string | null
         }
         Insert: {
@@ -1468,10 +1491,6 @@ export type Database = {
           finance_contact_name?: string | null
           finance_contact_number?: string | null
           id?: string
-          prefers_email?: boolean | null
-          prefers_sms?: boolean | null
-          support_contact_email?: string | null
-          support_contact_number?: string | null
           vendor_id?: string | null
         }
         Update: {
@@ -1479,10 +1498,6 @@ export type Database = {
           finance_contact_name?: string | null
           finance_contact_number?: string | null
           id?: string
-          prefers_email?: boolean | null
-          prefers_sms?: boolean | null
-          support_contact_email?: string | null
-          support_contact_number?: string | null
           vendor_id?: string | null
         }
         Relationships: [
@@ -1574,56 +1589,6 @@ export type Database = {
           },
         ]
       }
-      vendor_operations: {
-        Row: {
-          available_days: string[] | null
-          certifications_file_path: string | null
-          coverage_km: number | null
-          estimated_arrival_time_minutes: string | null
-          id: string
-          is_24x7: boolean | null
-          response_time: string | null
-          service_description: string | null
-          time_end: string | null
-          time_start: string | null
-          vendor_id: string | null
-        }
-        Insert: {
-          available_days?: string[] | null
-          certifications_file_path?: string | null
-          coverage_km?: number | null
-          estimated_arrival_time_minutes?: string | null
-          id?: string
-          is_24x7?: boolean | null
-          response_time?: string | null
-          service_description?: string | null
-          time_end?: string | null
-          time_start?: string | null
-          vendor_id?: string | null
-        }
-        Update: {
-          available_days?: string[] | null
-          certifications_file_path?: string | null
-          coverage_km?: number | null
-          estimated_arrival_time_minutes?: string | null
-          id?: string
-          is_24x7?: boolean | null
-          response_time?: string | null
-          service_description?: string | null
-          time_end?: string | null
-          time_start?: string | null
-          vendor_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "vendor_operations_vendor_id_fkey"
-            columns: ["vendor_id"]
-            isOneToOne: false
-            referencedRelation: "vendors"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       vendor_pricing: {
         Row: {
           id: string
@@ -1670,21 +1635,33 @@ export type Database = {
       }
       vendor_services: {
         Row: {
-          category: string
+          additional_price: number | null
+          created_at: string | null
+          day_charge: number | null
+          fixed_distance_charge: number | null
           id: string
-          repair_on_site: boolean | null
+          night_charge: number | null
+          service_name: string | null
           vendor_id: string | null
         }
         Insert: {
-          category: string
+          additional_price?: number | null
+          created_at?: string | null
+          day_charge?: number | null
+          fixed_distance_charge?: number | null
           id?: string
-          repair_on_site?: boolean | null
+          night_charge?: number | null
+          service_name?: string | null
           vendor_id?: string | null
         }
         Update: {
-          category?: string
+          additional_price?: number | null
+          created_at?: string | null
+          day_charge?: number | null
+          fixed_distance_charge?: number | null
           id?: string
-          repair_on_site?: boolean | null
+          night_charge?: number | null
+          service_name?: string | null
           vendor_id?: string | null
         }
         Relationships: [
@@ -1700,61 +1677,85 @@ export type Database = {
       vendors: {
         Row: {
           address: string
+          available_days: string[] | null
           city: string
           created_at: string | null
           created_by: string | null
+          due_date: string | null
           id: string
+          is_24x7: boolean | null
+          is_active: boolean | null
           location_url: string | null
           login_enabled: boolean | null
           name: string
           password: string | null
           pincode: string
+          price_list_file_path: string | null
           primary_contact_name: string
           primary_contact_number: string
           primary_email: string
+          remark: string | null
+          repair_on_site: boolean | null
           state: string
           status: string | null
-          type: string
+          time_end: string | null
+          time_start: string | null
           updated_at: string | null
           vendor_id: string | null
         }
         Insert: {
           address: string
+          available_days?: string[] | null
           city: string
           created_at?: string | null
           created_by?: string | null
+          due_date?: string | null
           id?: string
+          is_24x7?: boolean | null
+          is_active?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name: string
           password?: string | null
           pincode: string
+          price_list_file_path?: string | null
           primary_contact_name: string
           primary_contact_number: string
           primary_email: string
+          remark?: string | null
+          repair_on_site?: boolean | null
           state: string
           status?: string | null
-          type: string
+          time_end?: string | null
+          time_start?: string | null
           updated_at?: string | null
           vendor_id?: string | null
         }
         Update: {
           address?: string
+          available_days?: string[] | null
           city?: string
           created_at?: string | null
           created_by?: string | null
+          due_date?: string | null
           id?: string
+          is_24x7?: boolean | null
+          is_active?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name?: string
           password?: string | null
           pincode?: string
+          price_list_file_path?: string | null
           primary_contact_name?: string
           primary_contact_number?: string
           primary_email?: string
+          remark?: string | null
+          repair_on_site?: boolean | null
           state?: string
           status?: string | null
-          type?: string
+          time_end?: string | null
+          time_start?: string | null
           updated_at?: string | null
           vendor_id?: string | null
         }
@@ -2271,6 +2272,18 @@ export type Database = {
       geomfromewkt: {
         Args: { "": string }
         Returns: unknown
+      }
+      get_employee_sales_chart: {
+        Args: {
+          input_employee_id: string
+          range_type: string
+          input_month?: number
+          input_year?: number
+        }
+        Returns: {
+          day: string
+          count: number
+        }[]
       }
       get_monthly_sales_chart: {
         Args: { input_dealer_id: string }
