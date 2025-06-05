@@ -105,8 +105,6 @@ export const getVendorById = async (id: string) => {
       documents:vendor_documents(*),
       contacts:vendor_contacts(*),
       operating_areas:vendor_operating_areas(*),
-      operations:vendor_operations(*),
-      pricing:vendor_pricing(*),
       services:vendor_services(*),
       bank_info:vendor_bank_info(*)
     `
@@ -196,7 +194,6 @@ export const getAllVendors = async () => {
     .select(
       `
       id,
-      type,
       name, 
       address,
       city,
