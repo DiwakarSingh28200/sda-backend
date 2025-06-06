@@ -7,6 +7,7 @@ import dealerProfileRoutes from "../modules/dealer/profile/profile.route"
 import dashboardRoutes from "../modules/dealer/dashboard/dashboard.routes"
 import dealerEmployeeRoutes from "../modules/dealer/employee/employee.route"
 import bikeModelRoutes from "../modules/dealer/bike-models/bike.router"
+import walletRoutes from "../modules/dealer/wallet/wallet.routes"
 // future: import rsaRoutes, walletRoutes, etc.
 
 const router = Router()
@@ -35,5 +36,7 @@ router.use("/employees", dealerEmployeeRoutes)
 // Bike Models APIs
 router.use("/bike-models", bikeModelRoutes)
 
-// Future protected routes (wallet, rsa, team)
+// Wallet APIs
+router.use("/wallet", walletRoutes)
+
 export default router
