@@ -2121,7 +2121,7 @@ export type Database = {
           created_at?: string | null
           dealer_id?: string | null
           failure_reason?: string | null
-          id: string
+          id?: string
           payout_method?: string | null
           payout_reference?: string | null
           razorpayx_mode?: string | null

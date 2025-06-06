@@ -4,7 +4,9 @@ import {
   getDealerWalletTransactions,
   getWalletByDealerId,
   getWithdrawalHistory,
+  createWithdrawalRequest,
 } from "./wallet.service"
+import { WithdrawalRequestInput } from "./wallet.types"
 
 export const getWalletBalance = asyncHandler(async (req: Request, res: Response) => {
   const dealer_id = req.dealer?.id
@@ -124,6 +126,27 @@ export const getWithdrawalHistoryHandler = asyncHandler(async (req: Request, res
   res.json({
     success: true,
     message: "Withdrawal history fetched successfully",
+    data: result,
+  })
+})
+
+export const createWithdrawalRequestHandler = asyncHandler(async (req: Request, res: Response) => {
+  const dealer_id = req.dealer?.id
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  const { amount, bank_account_id } = req.body as WithdrawalRequestInput
+
+  const result = await createWithdrawalRequest(dealer_id, { amount, bank_account_id })
+
+  res.json({
+    success: true,
+    message: "Withdrawal request created successfully",
     data: result,
   })
 })

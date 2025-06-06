@@ -7,3 +7,8 @@ export const WalletTransactionFilterSchema = z.object({
   limit: z.number().optional(),
   offset: z.number().optional(),
 })
+
+export const DealerWithdrawalRequestSchema = z.object({
+  amount: z.number().min(1, "Amount must be greater than 0"),
+  bank_account_id: z.string().uuid("Invalid bank account ID"),
+})

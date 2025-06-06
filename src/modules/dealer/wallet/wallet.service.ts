@@ -1,5 +1,6 @@
 import { Database } from "../../../types/supabase"
 import { db } from "../../../config/db"
+import { WithdrawalRequestInput } from "./wallet.types"
 
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
@@ -112,4 +113,24 @@ export const getWithdrawalHistory = async (
     next_from: filters.from + withdrawals.length,
     has_more: filters.from + withdrawals.length < (count || 0),
   }
+}
+
+export const createWithdrawalRequest = async (
+  dealer_id: string,
+  payload: WithdrawalRequestInput
+) => {
+  const { data, error } = await db
+    .from("wallet_withdrawals")
+    .insert({
+      dealer_id,
+      amount: payload.amount,
+      bank_account_id: payload.bank_account_id,
+      status: "requested",
+      payout_method: "manual",
+    })
+    .select()
+    .single()
+
+  if (error) throw new Error("Failed to submit withdrawal request")
+  return data
 }
