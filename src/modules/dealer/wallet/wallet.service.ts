@@ -6,7 +6,7 @@ export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
 
   if (error) {
-    throw new Error("Failed to fetch wallet")
+    return null
   }
 
   return data as Database["public"]["Tables"]["wallets"]["Row"]
