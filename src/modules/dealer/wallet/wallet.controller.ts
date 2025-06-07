@@ -74,11 +74,16 @@ export const getTransactionHistory = asyncHandler(async (req: Request, res: Resp
     offset: Number(offset),
   })
 
-  if (!result) {
+  if (result?.transactions.length === 0) {
     return res.status(404).json({
       success: false,
       message: "No transactions found",
-      data: [],
+      data: {
+        transactions: [],
+        total_count: 0,
+        next_from: 0,
+        has_more: false,
+      },
     })
   }
 
@@ -119,7 +124,12 @@ export const getWithdrawalHistoryHandler = asyncHandler(async (req: Request, res
     return res.status(404).json({
       success: false,
       message: "No withdrawals found",
-      data: [],
+      data: {
+        withdrawals: [],
+        total_count: 0,
+        next_from: 0,
+        has_more: false,
+      },
     })
   }
 
@@ -143,6 +153,10 @@ export const createWithdrawalRequestHandler = asyncHandler(async (req: Request, 
   const { amount, bank_account_id } = req.body as WithdrawalRequestInput
 
   const result = await createWithdrawalRequest(dealer_id, { amount, bank_account_id })
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
 
   res.json({
     success: true,

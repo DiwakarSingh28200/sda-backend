@@ -50,7 +50,9 @@ export const getDealerWalletTransactions = async (
     filters.offset + filters.limit - 1
   )
 
-  if (error) throw new Error("Failed to fetch transactions")
+  if (!data) {
+    return null
+  }
 
   const transactions = data.map((tx) => {
     const isCredit = tx.type === "recharge"
@@ -91,7 +93,9 @@ export const getWithdrawalHistory = async (
 
   const { data, count, error } = await query.range(filters.from, to)
 
-  if (error) throw new Error("Failed to fetch withdrawals")
+  if (error) {
+    return null
+  }
 
   const withdrawals = (data || []).map((w) => ({
     id: w.id,
@@ -131,6 +135,17 @@ export const createWithdrawalRequest = async (
     .select()
     .single()
 
-  if (error) throw new Error("Failed to submit withdrawal request")
-  return data
+  console.log(data, error)
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to create withdrawal request",
+    }
+  }
+
+  return {
+    success: true,
+    data,
+  }
 }
