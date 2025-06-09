@@ -90,6 +90,15 @@ export const onboardDealerService = async (
 
     const dealerId = insertedDealer.id
 
+    // Create a new wallet for the dealer
+    await db.from("wallets").insert({
+      dealer_id: dealerId,
+      cash_balance: 0,
+      credits_limit: 30000,
+      credits_used: 0,
+      is_active: true,
+    })
+
     await db.from("dealer_documents").insert({
       dealer_id: dealerId,
       ...documents,
@@ -98,6 +107,15 @@ export const onboardDealerService = async (
     await db.from("dealer_finance_info").insert({
       dealer_id: dealerId,
       ...finance_info,
+    })
+
+    // Entry on bank account in wallet_withdrawal_options
+    await db.from("wallet_withdrawal_options").insert({
+      dealer_id: dealerId,
+      account_holder_name: finance_info.bank_name,
+      account_number: finance_info.account_number,
+      ifsc_code: finance_info.ifsc_code,
+      is_default: true,
     })
 
     const dealerEmpEmpPassword = "Dealer@1234"

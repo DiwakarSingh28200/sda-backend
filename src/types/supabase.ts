@@ -2181,7 +2181,7 @@ export type Database = {
           credits_limit?: number | null
           credits_used?: number | null
           dealer_id?: string | null
-          id: string
+          id?: string
           is_active?: boolean | null
           updated_at?: string | null
         }

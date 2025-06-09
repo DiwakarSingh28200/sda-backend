@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { onboardDealerService, getAllDealersService } from "./dealer.service"
 import { DealerOnboardingSchema } from "./dealer.schema"
+import { zodErrorFormatter } from "../../../utils/index"
 
 // export const onboardDealerHandler = async (
 //   req: Request<{}, {}, DealerOnboardingPayload>,
@@ -14,14 +15,20 @@ export const onboardDealerHandler = async (req: Request, res: Response) => {
   const parsed = DealerOnboardingSchema.safeParse(req.body)
 
   if (!parsed.success) {
+    const messages: string[] = []
+    for (const issue of parsed.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
     return res.status(400).json({
       success: false,
-      message: "Validation failed",
-      error: parsed.error.flatten().fieldErrors,
+      message: messages.join(", "),
     })
   }
+  const createdBy = (req as any).user?.id
 
-  const result = await onboardDealerService(parsed.data, (req as any).user?.id)
+  const result = await onboardDealerService(parsed.data, createdBy)
   return res.status(result.status).json(result)
 }
 
