@@ -5,8 +5,20 @@ import {
   getWalletByDealerId,
   getWithdrawalHistory,
   createWithdrawalRequest,
+  insertManualPaymentRequest,
+  createBankAccount,
+  getBankAccounts,
+  removeBankAccount,
+  markBankAccountAsDefault,
+  updateBankAccount,
 } from "./wallet.service"
 import { WithdrawalRequestInput } from "./wallet.types"
+import {
+  AddBankAccountSchema,
+  ManualPaymentRequestSchema,
+  UpdateBankAccountSchema,
+} from "./wallet.schema"
+import { zodErrorFormatter } from "../../../utils/index"
 
 export const getWalletBalance = asyncHandler(async (req: Request, res: Response) => {
   const dealer_id = req.dealer?.id
@@ -162,5 +174,195 @@ export const createWithdrawalRequestHandler = asyncHandler(async (req: Request, 
     success: true,
     message: "Withdrawal request created successfully",
     data: result,
+  })
+})
+
+export const submitManualPayment = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+  const payload = ManualPaymentRequestSchema.parse(req.body)
+
+  const payment = await insertManualPaymentRequest(dealer_id, payload)
+
+  res.status(201).json({
+    success: true,
+    message: "Manual payment submitted",
+    data: payment,
+  })
+})
+
+export const createBankAccountHandler = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  const parse = AddBankAccountSchema.safeParse(req.body)
+
+  if (!parse.success) {
+    const messages: string[] = []
+    for (const issue of parse.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: messages.join(", "),
+    })
+  }
+
+  const result = await createBankAccount(dealer_id, parse.data)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Bank account created successfully",
+    data: result.data,
+  })
+})
+
+export const updateBankAccountHandler = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+  const id = req.params.id as string
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "Bank account ID is required",
+    })
+  }
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  const parse = UpdateBankAccountSchema.safeParse(req.body)
+
+  if (!parse.success) {
+    const messages: string[] = []
+    for (const issue of parse.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: messages.join(", "),
+    })
+  }
+
+  const result = await updateBankAccount(dealer_id, id, parse.data)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Bank account updated successfully",
+    data: result.data,
+  })
+})
+
+export const listBankAccounts = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  const accounts = await getBankAccounts(dealer_id)
+
+  if (!accounts.success) {
+    return res.status(500).json(accounts)
+  }
+
+  res.json({
+    success: true,
+    message: "Bank accounts fetched",
+    data: accounts,
+  })
+})
+
+export const deleteBankAccount = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+  const id = req.params.id
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "Bank account ID is required",
+    })
+  }
+
+  const result = await removeBankAccount(dealer_id, id)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Bank account deleted successfully",
+  })
+})
+
+export const setDefaultBankAccount = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+  const id = req.params.id as string
+
+  console.log(dealer_id, id)
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "Bank account ID is required",
+    })
+  }
+
+  const result = await markBankAccountAsDefault(dealer_id, id)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Default bank account updated",
+    data: result.data,
   })
 })

@@ -1887,7 +1887,7 @@ export type Database = {
           cashback_percent?: number | null
           created_at?: string | null
           credit_validity_days?: number | null
-          id: string
+          id?: string
           tds_percent?: number | null
         }
         Update: {
@@ -1915,7 +1915,7 @@ export type Database = {
           amount: number
           created_at?: string | null
           dealer_id?: string | null
-          id: string
+          id?: string
           receipt_url?: string | null
           remarks?: string | null
           status?: string | null
@@ -2075,7 +2075,7 @@ export type Database = {
           account_number?: string | null
           created_at?: string | null
           dealer_id?: string | null
-          id: string
+          id?: string
           ifsc_code?: string | null
           is_default?: boolean | null
         }

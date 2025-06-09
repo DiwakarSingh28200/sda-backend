@@ -1,8 +1,8 @@
 import { z } from "zod"
 import {
-  AddBankAccountSchema,
   DealerWithdrawalRequestSchema,
   ManualPaymentApprovalSchema,
+  WalletConfigSchema,
   WalletTransactionFilterSchema,
 } from "./wallet.schema"
 import { Database } from "../../../types/supabase"
@@ -20,9 +20,5 @@ export type WithdrawalRequestInput = z.infer<typeof DealerWithdrawalRequestSchem
 
 export type ManualPaymentApprovalInput = z.infer<typeof ManualPaymentApprovalSchema>
 
-// Wallet Withdrawal Options
-export type WalletWithdrawalOptionsInsert =
-  Database["public"]["Tables"]["wallet_withdrawal_options"]["Insert"]
-
-export type WalletWithdrawalOptionsUpdate =
-  Database["public"]["Tables"]["wallet_withdrawal_options"]["Update"]
+export type WalletConfigInsert = Database["public"]["Tables"]["wallet_config_default"]["Insert"]
+export type WalletConfigInput = z.infer<typeof WalletConfigSchema>

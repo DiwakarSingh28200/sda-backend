@@ -26,10 +26,8 @@ export const ManualPaymentApprovalSchema = z.object({
   verified_by: z.string().uuid("Invalid verified by ID"),
 })
 
-export const AddBankAccountSchema = z.object({
-  account_holder_name: z.string().min(1, "Account holder name is required"),
-  account_number: z.string().min(6, "Account number is required"),
-  ifsc_code: z.string().regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code"),
+export const WalletConfigSchema = z.object({
+  tds_percent: z.number().min(0).max(100),
+  cashback_percent: z.number().min(0).max(100),
+  credit_validity_days: z.number().int().min(1),
 })
-
-export const UpdateBankAccountSchema = AddBankAccountSchema

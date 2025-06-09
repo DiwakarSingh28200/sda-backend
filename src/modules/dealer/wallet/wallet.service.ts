@@ -1,6 +1,11 @@
 import { Database } from "../../../types/supabase"
 import { db } from "../../../config/db"
-import { WithdrawalRequestInput } from "./wallet.types"
+import {
+  ManualPaymentRequestInput,
+  WalletWithdrawalOptionsInsert,
+  WalletWithdrawalOptionsUpdate,
+  WithdrawalRequestInput,
+} from "./wallet.types"
 
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
@@ -144,6 +149,163 @@ export const createWithdrawalRequest = async (
     }
   }
 
+  return {
+    success: true,
+    data,
+  }
+}
+
+export const insertManualPaymentRequest = async (
+  dealer_id: string,
+  payload: ManualPaymentRequestInput
+) => {
+  const { data, error } = await db
+    .from("wallet_manual_payment_requests")
+    .insert({
+      dealer_id,
+      amount: payload.amount,
+      utr_number: payload.utr_number,
+      receipt_url: payload.receipt_url,
+      remarks: payload.remarks,
+      status: "pending",
+    })
+    .select()
+    .single()
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to insert manual payment request",
+    }
+  }
+
+  return {
+    success: true,
+    data,
+  }
+}
+
+export const createBankAccount = async (
+  dealer_id: string,
+  payload: WalletWithdrawalOptionsInsert
+) => {
+  const { data, error } = await db
+    .from("wallet_withdrawal_options")
+    .insert({
+      dealer_id,
+      account_holder_name: payload.account_holder_name,
+      account_number: payload.account_number,
+      ifsc_code: payload.ifsc_code,
+      is_default: false,
+    })
+    .select("*")
+    .single()
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to add bank account",
+    }
+  }
+  return {
+    success: true,
+    data,
+  }
+}
+
+export const getBankAccounts = async (dealer_id: string) => {
+  const { data, error } = await db
+    .from("wallet_withdrawal_options")
+    .select("*")
+    .eq("dealer_id", dealer_id)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to fetch bank accounts",
+    }
+  }
+  return {
+    success: true,
+    data,
+  }
+}
+
+export const removeBankAccount = async (dealer_id: string, id: string) => {
+  const { error } = await db
+    .from("wallet_withdrawal_options")
+    .delete()
+    .eq("dealer_id", dealer_id)
+    .eq("id", id)
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to remove bank account",
+    }
+  }
+  return {
+    success: true,
+    message: "Bank account removed successfully",
+  }
+}
+
+export const markBankAccountAsDefault = async (dealer_id: string, account_id: string) => {
+  // Step 1: Set all to false
+  const { error: clearError } = await db
+    .from("wallet_withdrawal_options")
+    .update({ is_default: false })
+    .eq("dealer_id", dealer_id)
+
+  if (clearError) {
+    return {
+      success: false,
+      message: "Failed to clear previous default",
+    }
+  }
+
+  // Step 2: Set selected one as default
+  const { data, error } = await db
+    .from("wallet_withdrawal_options")
+    .update({ is_default: true })
+    .eq("id", account_id)
+    .eq("dealer_id", dealer_id)
+    .select("*")
+    .single()
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to set default bank account",
+    }
+  }
+
+  return {
+    success: true,
+    data,
+  }
+}
+
+export const updateBankAccount = async (
+  dealer_id: string,
+  id: string,
+  payload: WalletWithdrawalOptionsUpdate
+) => {
+  const { data, error } = await db
+    .from("wallet_withdrawal_options")
+    .update(payload)
+    .eq("id", id)
+    .eq("dealer_id", dealer_id)
+    .select("*")
+    .single()
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to update bank account",
+    }
+  }
   return {
     success: true,
     data,
