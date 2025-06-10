@@ -6,6 +6,7 @@ import {
   updateWalletConfigEntryHandler,
   createWalletConfigEntryHandler,
   getLatestWalletConfigEntryHandler,
+  approveWithdrawal,
 } from "./wallet.controller"
 
 const router = Router()
@@ -18,5 +19,8 @@ router.get("/manual-payment/:id", getManualPaymentRequestByIdHandler)
 router.post("/config", createWalletConfigEntryHandler)
 router.get("/config", getLatestWalletConfigEntryHandler)
 router.put("/config/:id", updateWalletConfigEntryHandler)
+
+// Withdrawals
+router.patch("/withdrawals/:id", approveWithdrawal)
 
 export default router

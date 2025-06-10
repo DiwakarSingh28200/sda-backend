@@ -6,7 +6,7 @@ import {
   WalletTransactionFilterSchema,
 } from "./wallet.schema"
 import { Database } from "../../../types/supabase"
-import { ManualPaymentRequestSchema } from "./wallet.schema"
+import { ApproveWithdrawalSchema, ManualPaymentRequestSchema } from "./wallet.schema"
 
 export type Wallet = Database["public"]["Tables"]["wallets"]["Row"]
 export type Transaction = Database["public"]["Tables"]["wallet_transactions"]["Row"]
@@ -22,3 +22,4 @@ export type ManualPaymentApprovalInput = z.infer<typeof ManualPaymentApprovalSch
 
 export type WalletConfigInsert = Database["public"]["Tables"]["wallet_config_default"]["Insert"]
 export type WalletConfigInput = z.infer<typeof WalletConfigSchema>
+export type ApproveWithdrawalInput = z.infer<typeof ApproveWithdrawalSchema>

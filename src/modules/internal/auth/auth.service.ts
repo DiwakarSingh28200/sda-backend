@@ -104,30 +104,97 @@ export const getAllEmployeesService = async () => {
 }
 
 export const getLoggedInUserService = async (userId: string) => {
-  const { data: employee } = await db
+  // const { data: employee } = await db
+  //   .from("employees")
+  //   .select("id, employee_id, first_name, last_name, department:department_id(id, name)")
+  //   .eq("id", userId)
+  //   .single()
+
+  // if (!employee) {
+  //   return { status: 404, success: false, message: "User not found." }
+  // }
+
+  // const { data: roles } = await db
+  //   .from("employee_roles")
+  //   .select("role_id, roles(role, role_name)")
+  //   .eq("employee_id", employee.id)
+
+  // const roleIds = roles?.map((r) => r.role_id) ?? []
+  // const roleNames = roles?.map((r) => r?.roles?.role_name.toLowerCase().split(" ").join("_")) ?? []
+
+  // const { data: permissions } = await db
+  //   .from("role_permissions")
+  //   .select("permission_id, permissions(name)")
+  //   .in("role_id", roleIds)
+
+  // const permissionNames = permissions?.map((p) => p?.permissions?.name ?? "") ?? []
+
+  // return {
+  //   status: 200,
+  //   success: true,
+  //   message: "Employee retrieved successfully.",
+  //   data: {
+  //     employee: {
+  //       id: employee.id,
+  //       employee_id: employee.employee_id,
+  //       name: `${employee.first_name} ${employee.last_name}`,
+  //       department: employee.department,
+  //     },
+  //     roles: roleNames,
+  //     permissions: permissionNames,
+  //   },
+  // }
+
+  // Step 1: Fetch Employee Using `employee_id
+  const { data: employee, error: employeeError } = await db
     .from("employees")
     .select("id, employee_id, first_name, last_name, department:department_id(id, name)")
     .eq("id", userId)
     .single()
 
-  if (!employee) {
-    return { status: 404, success: false, message: "User not found." }
+  if (employeeError || !employee) {
+    return {
+      status: 404,
+      success: false,
+      message: "User not found.",
+    }
   }
 
-  const { data: roles } = await db
+  // Step 2: Fetch Employee Roles (Using `id`, NOT `employee_id`)
+  const { data: roles, error: rolesError } = await db
     .from("employee_roles")
     .select("role_id, roles(role, role_name)")
     .eq("employee_id", employee.id)
 
-  const roleIds = roles?.map((r) => r.role_id) ?? []
-  const roleNames = roles?.map((r) => r?.roles?.role_name.toLowerCase().split(" ").join("_")) ?? []
+  if (rolesError || !roles.length) {
+    return {
+      success: false,
+      message: "No roles assigned. Contact admin.",
+      error: rolesError?.message,
+      data: roles,
+    }
+  }
 
-  const { data: permissions } = await db
+  const roleIds = roles.map((r: any) => r.role_id)
+  const roleNames = roles.map((r: any) => r.roles.role_name.toLowerCase().split(" ").join("_"))
+
+  // Step 4: Fetch Permissions Based on Roles (Using `role_id`)
+  const { data: permissions, error: permissionsError } = await db
     .from("role_permissions")
     .select("permission_id, permissions(name)")
     .in("role_id", roleIds)
 
-  const permissionNames = permissions?.map((p) => p?.permissions?.name ?? "") ?? []
+  // return res.status(200).json({ success: true, message: "Roles fetched successfully.", data: permissions });
+
+  if (permissionsError) {
+    return {
+      success: false,
+      message: "Error fetching permissions.",
+      error: permissionsError?.message,
+    }
+  }
+
+  const permissionNames = permissions.map((p: any) => p.permissions.name)
 
   return {
     status: 200,

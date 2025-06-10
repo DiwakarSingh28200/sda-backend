@@ -2023,7 +2023,7 @@ export type Database = {
           amount: number
           created_at?: string | null
           dealer_id?: string | null
-          id: string
+          id?: string
           note?: string | null
           reference_id?: string | null
           reference_type?: string | null

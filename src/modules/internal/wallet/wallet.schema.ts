@@ -31,3 +31,13 @@ export const WalletConfigSchema = z.object({
   cashback_percent: z.number().min(0).max(100),
   credit_validity_days: z.number().int().min(1),
 })
+
+export const ApproveWithdrawalSchema = z.object({
+  status: z.literal("paid"), // We only allow marking as "paid"
+  utr_number: z.string().min(5, "UTR number is required"),
+  payout_method: z.string(),
+  payout_reference: z.string().optional(),
+  razorpayx_payout_id: z.string().optional(),
+  razorpayx_status: z.string().optional(),
+  razorpayx_mode: z.string().optional(),
+})

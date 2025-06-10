@@ -7,12 +7,13 @@ import {
   updateManualPaymentStatus,
   getLatestWalletConfigEntry,
   updateWalletConfigEntry,
+  handleWithdrawalApproval,
 } from "./wallet.service"
-import { WithdrawalRequestInput } from "./wallet.types"
 import {
   ManualPaymentApprovalSchema,
   ManualPaymentRequestSchema,
   WalletConfigSchema,
+  ApproveWithdrawalSchema,
 } from "./wallet.schema"
 import { zodErrorFormatter } from "../../../utils/index"
 
@@ -119,5 +120,18 @@ export const updateWalletConfigEntryHandler = asyncHandler(async (req, res) => {
     success: true,
     message: "Wallet config updated",
     data: updated,
+  })
+})
+
+export const approveWithdrawal = asyncHandler(async (req, res) => {
+  const id = req.params.id
+  const payload = ApproveWithdrawalSchema.parse(req.body)
+
+  const result = await handleWithdrawalApproval(id, payload)
+
+  res.json({
+    success: true,
+    message: "Withdrawal marked as paid",
+    data: result,
   })
 })
