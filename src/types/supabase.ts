@@ -4047,6 +4047,10 @@ export type Database = {
         Args: { "": string }
         Returns: number
       }
+      update_wallet_balance_after_withdrawal: {
+        Args: { dealer_id_input: string; deduction_amount: number }
+        Returns: undefined
+      }
       updategeometrysrid: {
         Args: {
           catalogn_name: string

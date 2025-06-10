@@ -134,19 +134,24 @@ export const handleWithdrawalApproval = async (
   withdrawal_id: string,
   payload: ApproveWithdrawalInput
 ) => {
-  // 1. Fetch the withdrawal record
+  // 1. Fetch the withdrawal record first
   const { data: withdrawal, error: fetchError } = await db
     .from("wallet_withdrawals")
     .select("*")
     .eq("id", withdrawal_id)
     .single()
 
-  if (fetchError || !withdrawal) throw new Error("Withdrawal not found")
+  if (fetchError || !withdrawal) {
+    return {
+      success: false,
+      message: "Withdrawal not found",
+    }
+  }
 
   const dealer_id = withdrawal.dealer_id
   const amount = withdrawal.amount
 
-  // 2. Update withdrawal record
+  // 2. Update the withdrawal record
   const { data: updated, error: updateError } = await db
     .from("wallet_withdrawals")
     .update({
@@ -157,24 +162,32 @@ export const handleWithdrawalApproval = async (
       razorpayx_payout_id: payload.razorpayx_payout_id,
       razorpayx_status: payload.razorpayx_status,
       razorpayx_mode: payload.razorpayx_mode,
+      bank_account_id: payload.bank_account_id,
       updated_at: new Date().toISOString(),
     })
     .eq("id", withdrawal_id)
     .select("*")
     .single()
 
-  if (updateError) throw new Error("Failed to update withdrawal")
+  if (updateError) {
+    return {
+      success: false,
+      message: "Failed to update withdrawal",
+    }
+  }
 
-  // 3. Deduct from wallet
-  const { error: balanceError } = await db
-    .from("wallets")
-    .update({ cash_balance: amount })
-    .eq("dealer_id", dealer_id!)
-    .eq("is_active", true)
-    .eq("is_deleted", false)
-    .eq("is_approved", true) // TODO: Check if this is correct
+  // 3. Deduct the amount from wallet
+  const { error: walletError } = await db.rpc("update_wallet_balance_after_withdrawal", {
+    dealer_id_input: dealer_id!,
+    deduction_amount: amount,
+  })
 
-  if (balanceError) throw new Error("Failed to deduct from wallet balance")
+  if (walletError) {
+    return {
+      success: false,
+      message: "Failed to deduct from wallet balance",
+    }
+  }
 
   // 4. Create wallet transaction
   const { error: txnError } = await db.from("wallet_transactions").insert({
@@ -184,10 +197,18 @@ export const handleWithdrawalApproval = async (
     source: payload.payout_method,
     reference_type: "wallet_withdrawal",
     reference_id: withdrawal_id,
-    note: "Withdrawal marked as paid",
+    note: `Withdrawal paid via ${payload.payout_method}`,
   })
 
-  if (txnError) throw new Error("Failed to create wallet transaction")
+  if (txnError) {
+    return {
+      success: false,
+      message: "Failed to create wallet transaction",
+    }
+  }
 
-  return updated
+  return {
+    success: true,
+    data: updated,
+  }
 }
