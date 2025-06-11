@@ -2,10 +2,13 @@ import { Database } from "../../../types/supabase"
 import { db } from "../../../config/db"
 import {
   ManualPaymentRequestInput,
+  WalletPaymentInitiateInput,
   WalletWithdrawalOptionsInsert,
   WalletWithdrawalOptionsUpdate,
   WithdrawalRequestInput,
+  WalletPaymentSuccessInput,
 } from "./wallet.types"
+import crypto from "crypto"
 
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
@@ -309,5 +312,157 @@ export const updateBankAccount = async (
   return {
     success: true,
     data,
+  }
+}
+
+export const initiateWalletPaymentService = async (
+  dealer_id: string,
+  payload: WalletPaymentInitiateInput
+) => {
+  const { razorpay_order_id, amount, discount = 0 } = payload
+  const net_amount = amount - discount
+
+  const { data, error: insertError } = await db
+    .from("wallet_payments")
+    .insert({
+      dealer_id,
+      payment_mode: "razorpay",
+      payment_status: "created",
+      razorpay_order_id,
+      gross_amount: amount,
+      discount,
+      net_amount,
+    })
+    .select("id")
+    .single()
+
+  if (insertError) {
+    return {
+      success: false,
+      message: "Failed to create wallet payment",
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      payment_id: data?.id,
+      razorpay_order_id,
+      amount,
+      discount,
+      net_amount,
+    },
+  }
+}
+
+export const handleWalletPaymentSuccess = async (
+  dealer_id: string,
+  payload: WalletPaymentSuccessInput
+) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = payload
+
+  // Step 1: Verify Razorpay signature
+  const generatedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+    .digest("hex")
+
+  if (generatedSignature !== razorpay_signature) {
+    return {
+      success: false,
+      message: "Invalid Razorpay signature",
+    }
+  }
+
+  // Step 2: Fetch the payment record
+  const { data: payment, error: fetchError } = await db
+    .from("wallet_payments")
+    .select("*")
+    .eq("razorpay_order_id", razorpay_order_id)
+    .eq("dealer_id", dealer_id)
+    .single()
+
+  if (fetchError || !payment) {
+    return {
+      success: false,
+      message: "Payment not found",
+    }
+  }
+
+  if (payment.payment_status === "captured") {
+    return {
+      success: false,
+      message: "Payment already captured",
+    }
+  }
+
+  const net_amount = payment.net_amount
+
+  // Step 3: Update wallet_payments
+  const { error: updateError } = await db
+    .from("wallet_payments")
+    .update({
+      payment_status: "captured",
+      razorpay_payment_id,
+      razorpay_signature,
+      confirmed_at: new Date().toISOString(),
+    })
+    .eq("id", payment.id)
+
+  if (updateError) {
+    return {
+      success: false,
+      message: "Failed to update payment",
+    }
+  }
+
+  // get wallet id from dealer_id
+  const { data: wallet, error: walletError } = await db
+    .from("wallets")
+    .select("id")
+    .eq("dealer_id", dealer_id)
+    .single()
+
+  if (walletError) {
+    return {
+      success: false,
+      message: "Failed to get wallet id",
+    }
+  }
+
+  // Step 4: Insert into wallet_transactions
+  const { error: txnError } = await db.from("wallet_transactions").insert({
+    dealer_id,
+    wallet_id: wallet?.id,
+    amount: net_amount ?? 0,
+    type: "recharge",
+    source: "razorpay",
+    reference_type: "wallet_payment",
+    reference_id: payment.id,
+    note: "Recharge via Razorpay",
+  })
+
+  if (txnError) {
+    return {
+      success: false,
+      message: "Failed to log wallet transaction",
+    }
+  }
+
+  // Step 5: Update wallet balance
+  const { error: balanceError } = await db.rpc("update_wallet_balance_after_recharge", {
+    dealer_id_input: dealer_id,
+    addition_amount: net_amount ?? 0,
+  })
+
+  if (balanceError) throw new Error("Failed to update wallet balance")
+
+  return {
+    success: true,
+    data: {
+      razorpay_order_id,
+      razorpay_payment_id,
+      credited_amount: net_amount,
+    },
   }
 }

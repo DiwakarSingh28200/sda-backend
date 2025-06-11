@@ -9,6 +9,7 @@ import {
   deleteBankAccount,
   setDefaultBankAccount,
   updateBankAccountHandler,
+  initiateWalletPayment,
 } from "./wallet.controller"
 import { authenticateDealer } from "../../../middleware/dealerAuth.middleware"
 
@@ -28,5 +29,9 @@ router.get("/bank-accounts", authenticateDealer, listBankAccounts)
 // router.put("/bank-accounts/:id", authenticateDealer, updateBankAccountHandler)
 router.delete("/bank-accounts/:id", authenticateDealer, deleteBankAccount)
 router.put("/bank-accounts/:id/default", authenticateDealer, setDefaultBankAccount)
+
+// Add money on wallet
+// POST /dealer/wallet/payment → Initiate wallet payment
+router.post("/payment-initiate", authenticateDealer, initiateWalletPayment)
 
 export default router

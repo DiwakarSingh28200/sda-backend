@@ -3,6 +3,8 @@ import {
   AddBankAccountSchema,
   DealerWithdrawalRequestSchema,
   ManualPaymentApprovalSchema,
+  WalletPaymentInitiateSchema,
+  WalletPaymentSuccessSchema,
   WalletTransactionFilterSchema,
 } from "./wallet.schema"
 import { Database } from "../../../types/supabase"
@@ -26,3 +28,7 @@ export type WalletWithdrawalOptionsInsert =
 
 export type WalletWithdrawalOptionsUpdate =
   Database["public"]["Tables"]["wallet_withdrawal_options"]["Update"]
+
+export type WalletPaymentInitiateInput = z.infer<typeof WalletPaymentInitiateSchema>
+
+export type WalletPaymentSuccessInput = z.infer<typeof WalletPaymentSuccessSchema>

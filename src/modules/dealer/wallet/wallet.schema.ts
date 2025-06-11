@@ -33,3 +33,15 @@ export const AddBankAccountSchema = z.object({
 })
 
 export const UpdateBankAccountSchema = AddBankAccountSchema
+
+export const WalletPaymentInitiateSchema = z.object({
+  razorpay_order_id: z.string().min(1, "Razorpay Order ID is required"),
+  amount: z.number().min(1, "Amount must be greater than 0"),
+  discount: z.number().min(0).optional(), // Optional if you want to support cashback/promo
+})
+
+export const WalletPaymentSuccessSchema = z.object({
+  razorpay_order_id: z.string().min(1),
+  razorpay_payment_id: z.string().min(1),
+  razorpay_signature: z.string().min(1),
+})

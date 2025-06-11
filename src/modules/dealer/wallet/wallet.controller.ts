@@ -11,12 +11,16 @@ import {
   removeBankAccount,
   markBankAccountAsDefault,
   updateBankAccount,
+  initiateWalletPaymentService,
+  handleWalletPaymentSuccess,
 } from "./wallet.service"
 import { WithdrawalRequestInput } from "./wallet.types"
 import {
   AddBankAccountSchema,
   ManualPaymentRequestSchema,
   UpdateBankAccountSchema,
+  WalletPaymentInitiateSchema,
+  WalletPaymentSuccessSchema,
 } from "./wallet.schema"
 import { zodErrorFormatter } from "../../../utils/index"
 
@@ -363,6 +367,82 @@ export const setDefaultBankAccount = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: "Default bank account updated",
+    data: result.data,
+  })
+})
+
+export const initiateWalletPayment = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+  const payload = WalletPaymentInitiateSchema.safeParse(req.body)
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  if (!payload.success) {
+    const messages: string[] = []
+    for (const issue of payload.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: messages.join(", "),
+    })
+  }
+
+  const result = await initiateWalletPaymentService(dealer_id, payload.data)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Payment initiated and stored",
+    data: result.data,
+  })
+})
+
+export const markWalletPaymentSuccess = asyncHandler(async (req, res) => {
+  const dealer_id = req.dealer?.id
+  const payload = WalletPaymentSuccessSchema.safeParse(req.body)
+
+  if (!dealer_id) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  if (!payload.success) {
+    const messages: string[] = []
+    for (const issue of payload.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+  }
+
+  if (!payload.data) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid payload",
+    })
+  }
+
+  const result = await handleWalletPaymentSuccess(dealer_id, payload.data)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Wallet payment captured and wallet updated",
     data: result.data,
   })
 })

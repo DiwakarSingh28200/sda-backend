@@ -1972,7 +1972,7 @@ export type Database = {
           dealer_id?: string | null
           discount?: number | null
           gross_amount?: number | null
-          id: string
+          id?: string
           net_amount?: number | null
           payment_mode?: string | null
           payment_status?: string | null
@@ -4046,6 +4046,10 @@ export type Database = {
       unlockrows: {
         Args: { "": string }
         Returns: number
+      }
+      update_wallet_balance_after_recharge: {
+        Args: { dealer_id_input: string; addition_amount: number }
+        Returns: undefined
       }
       update_wallet_balance_after_withdrawal: {
         Args: { dealer_id_input: string; deduction_amount: number }
