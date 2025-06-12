@@ -9,6 +9,7 @@ import {
   WalletPaymentSuccessInput,
 } from "./wallet.types"
 import crypto from "crypto"
+import { razorpay } from "../../../config/razorpay"
 
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
@@ -319,8 +320,23 @@ export const initiateWalletPaymentService = async (
   dealer_id: string,
   payload: WalletPaymentInitiateInput
 ) => {
-  const { razorpay_order_id, amount, discount = 0 } = payload
+  const { amount, discount = 0 } = payload
   const net_amount = amount - discount
+
+  const options = {
+    amount: net_amount * 100,
+    currency: "INR",
+    receipt: "receipt_order_" + Date.now(),
+  }
+
+  const order = await razorpay.orders.create(options)
+
+  if (!order) {
+    return {
+      success: false,
+      message: "Failed to create order",
+    }
+  }
 
   const { data, error: insertError } = await db
     .from("wallet_payments")
@@ -328,7 +344,7 @@ export const initiateWalletPaymentService = async (
       dealer_id,
       payment_mode: "razorpay",
       payment_status: "created",
-      razorpay_order_id,
+      razorpay_order_id: order.id,
       gross_amount: amount,
       discount,
       net_amount,
@@ -345,13 +361,7 @@ export const initiateWalletPaymentService = async (
 
   return {
     success: true,
-    data: {
-      payment_id: data?.id,
-      razorpay_order_id,
-      amount,
-      discount,
-      net_amount,
-    },
+    data: order,
   }
 }
 
