@@ -2168,32 +2168,38 @@ export type Database = {
         Row: {
           cash_balance: number | null
           created_at: string | null
+          credit_expiry_date: string | null
           credits_limit: number | null
           credits_used: number | null
           dealer_id: string | null
           id: string
           is_active: boolean | null
           updated_at: string | null
+          wallet_id: string | null
         }
         Insert: {
           cash_balance?: number | null
           created_at?: string | null
+          credit_expiry_date?: string | null
           credits_limit?: number | null
           credits_used?: number | null
           dealer_id?: string | null
           id?: string
           is_active?: boolean | null
           updated_at?: string | null
+          wallet_id?: string | null
         }
         Update: {
           cash_balance?: number | null
           created_at?: string | null
+          credit_expiry_date?: string | null
           credits_limit?: number | null
           credits_used?: number | null
           dealer_id?: string | null
           id?: string
           is_active?: boolean | null
           updated_at?: string | null
+          wallet_id?: string | null
         }
         Relationships: [
           {
