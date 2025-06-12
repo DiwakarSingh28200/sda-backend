@@ -46,12 +46,7 @@ export const getWalletBalance = asyncHandler(async (req: Request, res: Response)
   res.json({
     success: true,
     message: "Wallet fetched successfully",
-    data: {
-      cash_balance: wallet.cash_balance,
-      credits_limit: wallet.credits_limit,
-      credits_used: wallet.credits_used,
-      is_active: wallet.is_active,
-    },
+    data: wallet,
   })
 })
 
