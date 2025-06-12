@@ -11,6 +11,7 @@ import {
   updateBankAccountHandler,
   initiateWalletPayment,
   markWalletPaymentSuccess,
+  submitManualPayment,
 } from "./wallet.controller"
 import { authenticateDealer } from "../../../middleware/dealerAuth.middleware"
 
@@ -35,4 +36,8 @@ router.put("/bank-accounts/:id/default", authenticateDealer, setDefaultBankAccou
 // POST /dealer/wallet/payment → Initiate wallet payment
 router.post("/payment-initiate", authenticateDealer, initiateWalletPayment)
 router.post("/payment-success", authenticateDealer, markWalletPaymentSuccess)
+
+// Manual Payment
+router.post("/manual-payment", authenticateDealer, submitManualPayment)
+
 export default router

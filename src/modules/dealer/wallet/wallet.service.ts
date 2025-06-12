@@ -12,13 +12,17 @@ import crypto from "crypto"
 import { razorpay } from "../../../config/razorpay"
 
 export const getWalletByDealerId = async (dealer_id: string) => {
-  const { data, error } = await db.from("wallets").select("*").eq("dealer_id", dealer_id).single()
+  const { data, error } = await db
+    .from("wallets")
+    .select("*, dealer_name:dealers(name)")
+    .eq("dealer_id", dealer_id)
+    .single()
 
   if (error) {
     return null
   }
 
-  return data as Database["public"]["Tables"]["wallets"]["Row"]
+  return data
 }
 
 export const getDealerWalletTransactions = async (
@@ -179,7 +183,25 @@ export const insertManualPaymentRequest = async (
   if (error) {
     return {
       success: false,
-      message: "Failed to insert manual payment request",
+      message: error.message,
+    }
+  }
+
+  // Add intry inside the wallet transactions table
+  const { error: txnError } = await db.from("wallet_transactions").insert({
+    dealer_id,
+    amount: payload.amount,
+    type: "recharge",
+    source: "manual",
+    reference_type: "wallet_manual_payment_request",
+    reference_id: data?.id,
+    note: "Manual Payment",
+  })
+
+  if (txnError) {
+    return {
+      success: false,
+      message: "Failed to insert manual payment request " + txnError.message,
     }
   }
 

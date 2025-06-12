@@ -185,9 +185,26 @@ export const submitManualPayment = asyncHandler(async (req, res) => {
       message: "Unauthorized",
     })
   }
-  const payload = ManualPaymentRequestSchema.parse(req.body)
+  const payload = ManualPaymentRequestSchema.safeParse(req.body)
 
-  const payment = await insertManualPaymentRequest(dealer_id, payload)
+  if (!payload.success) {
+    const messages: string[] = []
+    for (const issue of payload.error.issues) {
+      const label = zodErrorFormatter(issue.path as string[])
+      messages.push(`${label}: ${issue.message}`)
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: messages.join(", "),
+    })
+  }
+
+  const payment = await insertManualPaymentRequest(dealer_id, payload.data)
+
+  if (!payment.success) {
+    return res.status(200).json(payment)
+  }
 
   res.status(201).json({
     success: true,
