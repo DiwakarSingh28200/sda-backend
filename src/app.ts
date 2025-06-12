@@ -10,7 +10,12 @@ import dealerRoutes from "./routes/dealer-v1"
 const frontendUrl = process.env.FRONTEND_URL!
 const frontendDevUrl = process.env.FRONTEND_DEV_URL!
 
-const allowedOrigins = [frontendUrl, frontendDevUrl, "http://localhost:3000","https://hoppscotch.io"]
+const allowedOrigins = [
+  frontendUrl,
+  frontendDevUrl,
+  "http://localhost:3000",
+  "https://hoppscotch.io",
+]
 const app: Application = express()
 app.use(cookieParser())
 
