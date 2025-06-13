@@ -243,8 +243,8 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
       .select(
         "id, dealer_id,dealership_name,dealership_type,city,state,owner_name,operations_contact_phone,email,created_at"
       )
+      // .eq("is_master_dealer", true)
       .eq("dealer_id", dealer_id)
-      .eq("is_master_dealer", true)
       .single()
     if (error) {
       return res.status(500).json({
@@ -257,8 +257,16 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
     // also share the sub dealerships with the dealer
     const { data: subDealerships, error: subDealershipsError } = await db
       .from("dealer_sub_dealerships")
-      .select("id, name, contact, oems, address")
+      .select("id, name, contact, oem, address")
       .eq("dealer_id", data.id)
+
+    if (subDealershipsError) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch sub dealers",
+        error: subDealershipsError,
+      })
+    }
 
     return res.status(200).json({
       success: true,
@@ -363,7 +371,7 @@ export const getSubDealerLeads = async (req: Request, res: Response) => {
     const { data, error } = await db
       .from("dealer_sub_dealerships")
       .select(
-        "id, name, contact, oems, address, master_dealer:dealer_id(id, dealer_id,dealership_name) status"
+        "id, name, contact, oem, address, master_dealer:dealer_id(id, dealer_id,dealership_name), status"
       )
 
     if (error) {

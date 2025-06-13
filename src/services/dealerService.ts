@@ -14,7 +14,7 @@ export const onboardDealerService = async (
       state: dealer.state!,
       oemCode: oem?.substring(0, 3) || "DFL",
       isSubDealer: dealer.is_sub_dealer!,
-      parentDealerId: dealer.parent_dealer_id!,
+      parentDealerId: dealer.parent_dealer_id ?? "",
     })
 
     // const tempPassword = crypto.randomBytes(6).toString("base64")
@@ -60,7 +60,7 @@ export const onboardDealerService = async (
         gst_number: dealer.gst_number,
         password: hashedPassword,
         login_enabled: true,
-        parent_dealer_id: dealer.parent_dealer_id,
+        parent_dealer_id: dealer.parent_dealer_id ?? null,
         is_sub_dealer: dealer.is_sub_dealer,
         is_master_dealer: dealer.is_master_dealer,
         is_email_verified: dealer.is_email_verified,

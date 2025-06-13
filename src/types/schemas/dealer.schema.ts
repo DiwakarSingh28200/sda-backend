@@ -23,9 +23,9 @@ export const DealerSchema = z.object({
   dealer_id: z.string().optional(),
   password: z.string().optional(),
   login_enabled: z.boolean().optional().default(false),
-  created_by: z.string().uuid().optional(),
+  created_by: z.string().optional(),
   created_at: z.string().datetime().optional(),
-  parent_dealer_id: z.string().uuid().optional(),
+  parent_dealer_id: z.string().optional(),
   is_sub_dealer: z.boolean().optional().default(false),
   is_master_dealer: z.boolean().optional().default(false),
   is_email_verified: z.boolean().optional().default(false),
@@ -42,7 +42,7 @@ export const DealerSchema = z.object({
 
 // 🔹 Services
 export const ServiceSchema = z.object({
-  dealer_id: z.string().uuid().optional(),
+  dealer_id: z.string().optional(),
   service_name: z.string().optional(),
   night_charge: z.number().optional(),
   day_charge: z.number().optional(),

@@ -25,6 +25,7 @@ export async function generateDealerId({
 
   const basePrefix = `${stateCode}${oemCode.toUpperCase()}`
 
+  // Handle sub-dealer ID
   if (isSubDealer) {
     if (!parentDealerId) throw new Error("Parent dealer ID is required for sub-dealer")
 
@@ -49,43 +50,27 @@ export async function generateDealerId({
 
     const subIndex = (existingSubs?.length || 0) + 1
     const subSuffix = String(subIndex).padStart(2, "0")
-    return `${masterIdPrefix}S${subSuffix}` // e.g. DLTVS8374S01
+    return `${masterIdPrefix}S${subSuffix}` // e.g. MHHER0001S01
   }
 
-  // Generate unique random 4-digit number for master dealer
-  let finalDealerId = ""
-  let attempts = 0
+  // Master dealer ID: Get count of existing dealers with same prefix
+  const { data: existingMasters, error } = await db
+    .from("dealers")
+    .select("dealer_id")
+    .ilike("dealer_id", `${basePrefix}%M`) // e.g. MHHER____M
 
-  while (attempts < 5) {
-    const rand = randomDigits // e.g., 8374
-    const candidate = `${basePrefix}${rand}M`
+  if (error) throw new Error("Failed to fetch existing master dealers")
 
-    const { data: existing, error } = await db
-      .from("dealers")
-      .select("id")
-      .eq("dealer_id", candidate)
-      .maybeSingle()
-
-    if (!existing) {
-      finalDealerId = candidate
-      break
-    }
-
-    attempts++
-  }
-
-  if (!finalDealerId) {
-    throw new Error("Failed to generate unique dealer ID after 5 attempts")
-  }
-
-  return finalDealerId
+  const nextIndex = (existingMasters?.length || 0) + 1
+  const numericSuffix = String(nextIndex).padStart(4, "0") // e.g. 0001
+  return `${basePrefix}${numericSuffix}M` // e.g. MHHER0001M
 }
 
 export async function generateDealerEmployeeId(dealerId: string): Promise<string> {
   const isMasterDealer = dealerId.endsWith("M")
   const baseId = isMasterDealer ? dealerId.replace(/M$/, "") : dealerId
 
-  const prefix = `${baseId}E` // e.g. DLTVS8374E or DLTVS8374S01E
+  const prefix = `${baseId}E` // e.g. MHHER0001E or MHHER0001S01E
 
   const { data: existingEmployees } = await db
     .from("dealer_employees")
@@ -95,7 +80,7 @@ export async function generateDealerEmployeeId(dealerId: string): Promise<string
   const nextIndex = (existingEmployees?.length || 0) + 1
   const padded = String(nextIndex).padStart(3, "0")
 
-  return `${prefix}${padded}` // e.g. DLTVS8374E001 or DLTVS8374S01E001
+  return `${prefix}${padded}` // e.g. MHHER0001E001 or MHHER0001S01E001
 }
 
 export const STATE_CODE_MAP: Record<string, string> = {
