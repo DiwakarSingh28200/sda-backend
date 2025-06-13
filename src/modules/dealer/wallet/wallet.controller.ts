@@ -25,12 +25,12 @@ import {
 import { zodErrorFormatter } from "../../../utils/index"
 
 export const getWalletBalance = asyncHandler(async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.id
+  const dealer_id = req.query.dealer_id as string
 
   if (!dealer_id) {
-    return res.status(401).json({
+    return res.status(400).json({
       success: false,
-      message: "Unauthorized",
+      message: "dealer_id is required",
     })
   }
 
