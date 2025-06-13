@@ -43,7 +43,7 @@ export const getSubDealerLeads = async (req: Request, res: Response) => {
     const { data, error } = await db
       .from("dealer_sub_dealerships")
       .select(
-        "id, name, contact, oems:oem, address, master_dealer:dealer_id(id, dealer_id,dealership_name) status"
+        "id, name, contact, oem, address, master_dealer:dealer_id(id, dealer_id,dealership_name), status"
       )
 
     if (error) {
@@ -64,6 +64,133 @@ export const getSubDealerLeads = async (req: Request, res: Response) => {
       success: false,
       message: "Internal server error",
       error: error,
+    })
+  }
+}
+
+export const getDealerByDealerID = async (req: Request, res: Response) => {
+  try {
+    const { dealer_id } = req.params
+
+    console.log("Dealer ID: ", dealer_id)
+
+    // only get dealer detailes if the dealer is master dealer
+    const { data, error } = await db
+      .from("dealers")
+      .select(
+        // "id, dealer_id,dealership_name,dealership_type,city,state,owner_name,operations_contact_phone,email,created_at"
+        "*"
+      )
+      .eq("dealer_id", dealer_id)
+      .single()
+    console.log("Data: ", data)
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch dealer",
+        error: error.message,
+      })
+    }
+
+    // also share the sub dealerships with the dealer
+    const { data: subDealerships, error: subDealershipsError } = await db
+      .from("dealer_sub_dealerships")
+      .select("id, name, contact, oem, address")
+      .eq("dealer_id", data.id)
+
+    return res.status(200).json({
+      success: true,
+      message: "Dealer fetched successfully",
+      data: {
+        ...data,
+        sub_dealerships: subDealerships,
+      },
+    })
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    })
+  }
+}
+
+export const getDealerProfileById = async (req: Request, res: Response) => {
+  const { dealer_id } = req.params
+  try {
+    const { data: dealerData, error } = await db
+      .from("dealers")
+      .select(
+        `
+        *,
+        documents:dealer_documents(*),
+        employees:dealer_employees(name, role, contact_number, email),
+        finance_info:dealer_finance_info(*),
+        services:dealer_services(*),
+        sub_dealerships:dealer_sub_dealerships(*)
+      `
+      )
+      .eq("dealer_id", dealer_id)
+      .single()
+
+    if (!dealerData && error) {
+      return res.status(404).json({
+        success: false,
+        message: "Dealer not found",
+      })
+    }
+
+    // Restructure the response
+    const response = {
+      dealer: {
+        id: dealerData.id,
+        dealership_type: dealerData.dealership_type,
+        dealership_name: dealerData.dealership_name,
+        registered_address: dealerData.registered_address,
+        city: dealerData.city,
+        state: dealerData.state,
+        pincode: dealerData.pincode,
+        gps_location: dealerData.gps_location,
+        operations_contact_name: dealerData.operations_contact_name,
+        operations_contact_phone: dealerData.operations_contact_phone,
+        email: dealerData.email,
+        owner_name: dealerData.owner_name,
+        owner_contact: dealerData.owner_contact,
+        owner_email: dealerData.owner_email,
+        escalation_name: dealerData.escalation_name,
+        escalation_contact: dealerData.escalation_contact,
+        escalation_email: dealerData.escalation_email,
+        pan_number: dealerData.pan_number,
+        gst_number: dealerData.gst_number,
+        dealer_id: dealerData.dealer_id,
+        login_enabled: dealerData.login_enabled,
+        created_by: dealerData.created_by,
+        created_at: dealerData.created_at,
+        parent_dealer_id: dealerData.parent_dealer_id,
+        is_sub_dealer: dealerData.is_sub_dealer,
+        is_master_dealer: dealerData.is_master_dealer,
+        is_email_verified: dealerData.is_email_verified,
+        is_contact_verified: dealerData.is_contact_verified,
+        vehicle_types: dealerData.vehicle_types,
+        oems: [dealerData.oem],
+      },
+      documents: dealerData?.documents[0],
+      finance_info: dealerData.finance_info[0],
+      employees: dealerData.employees,
+      sub_dealerships: dealerData.sub_dealerships,
+      oems: [dealerData.oem],
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Dealer found",
+      data: response,
+    })
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
     })
   }
 }

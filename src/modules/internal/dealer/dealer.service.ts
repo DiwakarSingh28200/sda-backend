@@ -14,7 +14,7 @@ export const onboardDealerService = async (
       state: dealer.state!,
       oemCode: oem?.substring(0, 3) || "DFL",
       isSubDealer: dealer.is_sub_dealer!,
-      parentDealerId: dealer.parent_dealer_id!,
+      parentDealerId: dealer.parent_dealer_id ?? "",
     })
 
     // const tempPassword = crypto.randomBytes(6).toString("base64")
@@ -60,7 +60,7 @@ export const onboardDealerService = async (
         gst_number: dealer.gst_number,
         password: hashedPassword,
         login_enabled: true,
-        parent_dealer_id: dealer.parent_dealer_id,
+        parent_dealer_id: dealer.parent_dealer_id ?? null,
         is_sub_dealer: dealer.is_sub_dealer,
         is_master_dealer: dealer.is_master_dealer,
         is_email_verified: dealer.is_email_verified,
@@ -90,15 +90,6 @@ export const onboardDealerService = async (
 
     const dealerId = insertedDealer.id
 
-    // Create a new wallet for the dealer
-    await db.from("wallets").insert({
-      dealer_id: dealerId,
-      cash_balance: 0,
-      credits_limit: 30000,
-      credits_used: 0,
-      is_active: true,
-    })
-
     await db.from("dealer_documents").insert({
       dealer_id: dealerId,
       ...documents,
@@ -107,15 +98,6 @@ export const onboardDealerService = async (
     await db.from("dealer_finance_info").insert({
       dealer_id: dealerId,
       ...finance_info,
-    })
-
-    // Entry on bank account in wallet_withdrawal_options
-    await db.from("wallet_withdrawal_options").insert({
-      dealer_id: dealerId,
-      account_holder_name: finance_info.bank_name,
-      account_number: finance_info.account_number,
-      ifsc_code: finance_info.ifsc_code,
-      is_default: true,
     })
 
     const dealerEmpEmpPassword = "Dealer@1234"
