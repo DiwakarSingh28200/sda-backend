@@ -14,7 +14,7 @@ import { razorpay } from "../../../config/razorpay"
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db
     .from("wallets")
-    .select("*, dealer_name:dealers(name)")
+    .select("*, dealer:dealer_id(dealership_name, dealer_id)")
     .eq("dealer_id", dealer_id)
     .single()
 
@@ -22,7 +22,12 @@ export const getWalletByDealerId = async (dealer_id: string) => {
     return null
   }
 
-  return data
+  // remove dealer from the data
+  const { dealer, ...rest } = data
+  return {
+    ...rest,
+    dealer_name: dealer?.dealership_name,
+  }
 }
 
 export const getDealerWalletTransactions = async (
