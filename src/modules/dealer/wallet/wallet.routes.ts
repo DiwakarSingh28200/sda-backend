@@ -13,12 +13,17 @@ import {
   markWalletPaymentSuccess,
   submitManualPayment,
 } from "./wallet.controller"
-import { authenticateDealer } from "../../../middleware/dealerAuth.middleware"
+import {
+  authenticateDealer,
+  authenticateDealerEmployee,
+  authenticateDealerOrEmployee,
+} from "../../../middleware/authMiddleware"
 
 const router = Router()
 
 // GET /dealer/wallet → Get wallet balance
-router.get("/", authenticateDealer, getWalletBalance)
+// I want bother authecatedDealer and dealerEmployee to access this route
+router.get("/", authenticateDealerOrEmployee, getWalletBalance)
 router.get("/transactions", authenticateDealer, getTransactionHistory)
 router.get("/withdrawals", authenticateDealer, getWithdrawalHistoryHandler)
 router.post("/withdrawals", authenticateDealer, createWithdrawalRequestHandler)

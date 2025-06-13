@@ -82,3 +82,35 @@ export const authenticate = (userType: UserType) => {
 export const authenticateEmployee = authenticate(UserType.Employee)
 export const authenticateDealer = authenticate(UserType.Dealer)
 export const authenticateDealerEmployee = authenticate(UserType.DealerEmployee)
+
+export const authenticateDealerOrEmployee = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const dealerToken = req.cookies["dealer_token"]
+    const dealerEmployeeToken = req.cookies["dealer_employee_token"]
+
+    if (dealerToken) {
+      const decoded = jwt.verify(dealerToken, process.env.JWT_SECRET!) as Request["dealer"]
+      req.dealer = decoded
+      return next()
+    }
+
+    if (dealerEmployeeToken) {
+      const decoded = jwt.verify(
+        dealerEmployeeToken,
+        process.env.JWT_SECRET!
+      ) as Request["dealerEmployee"]
+      req.dealerEmployee = decoded
+      return next()
+    }
+
+    res
+      .status(401)
+      .json({ success: false, message: "Unauthorized: No valid dealer or dealer employee token" })
+  } catch (error) {
+    res.status(401).json({ success: false, message: "Unauthorized: Invalid token" })
+  }
+}
