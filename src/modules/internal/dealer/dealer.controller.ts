@@ -72,8 +72,6 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
   try {
     const { dealer_id } = req.params
 
-    console.log("Dealer ID: ", dealer_id)
-
     // only get dealer detailes if the dealer is master dealer
     const { data, error } = await db
       .from("dealers")
@@ -82,8 +80,9 @@ export const getDealerByDealerID = async (req: Request, res: Response) => {
         "*"
       )
       .eq("dealer_id", dealer_id)
+      .eq("is_master_dealer", true)
       .single()
-    console.log("Data: ", data)
+
     if (error) {
       return res.status(500).json({
         success: false,

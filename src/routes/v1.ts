@@ -4,6 +4,7 @@ import walletRoutes from "../modules/internal/wallet/wallet.routes"
 import employeeRoutes from "../modules/internal/employee/employee.router"
 import dealerRoutes from "../modules/internal/dealer/dealer.routes"
 import otpRoutes from "../modules/otp/otp.router"
+import vendorRoutes from "../modules/internal/vendor/vendor.router"
 
 // import dealerRoutes from "@/modules/dealer/dealer.routes";
 // import { authenticateEmployee } from "@/middleware/authMiddleware";
@@ -15,6 +16,8 @@ router.use("/employees", employeeRoutes)
 router.use("/dealers", dealerRoutes)
 // router.use(authenticateEmployee); // protect below
 // router.use("/dealers", dealerRoutes);
+
+router.use("/vendors", vendorRoutes)
 
 router.use("/wallet", walletRoutes)
 

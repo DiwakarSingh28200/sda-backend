@@ -8,7 +8,15 @@ export const onboardDealerService = async (
   createdBy: string
 ) => {
   try {
-    const { dealer, finance_info, documents, employees, services, sub_dealerships } = payload
+    const {
+      dealer,
+      finance_info,
+      documents,
+      employees,
+      services,
+      sub_dealerships,
+      wallet_config,
+    } = payload
     const oem = dealer.oem?.toUpperCase()
     const dealer_id = await generateDealerId({
       state: dealer.state!,
@@ -89,6 +97,49 @@ export const onboardDealerService = async (
     }
 
     const dealerId = insertedDealer.id
+
+    // Create a new wallet for the dealer
+    const { data: walletData, error: walletError } = await db
+      .from("wallets")
+      .insert({
+        dealer_id: dealerId,
+        wallet_id: `WL${dealer_id}`,
+        cash_balance: 0,
+        credits_limit: wallet_config?.credit_wallet_amount ?? 30000,
+        credits_used: 0,
+        is_active: true,
+      })
+      .select()
+      .single()
+
+    if (walletError) {
+      return {
+        success: false,
+        status: 500,
+        message: "Failed to create wallet",
+        error: walletError?.message,
+      }
+    }
+
+    // Entry on bank account in wallet_withdrawal_options
+    await db.from("wallet_withdrawal_options").insert({
+      dealer_id: dealerId,
+      account_holder_name: finance_info.bank_name,
+      account_number: finance_info.account_number,
+      ifsc_code: finance_info.ifsc_code,
+      is_default: true,
+    })
+
+    // Entry on wallet_configurations
+    await db.from("wallet_config").insert({
+      wallet_id: walletData?.id,
+      average_vehicles_sold_monthly: wallet_config?.average_vehicles_sold_monthly ?? 0,
+      rsa_percentage_sold: wallet_config?.rsa_percentage_sold ?? 0,
+      dealership_share: wallet_config?.dealership_share ?? 0,
+      sda_share: wallet_config?.sda_share ?? 0,
+      credit_wallet_amount: wallet_config?.credit_wallet_amount ?? 0,
+      minimum_wallet_amount: wallet_config?.minimum_wallet_amount ?? 0,
+    })
 
     await db.from("dealer_documents").insert({
       dealer_id: dealerId,

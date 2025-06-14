@@ -90,6 +90,16 @@ export const EmployeeSchema = z.object({
   email: z.string().optional(),
 })
 
+// 🔹 Wallet Config
+export const WalletConfigSchema = z.object({
+  average_vehicles_sold_monthly: z.number(),
+  rsa_percentage_sold: z.number(),
+  dealership_share: z.number(),
+  sda_share: z.number(),
+  credit_wallet_amount: z.number(),
+  minimum_wallet_amount: z.number(),
+})
+
 // 🔹 Full Dealer Onboarding Payload
 export const DealerOnboardingSchema = z.object({
   dealer: DealerSchema,
@@ -98,6 +108,7 @@ export const DealerOnboardingSchema = z.object({
   finance_info: FinanceInfoSchema,
   sub_dealerships: z.array(SubDealershipSchema).optional(),
   employees: z.array(EmployeeSchema).optional(),
+  wallet_config: WalletConfigSchema,
 })
 
 export type DealerOnboardingPayload = z.infer<typeof DealerOnboardingSchema>

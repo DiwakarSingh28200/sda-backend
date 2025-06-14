@@ -6,6 +6,7 @@ export type Employee = Database["public"]["Tables"]["dealer_employees"]["Insert"
 export type Service = Database["public"]["Tables"]["dealer_services"]["Insert"]
 export type Documents = Database["public"]["Tables"]["dealer_documents"]["Insert"]
 export type SubDealership = Database["public"]["Tables"]["dealer_sub_dealerships"]["Insert"]
+export type WalletConfig = Database["public"]["Tables"]["wallet_config"]["Insert"]
 
 export interface DealerOnboardingPayload {
   dealer: Omit<
@@ -27,4 +28,6 @@ export interface DealerOnboardingPayload {
   services?: Array<Omit<Service, "id">>
 
   sub_dealerships?: Array<Omit<SubDealership, "id" | "created_by" | "created_at">>
+
+  wallet_config?: Omit<WalletConfig, "id" | "created_by" | "created_at">
 }

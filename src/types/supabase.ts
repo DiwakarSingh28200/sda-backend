@@ -1875,6 +1875,53 @@ export type Database = {
           },
         ]
       }
+      wallet_config: {
+        Row: {
+          average_vehicles_sold_monthly: number
+          created_at: string | null
+          credit_wallet_amount: number
+          dealership_share: number
+          id: string
+          minimum_wallet_amount: number
+          rsa_percentage_sold: number
+          sda_share: number
+          updated_at: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          average_vehicles_sold_monthly: number
+          created_at?: string | null
+          credit_wallet_amount: number
+          dealership_share: number
+          id?: string
+          minimum_wallet_amount: number
+          rsa_percentage_sold: number
+          sda_share: number
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          average_vehicles_sold_monthly?: number
+          created_at?: string | null
+          credit_wallet_amount?: number
+          dealership_share?: number
+          id?: string
+          minimum_wallet_amount?: number
+          rsa_percentage_sold?: number
+          sda_share?: number
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_configurations_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wallet_config_default: {
         Row: {
           cashback_percent: number | null

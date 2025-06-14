@@ -1,7 +1,4 @@
 import { db } from "../config/db"
-import { v4 as uuidv4 } from "uuid"
-const uuid = uuidv4().replace(/\D/g, "")
-const randomDigits = uuid.slice(0, 4)
 
 export async function generateDealerId({
   state,
