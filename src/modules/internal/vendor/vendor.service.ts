@@ -62,6 +62,8 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
       latitude: a.latitude,
       longitude: a.longitude,
       location: `SRID=4326;POINT(${a.longitude} ${a.latitude})`,
+      state: vendor.state,
+      contact_number: vendor.primary_contact_number,
     }))
     const { error: areaError } = await db.from("vendor_operating_areas").insert(areaPayload)
     if (areaError) throw areaError
