@@ -563,25 +563,26 @@ export async function deductWalletForSale({
   const tdsPercent = 2
   const tdsAmount = (dealerShare * tdsPercent) / 100
   const netDealerCommission = dealerShare - tdsAmount
+  const totalDeduction = sdaShare + tdsAmount
 
   // 5. Check and update wallet
   let updateData: Record<string, any> = { updated_at: new Date().toISOString() }
 
   if (paymentSource === "cash") {
-    if (wallet.cash_balance && wallet.cash_balance < planAmount)
+    if (wallet.cash_balance && wallet.cash_balance < totalDeduction)
       return {
         success: false,
         message: "Insufficient cash balance",
       }
-    updateData.cash_balance = wallet.cash_balance! - planAmount
+    updateData.cash_balance = wallet.cash_balance! - totalDeduction
   } else {
     const availableCredit = wallet.credits_limit! - wallet.credits_used!
-    if (availableCredit < planAmount)
+    if (availableCredit < totalDeduction)
       return {
         success: false,
         message: "Insufficient credit balance",
       }
-    updateData.credits_used = wallet.credits_used! + planAmount
+    updateData.credits_used = wallet.credits_used! + totalDeduction
   }
 
   const { error: updateErr } = await db.from("wallets").update(updateData).eq("id", wallet.id)
