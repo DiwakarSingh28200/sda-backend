@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getDealerSales } from "./sales.service"
+import { getDealerSales, getDelaerSalesAndComissions } from "./sales.service"
 
 export const getDealerSalesHandler = async (req: Request, res: Response) => {
   const dealer_id = req.query.dealer_id as string
@@ -19,4 +19,12 @@ export const getDealerSalesHandler = async (req: Request, res: Response) => {
     message: "Sales fetched successfully",
     data,
   })
+}
+
+export const getDelaerSalesAndComissionsHandler = async (req: Request, res: Response) => {
+  const dealer_id = req.query.dealer_id as string
+
+  const data = await getDelaerSalesAndComissions(dealer_id.toString())
+
+  return res.status(200).json(data)
 }

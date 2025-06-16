@@ -78,9 +78,9 @@ export const getDealerWalletTransactions = async (
 
     return {
       transaction_id: tx.id,
-      date: tx.created_at?.split("T")[0] ?? "",
-      type: isCredit ? "Recharge" : "Withdrawal",
-      description: isCredit ? "Wallet Topup" : "Bank Transfer",
+      date: tx.created_at,
+      type: tx.type,
+      description: tx.note,
       amount: amountAbs,
       display: `${isCredit ? "+" : "-"}₹${amountAbs.toLocaleString("en-IN")}`,
       status: "Completed",
@@ -501,5 +501,142 @@ export const handleWalletPaymentSuccess = async (
       razorpay_payment_id,
       credited_amount: net_amount,
     },
+  }
+}
+
+type DeductWalletForSaleInput = {
+  dealerId: string
+  planAmount: number
+  saleId: string // rsa_plan_sales.id
+  customerId: string
+  planId: string
+  paymentSource: "cash" | "credit"
+}
+
+export async function deductWalletForSale({
+  dealerId,
+  planAmount,
+  saleId,
+  customerId,
+  planId,
+  paymentSource,
+}: DeductWalletForSaleInput) {
+  console.log("Deducting wallet for sale", {
+    dealerId,
+    planAmount,
+    saleId,
+    customerId,
+    planId,
+    paymentSource,
+  })
+  // 1. Fetch wallet
+  const { data: wallet, error: walletErr } = await db
+    .from("wallets")
+    .select("*")
+    .eq("dealer_id", dealerId)
+    .single()
+
+  if (walletErr || !wallet)
+    return {
+      success: false,
+      message: "Wallet not found",
+    }
+
+  // 2. Fetch config
+  const { data: config, error: configErr } = await db
+    .from("wallet_config")
+    .select("*")
+    .eq("wallet_id", wallet.id)
+    .single()
+
+  if (configErr || !config)
+    return {
+      success: false,
+      message: "Wallet config not found",
+    }
+
+  // 3. Calculate shares
+  const dealerShare = (planAmount * config.dealership_share) / 100
+  const sdaShare = (planAmount * config.sda_share) / 100
+
+  // 4. Calculate TDS (default 2%)
+  const tdsPercent = 2
+  const tdsAmount = (dealerShare * tdsPercent) / 100
+  const netDealerCommission = dealerShare - tdsAmount
+
+  // 5. Check and update wallet
+  let updateData: Record<string, any> = { updated_at: new Date().toISOString() }
+
+  if (paymentSource === "cash") {
+    if (wallet.cash_balance && wallet.cash_balance < planAmount)
+      return {
+        success: false,
+        message: "Insufficient cash balance",
+      }
+    updateData.cash_balance = wallet.cash_balance! - planAmount
+  } else {
+    const availableCredit = wallet.credits_limit! - wallet.credits_used!
+    if (availableCredit < planAmount)
+      return {
+        success: false,
+        message: "Insufficient credit balance",
+      }
+    updateData.credits_used = wallet.credits_used! + planAmount
+  }
+
+  const { error: updateErr } = await db.from("wallets").update(updateData).eq("id", wallet.id)
+
+  if (updateErr)
+    return {
+      success: false,
+      message: "Wallet update failed",
+    }
+
+  // 4. Create wallet transaction
+  const { data: txData, error: txErr } = await db
+    .from("wallet_transactions")
+    .insert({
+      dealer_id: dealerId,
+      wallet_id: wallet.id,
+      amount: planAmount,
+      type: "sale_deduction",
+      source: "system",
+      reference_type: "rsa_plan_sale",
+      reference_id: saleId,
+      note: `Deducted for RSA plan sale worth ₹${planAmount}`,
+    })
+    .select()
+    .single()
+
+  if (txErr)
+    return {
+      success: false,
+      message: "Wallet transaction failed" + txErr.message,
+    }
+
+  // 7. Create sales record
+  const { error: saleErr } = await db.from("sales").insert({
+    dealer_id: dealerId,
+    plan_id: planId,
+    customer_id: customerId,
+    total_amount: planAmount,
+    sda_commission: parseFloat(sdaShare.toFixed(2)),
+    dealer_commission: parseFloat(dealerShare.toFixed(2)),
+    tds_amount: parseFloat(tdsAmount.toFixed(2)),
+    commission_invoice_status: "pending",
+    wallet_transaction_id: txData.id,
+    rsa_plan_sales_id: saleId,
+  })
+
+  if (saleErr)
+    return {
+      success: false,
+      message: "Failed to update sales record",
+    }
+
+  return {
+    success: true,
+    dealerShare,
+    sdaShare,
   }
 }

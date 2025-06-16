@@ -43,3 +43,25 @@ export const getDealerSales = async (dealer_id: string, employee_id?: string) =>
     created_at: moment(sale.created_at).format("LLL"),
   }))
 }
+
+export const getDelaerSalesAndComissions = async (dealer_id: string) => {
+  const { data, error } = await db
+    .from("sales")
+    .select(
+      "id, plan:plan_id(id,name), customer:customer_id(first_name, last_name), total_amount, sda_commission, dealer_commission, tds_amount, created_at"
+    )
+    .eq("dealer_id", dealer_id)
+
+  if (error)
+    return {
+      success: false,
+      message: "Failed to fetch sales and comissions",
+      data: [],
+    }
+
+  return {
+    success: true,
+    message: "Sales and comissions fetched successfully",
+    data: data,
+  }
+}

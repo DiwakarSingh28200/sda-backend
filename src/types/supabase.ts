@@ -1352,43 +1352,49 @@ export type Database = {
       }
       sales: {
         Row: {
+          commission_invoice_status: string | null
           created_at: string | null
           customer_id: string | null
           dealer_commission: number | null
           dealer_id: string | null
           id: string
-          invoice_status: string | null
           invoice_url: string | null
           plan_id: string | null
+          rsa_plan_sales_id: string | null
           sda_commission: number | null
           tds_amount: number | null
           total_amount: number | null
+          wallet_transaction_id: string | null
         }
         Insert: {
-          created_at?: string | null
-          customer_id?: string | null
-          dealer_commission?: number | null
-          dealer_id?: string | null
-          id: string
-          invoice_status?: string | null
-          invoice_url?: string | null
-          plan_id?: string | null
-          sda_commission?: number | null
-          tds_amount?: number | null
-          total_amount?: number | null
-        }
-        Update: {
+          commission_invoice_status?: string | null
           created_at?: string | null
           customer_id?: string | null
           dealer_commission?: number | null
           dealer_id?: string | null
           id?: string
-          invoice_status?: string | null
           invoice_url?: string | null
           plan_id?: string | null
+          rsa_plan_sales_id?: string | null
           sda_commission?: number | null
           tds_amount?: number | null
           total_amount?: number | null
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          commission_invoice_status?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          dealer_commission?: number | null
+          dealer_id?: string | null
+          id?: string
+          invoice_url?: string | null
+          plan_id?: string | null
+          rsa_plan_sales_id?: string | null
+          sda_commission?: number | null
+          tds_amount?: number | null
+          total_amount?: number | null
+          wallet_transaction_id?: string | null
         }
         Relationships: [
           {
@@ -1410,6 +1416,20 @@ export type Database = {
             columns: ["plan_id"]
             isOneToOne: false
             referencedRelation: "rsa_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_rsa_plan_sales_id_fkey"
+            columns: ["rsa_plan_sales_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_plan_sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_wallet_transaction_id_fkey"
+            columns: ["wallet_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_transactions"
             referencedColumns: ["id"]
           },
         ]

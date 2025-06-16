@@ -13,6 +13,7 @@ import {
   updateBankAccount,
   initiateWalletPaymentService,
   handleWalletPaymentSuccess,
+  deductWalletForSale,
 } from "./wallet.service"
 import { WithdrawalRequestInput } from "./wallet.types"
 import {
@@ -456,5 +457,28 @@ export const markWalletPaymentSuccess = asyncHandler(async (req, res) => {
     success: true,
     message: "Wallet payment captured and wallet updated",
     data: result.data,
+  })
+})
+
+export const deductWalletForSaleHandler = asyncHandler(async (req, res) => {
+  const payload = req.body
+
+  if (!payload.dealerId) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    })
+  }
+
+  const result = await deductWalletForSale(payload)
+
+  if (!result.success) {
+    return res.status(500).json(result)
+  }
+
+  res.json({
+    success: true,
+    message: "Wallet deducted successfully",
+    data: result,
   })
 })

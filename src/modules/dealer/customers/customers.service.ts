@@ -8,6 +8,7 @@ import {
   CustomerOnboardInput,
 } from "./customers.types"
 import { STATE_CODE_MAP } from "../../../utils/generateDealerId"
+import { deductWalletForSale } from "../wallet/wallet.service"
 
 const generatePolicyNumber = (
   state: string,
@@ -36,7 +37,7 @@ export const createCustomerService = async (
   message: string
   data?: any
 }> => {
-  const { customer, vehicle, rsa_plan } = input
+  const { customer, vehicle, rsa_plan, wallet } = input
   let customer_id: string | null = null
   let vehicle_id: string | null = null
 
@@ -124,8 +125,22 @@ export const createCustomerService = async (
       status: "active",
     }
 
-    const { error: planErr } = await db.from("rsa_plan_sales").insert([rsaPayload])
+    const { data: planSale, error: planErr } = await db
+      .from("rsa_plan_sales")
+      .insert([rsaPayload])
+      .select()
+      .single()
+
     if (planErr) throw new Error("RSA Plan insert failed: " + planErr.message)
+
+    await deductWalletForSale({
+      dealerId: employee.dealer_id,
+      planAmount: Number(rsa_plan.paid_amount),
+      saleId: planSale.id,
+      customerId: customer_id,
+      planId: rsa_plan.plan_id,
+      paymentSource: wallet.wallet_type,
+    })
 
     const hashedPassword = await bcrypt.hash("Welcome@123", 10)
     const loginPayload: CustomerLoginInsert = {

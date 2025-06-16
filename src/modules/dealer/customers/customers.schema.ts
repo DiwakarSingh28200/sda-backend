@@ -42,4 +42,7 @@ export const CustomerOnboardSchema = z.object({
     paid_amount: z.string(),
     sales_by: z.string().uuid().optional(),
   }),
+  wallet: z.object({
+    wallet_type: z.enum(["cash", "credit"]),
+  }),
 })

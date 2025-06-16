@@ -12,6 +12,7 @@ import {
   initiateWalletPayment,
   markWalletPaymentSuccess,
   submitManualPayment,
+  deductWalletForSaleHandler,
 } from "./wallet.controller"
 import {
   authenticateDealer,
@@ -44,5 +45,7 @@ router.post("/payment-success", authenticateDealer, markWalletPaymentSuccess)
 
 // Manual Payment
 router.post("/manual-payment", authenticateDealer, submitManualPayment)
+
+router.post("/deduct-wallet-for-sale", deductWalletForSaleHandler)
 
 export default router
