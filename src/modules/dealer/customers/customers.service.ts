@@ -123,6 +123,7 @@ export const createCustomerService = async (
       dealer_id: employee.dealer_id,
       sales_by: employee.id,
       status: "active",
+      customer_id: customer_id,
     }
 
     const { data: planSale, error: planErr } = await db

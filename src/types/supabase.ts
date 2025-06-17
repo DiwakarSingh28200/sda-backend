@@ -677,6 +677,7 @@ export type Database = {
           password: string | null
           pincode: string | null
           price_list_file: string | null
+          razorpayx_contact_id: string | null
           registered_address: string | null
           repair_on_site: boolean | null
           state: string | null
@@ -716,6 +717,7 @@ export type Database = {
           password?: string | null
           pincode?: string | null
           price_list_file?: string | null
+          razorpayx_contact_id?: string | null
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
@@ -755,6 +757,7 @@ export type Database = {
           password?: string | null
           pincode?: string | null
           price_list_file?: string | null
+          razorpayx_contact_id?: string | null
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
@@ -1249,6 +1252,7 @@ export type Database = {
       rsa_plan_sales: {
         Row: {
           created_at: string | null
+          customer_id: string | null
           dealer_id: string
           end_date: string
           id: string
@@ -1264,6 +1268,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          customer_id?: string | null
           dealer_id: string
           end_date: string
           id?: string
@@ -1279,6 +1284,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          customer_id?: string | null
           dealer_id?: string
           end_date?: string
           id?: string
@@ -1293,6 +1299,13 @@ export type Database = {
           vehicle_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "rsa_plan_sales_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "rsa_plan_sales_dealer_id_fkey"
             columns: ["dealer_id"]
@@ -1680,29 +1693,35 @@ export type Database = {
       vendor_operating_areas: {
         Row: {
           city: string
+          contact_number: string | null
           id: string
           latitude: number
           location: unknown | null
           longitude: number
           region: string
+          state: string | null
           vendor_id: string | null
         }
         Insert: {
           city: string
+          contact_number?: string | null
           id?: string
           latitude: number
           location?: unknown | null
           longitude: number
           region: string
+          state?: string | null
           vendor_id?: string | null
         }
         Update: {
           city?: string
+          contact_number?: string | null
           id?: string
           latitude?: number
           location?: unknown | null
           longitude?: number
           region?: string
+          state?: string | null
           vendor_id?: string | null
         }
         Relationships: [
@@ -1811,9 +1830,14 @@ export type Database = {
           id: string
           is_24x7: boolean | null
           is_active: boolean | null
+          is_online: boolean | null
           location_url: string | null
           login_enabled: boolean | null
           name: string
+          owner_contact_number: string | null
+          owner_email: string | null
+          owner_name: string | null
+          owner_whatsapp: string | null
           password: string | null
           pincode: string
           price_list_file_path: string | null
@@ -1839,9 +1863,14 @@ export type Database = {
           id?: string
           is_24x7?: boolean | null
           is_active?: boolean | null
+          is_online?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name: string
+          owner_contact_number?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_whatsapp?: string | null
           password?: string | null
           pincode: string
           price_list_file_path?: string | null
@@ -1867,9 +1896,14 @@ export type Database = {
           id?: string
           is_24x7?: boolean | null
           is_active?: boolean | null
+          is_online?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name?: string
+          owner_contact_number?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_whatsapp?: string | null
           password?: string | null
           pincode?: string
           price_list_file_path?: string | null
@@ -2136,6 +2170,7 @@ export type Database = {
           id: string
           ifsc_code: string | null
           is_default: boolean | null
+          razorpayx_fund_account_id: string | null
         }
         Insert: {
           account_holder_name?: string | null
@@ -2145,6 +2180,7 @@ export type Database = {
           id?: string
           ifsc_code?: string | null
           is_default?: boolean | null
+          razorpayx_fund_account_id?: string | null
         }
         Update: {
           account_holder_name?: string | null
@@ -2154,6 +2190,7 @@ export type Database = {
           id?: string
           ifsc_code?: string | null
           is_default?: boolean | null
+          razorpayx_fund_account_id?: string | null
         }
         Relationships: [
           {

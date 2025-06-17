@@ -620,7 +620,7 @@ export async function deductWalletForSale({
     dealer_id: dealerId,
     plan_id: planId,
     customer_id: customerId,
-    total_amount: planAmount,
+    total_amount: totalDeduction,
     sda_commission: parseFloat(sdaShare.toFixed(2)),
     dealer_commission: parseFloat(dealerShare.toFixed(2)),
     tds_amount: parseFloat(tdsAmount.toFixed(2)),
