@@ -37,6 +37,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
         is_active: true,
         created_by: createdBy,
         status: "approved",
+        due_date: null,
       },
     ])
     .select("id")
@@ -45,7 +46,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
   if (vendorError) throw vendorError
   const vendor_id = vendorInsert.id
 
-  if (!vendor_id) throw new Error("Failed to create vendor")
+  if (!vendor_id) throw new Error("Failed to create vendor" + vendorError)
 
   // Insert services
   if (services.length) {
