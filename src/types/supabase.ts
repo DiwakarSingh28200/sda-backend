@@ -677,6 +677,7 @@ export type Database = {
           password: string | null
           pincode: string | null
           price_list_file: string | null
+          razorpayx_contact_id: string | null
           registered_address: string | null
           repair_on_site: boolean | null
           state: string | null
@@ -716,6 +717,7 @@ export type Database = {
           password?: string | null
           pincode?: string | null
           price_list_file?: string | null
+          razorpayx_contact_id?: string | null
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
@@ -755,6 +757,7 @@ export type Database = {
           password?: string | null
           pincode?: string | null
           price_list_file?: string | null
+          razorpayx_contact_id?: string | null
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
@@ -1249,6 +1252,7 @@ export type Database = {
       rsa_plan_sales: {
         Row: {
           created_at: string | null
+          customer_id: string | null
           dealer_id: string
           end_date: string
           id: string
@@ -1264,6 +1268,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          customer_id?: string | null
           dealer_id: string
           end_date: string
           id?: string
@@ -1279,6 +1284,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          customer_id?: string | null
           dealer_id?: string
           end_date?: string
           id?: string
@@ -1293,6 +1299,13 @@ export type Database = {
           vehicle_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "rsa_plan_sales_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "rsa_plan_sales_dealer_id_fkey"
             columns: ["dealer_id"]
@@ -1350,6 +1363,90 @@ export type Database = {
         }
         Relationships: []
       }
+      sales: {
+        Row: {
+          commission_invoice_status: string | null
+          created_at: string | null
+          customer_id: string | null
+          dealer_commission: number | null
+          dealer_id: string | null
+          id: string
+          invoice_url: string | null
+          plan_id: string | null
+          rsa_plan_sales_id: string | null
+          sda_commission: number | null
+          tds_amount: number | null
+          total_amount: number | null
+          wallet_transaction_id: string | null
+        }
+        Insert: {
+          commission_invoice_status?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          dealer_commission?: number | null
+          dealer_id?: string | null
+          id?: string
+          invoice_url?: string | null
+          plan_id?: string | null
+          rsa_plan_sales_id?: string | null
+          sda_commission?: number | null
+          tds_amount?: number | null
+          total_amount?: number | null
+          wallet_transaction_id?: string | null
+        }
+        Update: {
+          commission_invoice_status?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          dealer_commission?: number | null
+          dealer_id?: string | null
+          id?: string
+          invoice_url?: string | null
+          plan_id?: string | null
+          rsa_plan_sales_id?: string | null
+          sda_commission?: number | null
+          tds_amount?: number | null
+          total_amount?: number | null
+          wallet_transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_rsa_plan_sales_id_fkey"
+            columns: ["rsa_plan_sales_id"]
+            isOneToOne: false
+            referencedRelation: "rsa_plan_sales"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_wallet_transaction_id_fkey"
+            columns: ["wallet_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       spatial_ref_sys: {
         Row: {
           auth_name: string | null
@@ -1373,6 +1470,48 @@ export type Database = {
           srtext?: string | null
         }
         Relationships: []
+      }
+      tds_transactions: {
+        Row: {
+          amount: number | null
+          created_at: string | null
+          dealer_id: string | null
+          id: string
+          percent: number | null
+          sale_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string | null
+          dealer_id?: string | null
+          id: string
+          percent?: number | null
+          sale_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          percent?: number | null
+          sale_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tds_transactions_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tds_transactions_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vehicles: {
         Row: {
@@ -1554,29 +1693,35 @@ export type Database = {
       vendor_operating_areas: {
         Row: {
           city: string
+          contact_number: string | null
           id: string
           latitude: number
           location: unknown | null
           longitude: number
           region: string
+          state: string | null
           vendor_id: string | null
         }
         Insert: {
           city: string
+          contact_number?: string | null
           id?: string
           latitude: number
           location?: unknown | null
           longitude: number
           region: string
+          state?: string | null
           vendor_id?: string | null
         }
         Update: {
           city?: string
+          contact_number?: string | null
           id?: string
           latitude?: number
           location?: unknown | null
           longitude?: number
           region?: string
+          state?: string | null
           vendor_id?: string | null
         }
         Relationships: [
@@ -1685,9 +1830,14 @@ export type Database = {
           id: string
           is_24x7: boolean | null
           is_active: boolean | null
+          is_online: boolean | null
           location_url: string | null
           login_enabled: boolean | null
           name: string
+          owner_contact_number: string | null
+          owner_email: string | null
+          owner_name: string | null
+          owner_whatsapp: string | null
           password: string | null
           pincode: string
           price_list_file_path: string | null
@@ -1713,9 +1863,14 @@ export type Database = {
           id?: string
           is_24x7?: boolean | null
           is_active?: boolean | null
+          is_online?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name: string
+          owner_contact_number?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_whatsapp?: string | null
           password?: string | null
           pincode: string
           price_list_file_path?: string | null
@@ -1741,9 +1896,14 @@ export type Database = {
           id?: string
           is_24x7?: boolean | null
           is_active?: boolean | null
+          is_online?: boolean | null
           location_url?: string | null
           login_enabled?: boolean | null
           name?: string
+          owner_contact_number?: string | null
+          owner_email?: string | null
+          owner_name?: string | null
+          owner_whatsapp?: string | null
           password?: string | null
           pincode?: string
           price_list_file_path?: string | null
@@ -1765,6 +1925,392 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_config: {
+        Row: {
+          average_vehicles_sold_monthly: number
+          created_at: string | null
+          credit_wallet_amount: number
+          dealership_share: number
+          id: string
+          minimum_wallet_amount: number
+          rsa_percentage_sold: number
+          sda_share: number
+          updated_at: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          average_vehicles_sold_monthly: number
+          created_at?: string | null
+          credit_wallet_amount: number
+          dealership_share: number
+          id?: string
+          minimum_wallet_amount: number
+          rsa_percentage_sold: number
+          sda_share: number
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          average_vehicles_sold_monthly?: number
+          created_at?: string | null
+          credit_wallet_amount?: number
+          dealership_share?: number
+          id?: string
+          minimum_wallet_amount?: number
+          rsa_percentage_sold?: number
+          sda_share?: number
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_configurations_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_config_default: {
+        Row: {
+          cashback_percent: number | null
+          created_at: string | null
+          credit_validity_days: number | null
+          id: string
+          tds_percent: number | null
+        }
+        Insert: {
+          cashback_percent?: number | null
+          created_at?: string | null
+          credit_validity_days?: number | null
+          id?: string
+          tds_percent?: number | null
+        }
+        Update: {
+          cashback_percent?: number | null
+          created_at?: string | null
+          credit_validity_days?: number | null
+          id?: string
+          tds_percent?: number | null
+        }
+        Relationships: []
+      }
+      wallet_manual_payment_requests: {
+        Row: {
+          amount: number
+          created_at: string | null
+          dealer_id: string | null
+          id: string
+          receipt_url: string | null
+          remarks: string | null
+          status: string | null
+          utr_number: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          receipt_url?: string | null
+          remarks?: string | null
+          status?: string | null
+          utr_number?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          receipt_url?: string | null
+          remarks?: string | null
+          status?: string | null
+          utr_number?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_manual_payment_requests_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_manual_payment_requests_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_payments: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string | null
+          dealer_id: string | null
+          discount: number | null
+          gross_amount: number | null
+          id: string
+          net_amount: number | null
+          payment_mode: string | null
+          payment_status: string | null
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
+          razorpay_signature: string | null
+          receipt_url: string | null
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          discount?: number | null
+          gross_amount?: number | null
+          id?: string
+          net_amount?: number | null
+          payment_mode?: string | null
+          payment_status?: string | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          receipt_url?: string | null
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          discount?: number | null
+          gross_amount?: number | null
+          id?: string
+          net_amount?: number | null
+          payment_mode?: string | null
+          payment_status?: string | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          receipt_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_payments_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          dealer_id: string | null
+          id: string
+          note: string | null
+          reference_id: string | null
+          reference_type: string | null
+          source: string | null
+          type: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          note?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          source?: string | null
+          type?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          note?: string | null
+          reference_id?: string | null
+          reference_type?: string | null
+          source?: string | null
+          type?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_withdrawal_options: {
+        Row: {
+          account_holder_name: string | null
+          account_number: string | null
+          created_at: string | null
+          dealer_id: string | null
+          id: string
+          ifsc_code: string | null
+          is_default: boolean | null
+          razorpayx_fund_account_id: string | null
+        }
+        Insert: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          ifsc_code?: string | null
+          is_default?: boolean | null
+          razorpayx_fund_account_id?: string | null
+        }
+        Update: {
+          account_holder_name?: string | null
+          account_number?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          id?: string
+          ifsc_code?: string | null
+          is_default?: boolean | null
+          razorpayx_fund_account_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_withdrawal_options_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_withdrawals: {
+        Row: {
+          amount: number
+          bank_account_id: string | null
+          created_at: string | null
+          dealer_id: string | null
+          failure_reason: string | null
+          id: string
+          payout_method: string | null
+          payout_reference: string | null
+          razorpayx_mode: string | null
+          razorpayx_payout_id: string | null
+          razorpayx_status: string | null
+          status: string | null
+          updated_at: string | null
+          utr_number: string | null
+        }
+        Insert: {
+          amount: number
+          bank_account_id?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          payout_method?: string | null
+          payout_reference?: string | null
+          razorpayx_mode?: string | null
+          razorpayx_payout_id?: string | null
+          razorpayx_status?: string | null
+          status?: string | null
+          updated_at?: string | null
+          utr_number?: string | null
+        }
+        Update: {
+          amount?: number
+          bank_account_id?: string | null
+          created_at?: string | null
+          dealer_id?: string | null
+          failure_reason?: string | null
+          id?: string
+          payout_method?: string | null
+          payout_reference?: string | null
+          razorpayx_mode?: string | null
+          razorpayx_payout_id?: string | null
+          razorpayx_status?: string | null
+          status?: string | null
+          updated_at?: string | null
+          utr_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_withdrawals_bank_account_id_fkey"
+            columns: ["bank_account_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_withdrawal_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_withdrawals_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallets: {
+        Row: {
+          cash_balance: number | null
+          created_at: string | null
+          credit_expiry_date: string | null
+          credits_limit: number | null
+          credits_used: number | null
+          dealer_id: string | null
+          id: string
+          is_active: boolean | null
+          updated_at: string | null
+          wallet_id: string | null
+        }
+        Insert: {
+          cash_balance?: number | null
+          created_at?: string | null
+          credit_expiry_date?: string | null
+          credits_limit?: number | null
+          credits_used?: number | null
+          dealer_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Update: {
+          cash_balance?: number | null
+          created_at?: string | null
+          credit_expiry_date?: string | null
+          credits_limit?: number | null
+          credits_used?: number | null
+          dealer_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          updated_at?: string | null
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
             referencedColumns: ["id"]
           },
         ]
@@ -3610,6 +4156,14 @@ export type Database = {
       unlockrows: {
         Args: { "": string }
         Returns: number
+      }
+      update_wallet_balance_after_recharge: {
+        Args: { dealer_id_input: string; addition_amount: number }
+        Returns: undefined
+      }
+      update_wallet_balance_after_withdrawal: {
+        Args: { dealer_id_input: string; deduction_amount: number }
+        Returns: undefined
       }
       updategeometrysrid: {
         Args: {

@@ -1,16 +1,20 @@
 import { Request, Response } from "express"
 import { errorResponse, successResponse } from "../utils/apiResponse"
-import { getCustomerByPhoneNumber } from "../services/customerService"
+import {
+  getCustomerByPhoneNumber,
+  getVendorByVendorID,
+  setVendorOnlineOffline,
+} from "../services/customerService"
 import { getVendorsByLocation } from "../services/vendorService"
 import { getUrlData } from "../utils/coordinates"
 
 export const getCustomerByPhoneNumberHandler = async (req: Request, res: Response) => {
   const { phoneNumber } = req.params as { phoneNumber: string }
   const customer = await getCustomerByPhoneNumber(phoneNumber)
-  if (customer !== null) {
-    return res.status(200).json(successResponse("Customer fetched successfully", customer))
+  if (customer.success) {
+    return res.status(200).json(customer)
   } else {
-    return res.status(404).json(errorResponse("Customer not found"))
+    return res.status(200).json(customer)
   }
 }
 
@@ -60,5 +64,28 @@ export const getVendorsByLocationHandler = async (req: Request, res: Response) =
   } catch (err: any) {
     console.error("Error in getVendorsByLocationHandler:", err)
     return res.status(500).json(errorResponse("Internal server error"))
+  }
+}
+
+export const getVendorByVendorIDHandler = async (req: Request, res: Response) => {
+  const { vendor_id } = req.params as { vendor_id: string }
+  const vendor = await getVendorByVendorID(vendor_id)
+  if (vendor.success) {
+    return res.status(200).json(vendor)
+  } else {
+    return res.status(200).json(vendor)
+  }
+}
+
+export const setVendorOnlineOfflineHandler = async (req: Request, res: Response) => {
+  const { vendor_id, is_online } = req.body as { vendor_id: string; is_online: boolean }
+  if (!vendor_id || is_online === undefined) {
+    return res.status(400).json(errorResponse("Vendor ID and is_online are required"))
+  }
+  const vendor = await setVendorOnlineOffline(vendor_id, is_online)
+  if (vendor.success) {
+    return res.status(200).json(vendor)
+  } else {
+    return res.status(404).json(vendor)
   }
 }
