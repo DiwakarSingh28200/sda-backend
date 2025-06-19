@@ -32,3 +32,8 @@ export type WalletWithdrawalOptionsUpdate =
 export type WalletPaymentInitiateInput = z.infer<typeof WalletPaymentInitiateSchema>
 
 export type WalletPaymentSuccessInput = z.infer<typeof WalletPaymentSuccessSchema>
+
+export type RazorpayXFundAccountInput = {
+  dealer_id: string
+  withdrawal_option_id: string
+}

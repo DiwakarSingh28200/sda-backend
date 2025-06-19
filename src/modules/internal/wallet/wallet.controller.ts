@@ -8,6 +8,8 @@ import {
   getLatestWalletConfigEntry,
   updateWalletConfigEntry,
   handleWithdrawalApproval,
+  processWithdrawalPayout,
+  getAllWithdrawalsForAdmin,
 } from "./wallet.service"
 import {
   ManualPaymentApprovalSchema,
@@ -134,4 +136,41 @@ export const approveWithdrawal = asyncHandler(async (req, res) => {
     message: "Withdrawal marked as paid",
     data: result,
   })
+})
+
+export const processWithdrawalPayoutHandler = asyncHandler(async (req, res) => {
+  const id = req.params.id
+  if (!id) {
+    return res.status(400).json({
+      success: false,
+      message: "Withdrawal ID is required",
+    })
+  }
+
+  const result = await processWithdrawalPayout(id)
+
+  res.json({
+    success: true,
+    message: "Withdrawal processed",
+    data: result,
+  })
+})
+
+export const handleAdminWithdrawalsList = asyncHandler(async (req: Request, res: Response) => {
+  const { status, dealer_id, from_date, to_date, page, limit } = req.query
+
+  const result = await getAllWithdrawalsForAdmin({
+    status: status as string,
+    dealer_id: dealer_id as string,
+    from_date: from_date as string,
+    to_date: to_date as string,
+    page: Number(page),
+    limit: Number(limit),
+  })
+
+  if (!result.success) {
+    return res.status(400).json(result)
+  }
+
+  return res.json(result)
 })

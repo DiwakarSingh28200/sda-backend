@@ -23,11 +23,16 @@ import {
 const router = Router()
 
 // GET /dealer/wallet → Get wallet balance
-// I want bother authecatedDealer and dealerEmployee to access this route
 router.get("/", authenticateDealerOrEmployee, getWalletBalance)
 router.get("/transactions", authenticateDealer, getTransactionHistory)
+
+// Withdrawals
 router.get("/withdrawals", authenticateDealer, getWithdrawalHistoryHandler)
 router.post("/withdrawals", authenticateDealer, createWithdrawalRequestHandler)
+
+// Manual Payment
+router.post("/manual-payment", authenticateDealer, submitManualPayment)
+
 // router.get("/manual-payment", authenticateDealer, )
 
 // POST /dealer/wallet/bank-account → Create bank account

@@ -10,6 +10,20 @@ import {
 } from "./wallet.types"
 import crypto from "crypto"
 import { razorpay } from "../../../config/razorpay"
+import axios from "axios"
+import { RazorpayXFundAccountInput } from "./wallet.types"
+
+const RAZORPAYX_BASE_URL = "https://api.razorpay.com/v1"
+const RAZORPAYX_KEY_ID = process.env.RAZORPAYX_KEY_ID!
+const RAZORPAYX_KEY_SECRET = process.env.RAZORPAYX_KEY_SECRET!
+
+const razorpayAxios = axios.create({
+  baseURL: RAZORPAYX_BASE_URL,
+  auth: {
+    username: RAZORPAYX_KEY_ID,
+    password: RAZORPAYX_KEY_SECRET,
+  },
+})
 
 export const getWalletByDealerId = async (dealer_id: string) => {
   const { data, error } = await db
@@ -141,6 +155,25 @@ export const createWithdrawalRequest = async (
   dealer_id: string,
   payload: WithdrawalRequestInput
 ) => {
+  // Step 1: Fetch wallet
+  const { data: wallet, error: walletError } = await getDealerWallet(dealer_id)
+
+  if (walletError || !wallet || !wallet.is_active) {
+    return {
+      success: false,
+      message: "Wallet not found or inactive",
+    }
+  }
+
+  // Step 2: Validate balance
+  if (Number(payload.amount) > Number(wallet.cash_balance)) {
+    return {
+      success: false,
+      message: "Insufficient wallet balance",
+    }
+  }
+  // Step 3: Proceed to create withdrawal request
+
   const { data, error } = await db
     .from("wallet_withdrawals")
     .insert({
@@ -640,4 +673,72 @@ export async function deductWalletForSale({
     dealerShare,
     sdaShare,
   }
+}
+
+export const getDealerWallet = async (dealer_id: string) => {
+  return await db.from("wallets").select("*").eq("id", dealer_id).eq("is_active", true).single()
+}
+
+export const createRazorpayFundAccount = async (payload: RazorpayXFundAccountInput) => {
+  const { dealer_id, withdrawal_option_id } = payload
+
+  // 1. Fetch bank account
+  const { data: account, error } = await db
+    .from("wallet_withdrawal_options")
+    .select("*")
+    .eq("id", withdrawal_option_id)
+    .eq("dealer_id", dealer_id)
+    .eq("is_default", true)
+    .single()
+
+  if (error || !account) {
+    return { success: false, message: "Bank account not found" }
+  }
+
+  if (account.razorpayx_fund_account_id && account.razorpayx_fund_account_id !== "") {
+    return { success: true, fund_account_id: account.razorpayx_fund_account_id }
+  }
+
+  // 2. Create Razorpay Contact
+  const contactPayload = {
+    name: account.account_holder_name,
+    type: "dealer",
+    reference_id: dealer_id,
+    notes: { source: "SureDrive Wallet" },
+  }
+
+  const contactRes = await razorpayAxios.post("/contacts", contactPayload)
+  const contact_id = contactRes.data?.id
+
+  // 3. Create Fund Account
+  const fundAccountPayload = {
+    contact_id,
+    account_type: "bank_account",
+    bank_account: {
+      name: account.account_holder_name,
+      ifsc: account.ifsc_code,
+      account_number: account.account_number,
+    },
+  }
+
+  const fundRes = await razorpayAxios.post("/fund_accounts", fundAccountPayload)
+  const fund_account_id = fundRes.data?.id
+
+  // 4. Update in DB
+  await db
+    .from("wallet_withdrawal_options")
+    .update({ razorpayx_fund_account_id: fund_account_id })
+    .eq("id", withdrawal_option_id)
+
+  return { success: true, fund_account_id }
+}
+
+export const getWalletId = async (dealer_id: string) => {
+  const { data, error } = await db.from("wallets").select("id").eq("dealer_id", dealer_id).single()
+
+  if (error) {
+    return null
+  }
+
+  return data.id
 }

@@ -7,6 +7,8 @@ import {
   createWalletConfigEntryHandler,
   getLatestWalletConfigEntryHandler,
   approveWithdrawal,
+  processWithdrawalPayoutHandler,
+  handleAdminWithdrawalsList,
 } from "./wallet.controller"
 
 const router = Router()
@@ -21,6 +23,8 @@ router.get("/config", getLatestWalletConfigEntryHandler)
 router.put("/config/:id", updateWalletConfigEntryHandler)
 
 // Withdrawals
+router.get("/withdrawals", handleAdminWithdrawalsList)
 router.patch("/withdrawals/:id", approveWithdrawal)
+router.post("/withdrawals/:id/process", processWithdrawalPayoutHandler)
 
 export default router
