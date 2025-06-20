@@ -100,7 +100,10 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   await axios.post(
     `https://www.zohoapis.in/crm/v7/functions/vendor_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
-    input
+    {
+      ...input,
+      vendor_id: vendorInsert.id,
+    }
   )
 
   return { vendor_id }

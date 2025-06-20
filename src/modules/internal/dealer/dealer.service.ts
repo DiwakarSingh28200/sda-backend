@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import { db } from "../../../config/db"
 import { DealerOnboardingPayload } from "./dealer.types"
 import { generateDealerId, generateDealerEmployeeId } from "../../../utils/generateDealerId"
+import axios from "axios"
 
 export const onboardDealerService = async (
   payload: DealerOnboardingPayload,
@@ -202,6 +203,14 @@ export const onboardDealerService = async (
       performed_by: createdBy,
       remarks: `Created onboarding request for ${dealer.dealership_name}`,
     })
+
+    await axios.post(
+      `https://www.zohoapis.in/crm/v7/functions/dealers_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
+      {
+        ...payload,
+        dealer_id: dealerId,
+      }
+    )
 
     return {
       success: true,
