@@ -69,7 +69,7 @@ export const onboardDealerService = async (
         gst_number: dealer.gst_number,
         password: hashedPassword,
         login_enabled: true,
-        parent_dealer_id: dealer.parent_dealer_id ?? null,
+        parent_dealer_id: dealer.parent_dealer_id ? dealer.parent_dealer_id : null,
         is_sub_dealer: dealer.is_sub_dealer,
         is_master_dealer: dealer.is_master_dealer,
         is_email_verified: dealer.is_email_verified,

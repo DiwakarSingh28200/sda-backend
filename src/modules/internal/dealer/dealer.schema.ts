@@ -25,7 +25,7 @@ export const DealerSchema = z.object({
   login_enabled: z.boolean().optional().default(false),
   created_by: z.string().uuid().optional(),
   created_at: z.string().datetime().optional(),
-  parent_dealer_id: z.string().uuid().optional(),
+  parent_dealer_id: z.string().optional(),
   is_sub_dealer: z.boolean().optional().default(false),
   is_master_dealer: z.boolean().optional().default(false),
   is_email_verified: z.boolean().optional().default(false),
