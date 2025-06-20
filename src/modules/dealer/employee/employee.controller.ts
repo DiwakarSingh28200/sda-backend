@@ -102,3 +102,4 @@ export const deleteDealerEmployeeHandler = async (req: Request, res: Response) =
     data: result.data,
   })
 }
+

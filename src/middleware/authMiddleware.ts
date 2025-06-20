@@ -78,11 +78,6 @@ export const authenticate = (userType: UserType) => {
   }
 }
 
-// Create specific authentication middlewares using the factory
-export const authenticateEmployee = authenticate(UserType.Employee)
-export const authenticateDealer = authenticate(UserType.Dealer)
-export const authenticateDealerEmployee = authenticate(UserType.DealerEmployee)
-
 export const authenticateDealerOrEmployee = (
   req: Request,
   res: Response,
@@ -114,3 +109,8 @@ export const authenticateDealerOrEmployee = (
     res.status(401).json({ success: false, message: "Unauthorized: Invalid token" })
   }
 }
+
+// Create specific authentication middlewares using the factory
+export const authenticateEmployee = authenticate(UserType.Employee)
+export const authenticateDealer = authenticate(UserType.Dealer)
+export const authenticateDealerEmployee = authenticate(UserType.DealerEmployee)

@@ -116,3 +116,57 @@ export const logoutDealerEmployeeService = async (res: Response) => {
     message: "Logout successful",
   }
 }
+
+export const resetDealerEmployeePasswordService = async (
+  dealer_id: string,
+  employee_id: string,
+  new_password: string
+) => {
+  // check if employee exists
+  const { data: employee, error: employeeError } = await db
+    .from("dealer_employees")
+    .select("id")
+    .eq("id", employee_id)
+    .eq("dealer_id", dealer_id)
+
+  if (employeeError) {
+    return {
+      status: 500,
+      success: false,
+      message: employeeError.message,
+    }
+  }
+
+  if (employee.length === 0) {
+    return {
+      status: 400,
+      success: false,
+      message: "Employee not found",
+    }
+  }
+
+  // hash the new password
+  const hashedPassword = await bcrypt.hash(new_password, 10)
+
+  // update the password
+  const { data, error } = await db
+    .from("dealer_employees")
+    .update({ password: hashedPassword })
+    .eq("id", employee_id)
+    .eq("dealer_id", dealer_id)
+
+  if (error) {
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    }
+  }
+
+  return {
+    status: 200,
+    success: true,
+    message: "Password reset successfully",
+    data: data,
+  }
+}

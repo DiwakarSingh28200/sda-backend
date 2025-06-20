@@ -3,6 +3,7 @@ import {
   loginDealerEmployeeService,
   getLoggedInDealerEmployeeService,
   logoutDealerEmployeeService,
+  resetDealerEmployeePasswordService,
 } from "./team-auth.service"
 
 export const loginDealerEmployeeHandler = async (req: Request, res: Response) => {
@@ -48,4 +49,31 @@ export const logoutDealerEmployeeHandler = async (_req: Request, res: Response) 
     success: true,
     message: "Logout successful",
   })
+}
+
+export const resetDealerEmployeePasswordHandler = async (req: Request, res: Response) => {
+  const employee_id = req.dealerEmployee!.id
+  const dealerId = req.dealerEmployee!.dealer_id
+  const { new_password } = req.body
+
+  if (!dealerId || !employee_id || !new_password) {
+    return res.status(400).json({
+      status: 400,
+      success: false,
+      message: "All fields are required",
+    })
+  }
+  const result = await resetDealerEmployeePasswordService(dealerId, employee_id, new_password)
+  if (!result.success) {
+    return res.status(result.status).json(result)
+  }
+  // clear the dealer employee token
+  res.clearCookie("dealer_employee_token", {
+    domain: process.env.COOKIE_DOMAIN,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+  })
+  return res.status(result.status).json(result)
 }

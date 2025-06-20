@@ -6,9 +6,6 @@ import { DealerLoginInput } from "./auth.types"
 
 export const loginDealerService = async (body: DealerLoginInput) => {
   const { dealer_id, password } = body
-
-  console.log(dealer_id, password)
-
   const { data: dealer } = await db
     .from("dealers")
     .select("id, dealer_id, dealership_name, email, password, is_sub_dealer, oem")
@@ -150,5 +147,53 @@ export const logoutDealerService = async (res: Response) => {
     status: 200,
     success: true,
     message: "Logout successful",
+  }
+}
+
+export const resetDealerPasswordService = async (dealerId: string, new_password: string) => {
+  // check if dealer exists
+  const { data: dealer, error: dealerError } = await db
+    .from("dealers")
+    .select("id")
+    .eq("id", dealerId)
+    .single()
+
+  if (dealerError) {
+    return {
+      status: 500,
+      success: false,
+      message: dealerError.message,
+    }
+  }
+
+  if (!dealer) {
+    return {
+      status: 404,
+      success: false,
+      message: "Dealer not found",
+    }
+  }
+
+  // hash the new password
+  const hashedPassword = await bcrypt.hash(new_password, 10)
+
+  const { data, error } = await db
+    .from("dealers")
+    .update({ password: hashedPassword })
+    .eq("id", dealerId)
+
+  if (error) {
+    return {
+      status: 500,
+      success: false,
+      message: error.message,
+    }
+  }
+
+  return {
+    status: 200,
+    success: true,
+    message: "Password reset successfully",
+    data: data,
   }
 }

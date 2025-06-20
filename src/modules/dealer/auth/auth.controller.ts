@@ -1,5 +1,10 @@
 import { Request, Response } from "express"
-import { loginDealerService, logoutDealerService, getLoggedInDealerService } from "./auth.service"
+import {
+  loginDealerService,
+  logoutDealerService,
+  getLoggedInDealerService,
+  resetDealerPasswordService,
+} from "./auth.service"
 
 export const loginDealerHandler = async (req: Request, res: Response) => {
   const result = await loginDealerService(req.body)
@@ -41,4 +46,29 @@ export const logoutDealerHandler = async (_req: Request, res: Response) => {
     success: true,
     message: "Logout successful",
   })
+}
+
+export const resetDealerPasswordHandler = async (req: Request, res: Response) => {
+  const { new_password } = req.body
+  const dealerId = req.dealer!.id
+  if (!dealerId || !new_password) {
+    return res.status(400).json({
+      status: 400,
+      success: false,
+      message: "All fields are required",
+    })
+  }
+  const result = await resetDealerPasswordService(dealerId, new_password)
+  if (!result.success) {
+    return res.status(result.status).json(result)
+  }
+  // clear the dealer token
+  res.clearCookie("dealer_token", {
+    domain: process.env.COOKIE_DOMAIN,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+  })
+  return res.status(result.status).json(result)
 }
