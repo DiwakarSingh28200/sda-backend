@@ -5,6 +5,7 @@ import employeeRoutes from "../modules/internal/employee/employee.router"
 import dealerRoutes from "../modules/internal/dealer/dealer.routes"
 import otpRoutes from "../modules/otp/otp.router"
 import vendorRoutes from "../modules/internal/vendor/vendor.router"
+import invoiceRoutes from "../modules/internal/invoice/invoice.routes"
 
 // import dealerRoutes from "@/modules/dealer/dealer.routes";
 // import { authenticateEmployee } from "@/middleware/authMiddleware";
@@ -23,5 +24,8 @@ router.use("/wallet", walletRoutes)
 
 // OTP routes
 router.use("/otp", otpRoutes)
+
+// Invoice routes
+router.use("/invoice", invoiceRoutes)
 
 export default router
