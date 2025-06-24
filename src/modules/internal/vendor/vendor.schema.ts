@@ -25,11 +25,11 @@ const ContactSchema = z.object({
 
 const DocumentSchema = z.object({
   pan_number: z.string(),
-  gst_number: z.string(),
-  gst_certificate_file_path: z.string(),
+  gst_number: z.string().optional(),
+  gst_certificate_file_path: z.string().optional(),
   pan_card_file_path: z.string(),
-  address_proof_file_path: z.string(),
-  cancelled_cheque_file_path: z.string(),
+  address_proof_file_path: z.string().optional(),
+  cancelled_cheque_file_path: z.string().optional(),
 })
 
 const BankInfoSchema = z.object({
