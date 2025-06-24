@@ -113,19 +113,24 @@ export const getVendorById = async (id: string) => {
   const { data, error } = await db
     .from("vendors")
     .select(
-      `
-      *,
-      documents:vendor_documents(*),
-      contacts:vendor_contacts(*),
-      operating_areas:vendor_operating_areas(*),
-      services:vendor_services(*),
-      bank_info:vendor_bank_info(*)
-    `
+      `*,
+       documents:vendor_documents(*),
+    contacts:vendor_contacts(*),
+    operating_areas:vendor_operating_areas(*),
+    services:vendor_services(*),
+    bank_info:vendor_bank_info(*)`
     )
     .eq("vendor_id", id)
     .single()
 
-  if (error) throw error
+  if (error) {
+    return {
+      success: false,
+      status: 404,
+      message: "Vendor not found" + error.message,
+    }
+  }
+
   return {
     vendor: {
       id: data.id,

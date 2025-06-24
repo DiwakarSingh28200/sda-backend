@@ -132,8 +132,6 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
       .eq("dealer_id", dealer_id)
       .single()
 
-    console.log("dealerData ", dealerData)
-
     if (!dealerData && error) {
       return res.status(404).json({
         success: false,
