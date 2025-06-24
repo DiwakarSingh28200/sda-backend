@@ -814,6 +814,33 @@ export type Database = {
           },
         ]
       }
+      draft_form_data: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data: Json | null
+          draft_name: string | null
+          id: string
+          type: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data?: Json | null
+          draft_name?: string | null
+          id?: string
+          type?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data?: Json | null
+          draft_name?: string | null
+          id?: string
+          type?: string | null
+        }
+        Relationships: []
+      }
       employee_roles: {
         Row: {
           assigned_by: string

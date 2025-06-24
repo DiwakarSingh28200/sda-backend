@@ -50,7 +50,12 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
 
   // Insert services
   if (services.length) {
-    const { error: serviceError } = await db.from("vendor_services").insert(services)
+    const servicePayload = services.map((s) => ({
+      ...s,
+      vendor_id,
+    }))
+
+    const { error: serviceError } = await db.from("vendor_services").insert(servicePayload)
     if (serviceError) throw serviceError
   }
 
