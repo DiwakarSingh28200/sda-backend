@@ -16,7 +16,7 @@ export const getDealerProfileService = async (dealer_id: string) => {
   const { password, ...safeDealer } = dealer
 
   // Step 2: Fetch all other data using dealerID
-  const [documents, finance_info, sub_dealerships, employees] = await Promise.all([
+  const [documents, finance_info, sub_dealerships, employees, services] = await Promise.all([
     db.from("dealer_documents").select("*").eq("dealer_id", dealerID).single(),
     db.from("dealer_finance_info").select("*").eq("dealer_id", dealerID).single(),
     db
@@ -29,14 +29,16 @@ export const getDealerProfileService = async (dealer_id: string) => {
       .from("dealer_employees")
       .select("name, role, contact_number, email")
       .eq("dealer_id", dealerID),
+    db.from("dealer_services").select("*").eq("dealer_id", dealerID),
   ])
 
   return {
     dealer: safeDealer,
     documents: documents.data,
     finance_info: finance_info.data,
-    oems: safeDealer.oem,
+    oem: safeDealer.oem,
     sub_dealerships: sub_dealerships.data,
     employees: employees.data,
+    services: services.data,
   }
 }
