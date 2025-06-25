@@ -8,6 +8,7 @@ import dashboardRoutes from "../modules/dealer/dashboard/dashboard.routes"
 import dealerEmployeeRoutes from "../modules/dealer/employee/employee.route"
 import bikeModelRoutes from "../modules/dealer/bike-models/bike.router"
 import walletRoutes from "../modules/dealer/wallet/wallet.routes"
+import invoiceRoutes from "../modules/dealer/invoice/invoice.routes"
 // future: import rsaRoutes, walletRoutes, etc.
 
 const router = Router()
@@ -38,5 +39,8 @@ router.use("/bike-models", bikeModelRoutes)
 
 // Wallet APIs
 router.use("/wallet", walletRoutes)
+
+// Invoice APIs
+router.use("/invoice", invoiceRoutes)
 
 export default router
