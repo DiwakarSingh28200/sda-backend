@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { InvoiceService } from "./invoice.services"
+import { generateInvoiceFromSaleId, InvoiceService } from "./invoice.services"
 import { asyncHandler } from "../../../utils/asyncHandler"
 
 export const generateInvoice = asyncHandler(async (req: Request, res: Response) => {
@@ -17,3 +17,18 @@ export const generateInvoice = asyncHandler(async (req: Request, res: Response) 
 
   res.send(pdfBuffer)
 })
+
+// Generate invoice from sale id
+export const generateInvoiceFromSaleIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { saleId } = req.params
+    const pdfBuffer = await generateInvoiceFromSaleId(saleId)
+
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=${saleId}.pdf`,
+      "Content-Length": pdfBuffer.length,
+    })
+    res.send(pdfBuffer)
+  }
+)
