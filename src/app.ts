@@ -6,6 +6,7 @@ import logger from "./config/logger"
 import cookieParser from "cookie-parser"
 import internalRoutes from "./routes/v1"
 import dealerRoutes from "./routes/dealer-v1"
+import zohoRoutes from "./routes/zoho"
 
 const frontendUrl = process.env.FRONTEND_URL!
 const frontendDevUrl = process.env.FRONTEND_DEV_URL!
@@ -51,5 +52,6 @@ app.use((req, res, next) => {
 
 app.use("/api/v1", internalRoutes)
 app.use("/api/dealer/v1", dealerRoutes)
+app.use("/api/zoho", zohoRoutes)
 
 export default app
