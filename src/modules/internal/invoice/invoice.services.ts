@@ -9,21 +9,26 @@ export const InvoiceService = {
 }
 
 export const generateInvoiceFromSaleId = async (saleId: string) => {
-  // 1. Fetch rsa_plan_sales with dealer
+  // 1. Fetch sale with dealer and rsa_plan_sales
   const { data: sale, error } = await db
-    .from("rsa_plan_sales")
+    .from("sales")
     .select(
       `
       *,
-      dealers:dealer_id (
-        dealership_name,
-        registered_address,
-        pan_number,
-        gst_number,
-        email,
-        operations_contact_phone,
-        dealer_id
-      )
+        dealers:dealer_id (
+          dealership_name,
+          registered_address,
+          pan_number,
+          gst_number,
+          email,
+          operations_contact_phone,
+          dealer_id
+        ),
+        rsa_plan_sales:rsa_plan_sales_id (
+          policy_number,
+          created_at,
+          plan_duration_years
+        )
     `
     )
     .eq("id", saleId)
@@ -33,7 +38,7 @@ export const generateInvoiceFromSaleId = async (saleId: string) => {
 
   // 2. Map DB data → template variables
   const invoiceData = {
-    invoiceNumber: sale.policy_number,
+    invoiceNumber: sale.rsa_plan_sales?.policy_number || "",
     invoiceDate: new Date(sale.created_at!).toLocaleDateString("en-IN"),
     dealerId: sale.dealers?.dealer_id || "-",
     placeOfSupply: "Maharashtra (27)",
@@ -52,22 +57,22 @@ export const generateInvoiceFromSaleId = async (saleId: string) => {
     shippingPhone: sale.dealers?.operations_contact_phone || "",
     shippingEmail: sale.dealers?.email || "",
 
-    itemDescription: `Roadside Assistance Subscription – ${sale.plan_duration_years} Year(s)`,
+    itemDescription: `Roadside Assistance Subscription – ${sale.rsa_plan_sales?.plan_duration_years} Year(s)`,
     sacCode: "998729",
     qty: 1,
-    rate: Number(sale.paid_amount) - 56.44,
+    rate: Number(sale.total_amount),
     cgst: "0.00",
     sgst: "0.00",
     igst: 56.44,
-    amount: Number(sale.paid_amount),
-    amountInWords: "Indian Rupees " + toWords(Number(sale.paid_amount)) + " Only",
-    taxableValue: Number(sale.paid_amount) - 56.44,
+    amount: Number(sale.sda_commission),
+    amountInWords: "Indian Rupees " + toWords(Number(sale.sda_commission)) + " Only",
+    taxableValue: Number(sale.sda_commission) - 56.44,
     cgstTotal: "0.00",
     sgstTotal: "0.00",
     igstTotal: 56.44,
-    commission: 109.75,
-    tds: 2.19,
-    totalInvoiceValue: Number(sale.paid_amount) - 109.75 + 2.19,
+    commission: Number(sale.dealer_commission),
+    tds: Number(sale.tds_amount),
+    totalInvoiceValue: Number(sale.sda_commission) + Number(sale.tds_amount),
     logoUrl: "https://sda.vinaydemos.site/assets/images/logo.svg",
   }
 
