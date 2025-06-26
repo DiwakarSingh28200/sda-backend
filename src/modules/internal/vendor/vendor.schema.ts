@@ -58,6 +58,7 @@ export const CreateVendorSchema = z.object({
     price_list_file_path: z.string().optional(),
     repair_on_site: z.boolean(),
     remark: z.string().optional(),
+    remark_title: z.string().optional(),
     due_date: z.string().optional(),
     owner_name: z.string(),
     owner_contact_number: z.string(),

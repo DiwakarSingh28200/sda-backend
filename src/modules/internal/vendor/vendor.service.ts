@@ -33,10 +33,10 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
         ...vendor,
         vendor_id: vendorId,
         password: hashedPassword,
-        login_enabled: true,
-        is_active: true,
+        login_enabled: false,
+        is_active: false,
         created_by: createdBy,
-        status: "approved",
+        status: "pending",
         due_date: null,
       },
     ])

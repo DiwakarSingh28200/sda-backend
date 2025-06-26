@@ -68,7 +68,7 @@ export const onboardDealerService = async (
         pan_number: dealer.pan_number,
         gst_number: dealer.gst_number,
         password: hashedPassword,
-        login_enabled: true,
+        login_enabled: false, // by default login is disabled
         parent_dealer_id: dealer.parent_dealer_id ? dealer.parent_dealer_id : null,
         is_sub_dealer: dealer.is_sub_dealer,
         is_master_dealer: dealer.is_master_dealer,
@@ -86,6 +86,7 @@ export const onboardDealerService = async (
         manager_name: dealer.manager_name,
         manager_contact: dealer.manager_contact,
         msme_number: dealer.msme_number,
+        status: "pending",
         created_by: createdBy,
       })
       .select()
@@ -210,8 +211,9 @@ export const onboardDealerService = async (
     await axios.post(
       `https://www.zohoapis.in/crm/v7/functions/dealers_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
       {
+        id: dealerId,
+        dealer_id: dealer_id,
         ...payload,
-        dealer_id: dealerId,
       }
     )
 

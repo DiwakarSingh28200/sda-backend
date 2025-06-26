@@ -684,6 +684,7 @@ export type Database = {
           registered_address: string | null
           repair_on_site: boolean | null
           state: string | null
+          status: string | null
           time_end: string | null
           time_start: string | null
           vehicle_types: string[] | null
@@ -727,6 +728,7 @@ export type Database = {
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
+          status?: string | null
           time_end?: string | null
           time_start?: string | null
           vehicle_types?: string[] | null
@@ -770,6 +772,7 @@ export type Database = {
           registered_address?: string | null
           repair_on_site?: boolean | null
           state?: string | null
+          status?: string | null
           time_end?: string | null
           time_start?: string | null
           vehicle_types?: string[] | null
