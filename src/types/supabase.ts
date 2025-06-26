@@ -1884,6 +1884,7 @@ export type Database = {
           primary_contact_number: string
           primary_email: string
           remark: string | null
+          remark_title: string | null
           repair_on_site: boolean | null
           state: string
           status: string | null
@@ -1917,6 +1918,7 @@ export type Database = {
           primary_contact_number: string
           primary_email: string
           remark?: string | null
+          remark_title?: string | null
           repair_on_site?: boolean | null
           state: string
           status?: string | null
@@ -1950,6 +1952,7 @@ export type Database = {
           primary_contact_number?: string
           primary_email?: string
           remark?: string | null
+          remark_title?: string | null
           repair_on_site?: boolean | null
           state?: string
           status?: string | null

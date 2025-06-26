@@ -159,6 +159,7 @@ export const getVendorById = async (id: string) => {
       repair_on_site: data.repair_on_site,
       due_date: data.due_date,
       is_active: data.is_active,
+      remark_title: data.remark_title,
     },
     documents: {
       gst_number: data.documents[0]?.gst_number,
