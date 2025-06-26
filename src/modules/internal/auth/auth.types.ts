@@ -1,4 +1,4 @@
 export type LoginInput = {
-  employee_id: string
+  email: string
   password: string
 }

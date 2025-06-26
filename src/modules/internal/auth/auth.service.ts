@@ -5,19 +5,19 @@ import { Response } from "express"
 import { LoginInput } from "./auth.types"
 
 export const loginEmployeeService = async (body: LoginInput) => {
-  const { employee_id, password } = body
+  const { email, password } = body
 
   const { data: employee, error: employeeError } = await db
     .from("employees")
     .select("id, employee_id, first_name, last_name, password, department:department_id(id, name)")
-    .eq("employee_id", employee_id)
+    .eq("email", email)
     .single()
 
   if (employeeError || !employee) {
     return {
       status: 401,
       success: false,
-      message: "Invalid Employee ID or password.",
+      message: "Invalid email or password.",
     }
   }
 

@@ -38,8 +38,8 @@ export const DealerSchema = z.object({
   price_list_file: z.string().optional(),
   repair_on_site: z.boolean().optional(),
   oem: z.string().optional(),
-  manger_name: z.string().optional(),
-  manger_contact: z.string().optional(),
+  manager_name: z.string().optional(),
+  manager_contact: z.string().optional(),
   msme_number: z.string().optional(),
 })
 

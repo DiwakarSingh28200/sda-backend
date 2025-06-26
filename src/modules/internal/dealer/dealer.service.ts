@@ -18,6 +18,7 @@ export const onboardDealerService = async (
       sub_dealerships,
       wallet_config,
     } = payload
+
     const oem = dealer.oem?.toUpperCase()
     const dealer_id = await generateDealerId({
       state: dealer.state!,
