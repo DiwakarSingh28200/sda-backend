@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { EmployeeOnboardingSchema } from "./employee.schema"
-import { onboardEmployeeService } from "./employee.service"
+import { getAllPendingEmployeesService, onboardEmployeeService } from "./employee.service"
 import { zodErrorFormatter } from "../../../utils/index"
 import { asyncHandler } from "../../../utils/asyncHandler"
 
@@ -28,3 +28,15 @@ export const onboardEmployeeController = asyncHandler(async (req: Request, res: 
     data: result.data,
   })
 })
+
+export const getAllPendingEmployeesController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const result = await getAllPendingEmployeesService()
+
+    return res.status(result.success ? 200 : 400).json({
+      success: result.success,
+      message: result.message,
+      data: result.data,
+    })
+  }
+)

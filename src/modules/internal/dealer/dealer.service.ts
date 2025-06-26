@@ -211,8 +211,8 @@ export const onboardDealerService = async (
     await axios.post(
       `https://www.zohoapis.in/crm/v7/functions/dealers_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
       {
-        id: dealerId,
-        dealer_id: dealer_id,
+        id: dealerId, // supabase id
+        dealer_id: dealer_id, // dealer id like DFL123456
         ...payload,
       }
     )

@@ -50,3 +50,25 @@ export const onboardEmployeeService = async (payload: any) => {
     data: employee,
   }
 }
+
+export const getAllPendingEmployeesService = async () => {
+  const { data: employees, error } = await db
+    .from("employees")
+    .select(
+      "id, employee_id, first_name, last_name, email, phone, dob, gender, status, department:department_id(id, name), created_by(id, first_name, last_name), created_at"
+    )
+    .eq("status", "pending")
+
+  if (error) {
+    return {
+      success: false,
+      message: error.message,
+    }
+  }
+
+  return {
+    success: true,
+    message: "Pending employees fetched successfully",
+    data: employees,
+  }
+}
