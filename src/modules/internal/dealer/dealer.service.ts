@@ -83,6 +83,9 @@ export const onboardDealerService = async (
         time_end: dealer.time_end,
         price_list_file: dealer.price_list_file,
         repair_on_site: dealer.repair_on_site,
+        manager_name: dealer.manager_name,
+        manager_contact: dealer.manager_contact,
+        msme_number: dealer.msme_number,
         created_by: createdBy,
       })
       .select()

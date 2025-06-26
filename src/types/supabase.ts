@@ -665,6 +665,9 @@ export type Database = {
           is_master_dealer: boolean | null
           is_sub_dealer: boolean | null
           login_enabled: boolean | null
+          manager_contact: string | null
+          manager_name: string | null
+          msme_number: string | null
           oem: string | null
           operation_location: string | null
           operations_contact_name: string | null
@@ -705,6 +708,9 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
+          manager_contact?: string | null
+          manager_name?: string | null
+          msme_number?: string | null
           oem?: string | null
           operation_location?: string | null
           operations_contact_name?: string | null
@@ -745,6 +751,9 @@ export type Database = {
           is_master_dealer?: boolean | null
           is_sub_dealer?: boolean | null
           login_enabled?: boolean | null
+          manager_contact?: string | null
+          manager_name?: string | null
+          msme_number?: string | null
           oem?: string | null
           operation_location?: string | null
           operations_contact_name?: string | null
