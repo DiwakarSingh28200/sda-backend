@@ -213,6 +213,7 @@ export const insertManualPaymentRequest = async (
       utr_number: payload.utr_number,
       receipt_url: payload.receipt_url,
       remarks: payload.remarks,
+      deposit_date: payload.deposit_date,
       status: "pending",
     })
     .select()
@@ -261,6 +262,7 @@ export const createBankAccount = async (
       account_number: payload.account_number,
       ifsc_code: payload.ifsc_code,
       is_default: false,
+      cancelled_cheque_file: payload.cancelled_cheque_file,
     })
     .select("*")
     .single()

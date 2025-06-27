@@ -134,6 +134,7 @@ export const onboardDealerService = async (
       account_number: finance_info.account_number,
       ifsc_code: finance_info.ifsc_code,
       is_default: true,
+      cancelled_cheque_file: finance_info.cancelled_cheque_file,
     })
 
     // Entry on wallet_configurations

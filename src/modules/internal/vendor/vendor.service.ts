@@ -212,7 +212,7 @@ export const getVendorById = async (id: string) => {
   }
 }
 
-export const getAllVendors = async () => {
+export const getAllVendors = async (employeeID: string) => {
   const { data, error } = await db
     .from("vendors")
     .select(
@@ -232,7 +232,9 @@ export const getAllVendors = async () => {
       created_at
     `
     )
+    .eq("created_by", employeeID)
     .order("created_at", { ascending: false })
+
   if (error) throw error
   return data
 }

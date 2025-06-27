@@ -37,6 +37,10 @@ export const handleGetVendorById = async (req: Request, res: Response) => {
 }
 
 export const handleGetAllVendors = async (req: Request, res: Response) => {
-  const result = await getAllVendors()
+  const employeeID = (req as any).user?.id
+  if (!employeeID) {
+    return res.status(400).json({ success: false, message: "Employee ID is required" })
+  }
+  const result = await getAllVendors(employeeID)
   res.status(200).json({ success: true, data: result })
 }

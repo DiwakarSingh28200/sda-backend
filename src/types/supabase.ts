@@ -2047,6 +2047,7 @@ export type Database = {
           amount: number
           created_at: string | null
           dealer_id: string | null
+          deposit_date: string | null
           id: string
           receipt_url: string | null
           remarks: string | null
@@ -2058,6 +2059,7 @@ export type Database = {
           amount: number
           created_at?: string | null
           dealer_id?: string | null
+          deposit_date?: string | null
           id?: string
           receipt_url?: string | null
           remarks?: string | null
@@ -2069,6 +2071,7 @@ export type Database = {
           amount?: number
           created_at?: string | null
           dealer_id?: string | null
+          deposit_date?: string | null
           id?: string
           receipt_url?: string | null
           remarks?: string | null
@@ -2207,6 +2210,7 @@ export type Database = {
         Row: {
           account_holder_name: string | null
           account_number: string | null
+          cancelled_cheque_file: string | null
           created_at: string | null
           dealer_id: string | null
           id: string
@@ -2217,6 +2221,7 @@ export type Database = {
         Insert: {
           account_holder_name?: string | null
           account_number?: string | null
+          cancelled_cheque_file?: string | null
           created_at?: string | null
           dealer_id?: string | null
           id?: string
@@ -2227,6 +2232,7 @@ export type Database = {
         Update: {
           account_holder_name?: string | null
           account_number?: string | null
+          cancelled_cheque_file?: string | null
           created_at?: string | null
           dealer_id?: string | null
           id?: string

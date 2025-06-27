@@ -17,6 +17,7 @@ export const ManualPaymentRequestSchema = z.object({
   amount: z.number().min(1, "Amount must be greater than 0"),
   utr_number: z.string().min(5, "UTR number is required"),
   receipt_url: z.string().url("Valid receipt URL is required"),
+  deposit_date: z.string().min(1, "Deposit date is required"),
   remarks: z.string().optional(),
 })
 
@@ -30,6 +31,7 @@ export const AddBankAccountSchema = z.object({
   account_holder_name: z.string().min(1, "Account holder name is required"),
   account_number: z.string().min(6, "Account number is required"),
   ifsc_code: z.string().regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code"),
+  cancelled_cheque_file: z.string().min(1, "Valid cancelled cheque file URL is required"),
 })
 
 export const UpdateBankAccountSchema = AddBankAccountSchema
