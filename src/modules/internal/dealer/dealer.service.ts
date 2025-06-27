@@ -236,12 +236,13 @@ export const onboardDealerService = async (
   }
 }
 
-export const getAllDealersService = async () => {
+export const getAllDealersService = async (employeeID: string) => {
   const { data, error } = await db
     .from("dealers")
     .select(
-      "id, dealer_id, dealership_name, dealership_type, city, state, owner_name, operations_contact_phone, email, login_enabled, created_at"
+      "id, dealer_id, dealership_name, dealership_type, city, state, owner_name, operations_contact_phone, email, login_enabled, status, created_at"
     )
+    .eq("created_by", employeeID)
     .order("created_at", { ascending: false })
 
   if (error) {

@@ -33,8 +33,12 @@ export const onboardDealerHandler = async (req: Request, res: Response) => {
   return res.status(result.status).json(result)
 }
 
-export const getAllDealersHandler = async (_req: Request, res: Response) => {
-  const result = await getAllDealersService()
+export const getAllDealersHandler = async (req: Request, res: Response) => {
+  const employeeID = (req as any).user?.id
+  if (!employeeID) {
+    return res.status(400).json({ success: false, message: "Employee ID is required" })
+  }
+  const result = await getAllDealersService(employeeID)
   return res.status(result.status).json(result)
 }
 
