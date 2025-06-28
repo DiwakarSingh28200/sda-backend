@@ -210,12 +210,19 @@ export const onboardDealerService = async (
       remarks: `Created onboarding request for ${dealer.dealership_name}`,
     })
 
+    const createdByUser = await db
+      .from("employees")
+      .select("id, first_name, last_name, email, phone")
+      .eq("id", createdBy)
+      .single()
     await axios.post(
       `https://www.zohoapis.in/crm/v7/functions/dealers_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
       {
-        id: dealerId, // supabase id
-        dealer_id: dealer_id, // dealer id like DFL123456
+        id: dealerId,
+        dealer_id: dealer_id,
+        is_rsa_support: services?.length ? true : false,
         ...payload,
+        agent: createdByUser,
       }
     )
 
@@ -259,5 +266,38 @@ export const getAllDealersService = async (employeeID: string) => {
     status: 200,
     message: "Dealers fetched successfully",
     data,
+  }
+}
+
+export const employeeDealerCountStat = async (employeeId: string) => {
+  // 1. Get total dealers count
+
+  const { count: totalDealersCount, error: totalDealersError } = await db
+    .from("dealers")
+    .select("*", { count: "exact", head: true })
+    .eq("created_by", employeeId)
+    .order("created_at", { ascending: false })
+
+  if (totalDealersError) throw totalDealersError
+
+  // 2. Get pending dealers created by the employee
+  const { count: pendingDealersCount, error: pendingDealersError } = await db
+    .from("dealers")
+    .select("*", { count: "exact", head: true })
+    .eq("created_by", employeeId)
+    .eq("status", "pending")
+  if (pendingDealersError) throw pendingDealersError
+
+  // 3. Get all vendors created by the employee
+  const { count: dealerCount, error: dealersError } = await db
+    .from("dealers")
+    .select("*", { count: "exact", head: true })
+    .eq("created_by", employeeId)
+  if (dealersError) throw dealersError
+
+  return {
+    total_dealers: totalDealersCount ?? 0,
+    pending_dealers: pendingDealersCount ?? 0,
+    onboarded_dealers: dealerCount ?? 0,
   }
 }

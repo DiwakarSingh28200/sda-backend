@@ -1,5 +1,9 @@
 import { Request, Response } from "express"
-import { onboardDealerService, getAllDealersService } from "./dealer.service"
+import {
+  onboardDealerService,
+  getAllDealersService,
+  employeeDealerCountStat,
+} from "./dealer.service"
 import { DealerOnboardingSchema } from "./dealer.schema"
 import { zodErrorFormatter } from "../../../utils/index"
 import { db } from "../../../config/db"
@@ -201,4 +205,14 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
       error: error.message,
     })
   }
+}
+
+export const getDealerOnboardStatController = async (req: Request, res: Response) => {
+  // const employeeID = req.user?.id
+  const employeeID = "315cd559-91ec-483f-966f-365e46472b86"
+  if (!employeeID) {
+    return res.status(400).json({ success: false, message: "Employee ID is required" })
+  }
+  const result = await employeeDealerCountStat(employeeID)
+  res.status(200).json({ success: true, data: result })
 }

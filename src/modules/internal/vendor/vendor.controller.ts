@@ -1,6 +1,11 @@
 import { Request, Response } from "express"
 import { CreateVendorSchema } from "./vendor.schema"
-import { createVendor, getVendorById, getAllVendors } from "./vendor.service"
+import {
+  createVendor,
+  getVendorById,
+  getAllVendors,
+  employeeVendorCountStat,
+} from "./vendor.service"
 import { zodErrorFormatter } from "../../../utils"
 
 export const handleCreateVendor = async (req: Request, res: Response) => {
@@ -42,5 +47,14 @@ export const handleGetAllVendors = async (req: Request, res: Response) => {
     return res.status(400).json({ success: false, message: "Employee ID is required" })
   }
   const result = await getAllVendors(employeeID)
+  res.status(200).json({ success: true, data: result })
+}
+
+export const getEmployeeVendorStatusController = async (req: Request, res: Response) => {
+  const employeeID = (req as any).user?.id
+  if (!employeeID) {
+    return res.status(400).json({ success: false, message: "Employee ID is required" })
+  }
+  const result = await employeeVendorCountStat(employeeID)
   res.status(200).json({ success: true, data: result })
 }

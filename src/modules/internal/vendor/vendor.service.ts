@@ -103,11 +103,19 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
     },
   ])
 
+  const createdByUser = await db
+    .from("employees")
+    .select("id, first_name, last_name, email, phone")
+    .eq("id", createdBy)
+    .single()
+
   await axios.post(
     `https://www.zohoapis.in/crm/v7/functions/vendor_data/actions/execute?auth_type=apikey&zapikey=1003.a0c79906670c4b5b04784b5a644999f1.5c5be3a14e8532fc6dd03c5f9f07bf79`,
     {
+      id: vendor_id,
+      vendor_id: vendorId, // VNDDL0004
       ...input,
-      vendor_id: vendorInsert.id,
+      agent: createdByUser,
     }
   )
 
@@ -257,4 +265,33 @@ export const getVendorsByLocation = async (lat: number, lng: number, radius_km: 
     ...vendor,
     distance_km: (vendor.distance_meters / 1000).toFixed(2),
   }))
+}
+
+export const employeeVendorCountStat = async (employeeId: string) => {
+  // 1. Get total vendors count
+  const { count: totalVendorsCount, error: totalVendorsError } = await db
+    .from("vendors")
+    .select("*", { count: "exact", head: true })
+  if (totalVendorsError) throw totalVendorsError
+
+  // 2. Get pending vendors created by the employee
+  const { count: pendingVendorsCount, error: pendingVendorsError } = await db
+    .from("vendors")
+    .select("*", { count: "exact", head: true })
+    .eq("created_by", employeeId)
+    .eq("status", "pending")
+  if (pendingVendorsError) throw pendingVendorsError
+
+  // 3. Get all vendors created by the employee
+  const { count: vendorCount, error: vendorsError } = await db
+    .from("vendors")
+    .select("*", { count: "exact", head: true })
+    .eq("created_by", employeeId)
+  if (vendorsError) throw vendorsError
+
+  return {
+    total_vendors: totalVendorsCount ?? 0,
+    pending_vendors: pendingVendorsCount ?? 0,
+    onboarded_vendors: vendorCount ?? 0,
+  }
 }
