@@ -19,6 +19,7 @@ import {
   authenticateDealerEmployee,
   authenticateDealerOrEmployee,
 } from "../../../middleware/authMiddleware"
+import transactionRoutes from "./transaction/transaction.route"
 
 const router = Router()
 
@@ -52,5 +53,8 @@ router.post("/payment-success", authenticateDealer, markWalletPaymentSuccess)
 router.post("/manual-payment", authenticateDealer, submitManualPayment)
 
 router.post("/deduct-wallet-for-sale", deductWalletForSaleHandler)
+
+// Transaction routes
+router.use("/transaction", transactionRoutes)
 
 export default router

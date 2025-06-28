@@ -9,6 +9,7 @@ import dealerEmployeeRoutes from "../modules/dealer/employee/employee.route"
 import bikeModelRoutes from "../modules/dealer/bike-models/bike.router"
 import walletRoutes from "../modules/dealer/wallet/wallet.routes"
 import invoiceRoutes from "../modules/dealer/invoice/invoice.routes"
+import comissionInvoiceRoutes from "../modules/dealer/invoice/comission/comission-invoice.route"
 // future: import rsaRoutes, walletRoutes, etc.
 
 const router = Router()

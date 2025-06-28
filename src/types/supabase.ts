@@ -439,6 +439,53 @@ export type Database = {
           },
         ]
       }
+      dealer_commission_invoices: {
+        Row: {
+          created_at: string
+          dealer_id: string | null
+          doc_amount: number | null
+          doc_date: string | null
+          doc_desc: string | null
+          doc_number: string | null
+          doc_type: string | null
+          file: string | null
+          id: string
+          other_reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          dealer_id?: string | null
+          doc_amount?: number | null
+          doc_date?: string | null
+          doc_desc?: string | null
+          doc_number?: string | null
+          doc_type?: string | null
+          file?: string | null
+          id?: string
+          other_reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: string | null
+          doc_amount?: number | null
+          doc_date?: string | null
+          doc_desc?: string | null
+          doc_number?: string | null
+          doc_type?: string | null
+          file?: string | null
+          id?: string
+          other_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_commission_invoices_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_documents: {
         Row: {
           additional_docs: Json | null
@@ -2884,6 +2931,19 @@ export type Database = {
         Returns: {
           day: string
           count: number
+        }[]
+      }
+      get_plan_sales_stats: {
+        Args: {
+          dealer_input: string
+          range?: string
+          month?: number
+          year?: number
+        }
+        Returns: {
+          name: string
+          count: number
+          percentage: number
         }[]
       }
       get_plan_type_stats: {
