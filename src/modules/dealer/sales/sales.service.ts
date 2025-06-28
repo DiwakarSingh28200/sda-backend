@@ -134,7 +134,7 @@ export const getRsaplans = async () => {
   // ✅ Flatten and remove rsa_plan_features
   const plansWithFlatFeatures = data.map((plan) => ({
     id: plan.id,
-    name: plan.name,
+    name: "Sure Shield " + plan.name.charAt(0).toUpperCase() + plan.name.slice(1),
     description: plan.description,
     price: plan.price,
     validity: plan.validity,

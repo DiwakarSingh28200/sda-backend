@@ -38,6 +38,7 @@ export const createCustomerService = async (
   data?: any
 }> => {
   const { customer, vehicle, rsa_plan, wallet } = input
+
   let customer_id: string | null = null
   let vehicle_id: string | null = null
 
@@ -107,8 +108,8 @@ export const createCustomerService = async (
       .eq("id", rsa_plan.plan_id)
       .single()
 
-    const planCodeMap = { standard: "S", premium: "P", elite: "E" }
-    const planCode = planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "S"
+    const planCodeMap = { max: "M", core: "C" }
+    const planCode = planCodeMap[plan?.name.toLowerCase() as keyof typeof planCodeMap] || "M"
 
     const policyNumber = generatePolicyNumber(customer.state, oemCode, serialNumber, planCode)
 
