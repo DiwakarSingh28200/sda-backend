@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { getDealerSales, getDelaerSalesAndComissions } from "./sales.service"
+import { getDealerSales, getDelaerSalesAndComissions, getRsaplans } from "./sales.service"
 
 export const getDealerSalesHandler = async (req: Request, res: Response) => {
   const dealer_id = req.query.dealer_id as string
@@ -26,5 +26,10 @@ export const getDelaerSalesAndComissionsHandler = async (req: Request, res: Resp
 
   const data = await getDelaerSalesAndComissions(dealer_id.toString())
 
+  return res.status(200).json(data)
+}
+
+export const getRsaplansHandler = async (req: Request, res: Response) => {
+  const data = await getRsaplans()
   return res.status(200).json(data)
 }

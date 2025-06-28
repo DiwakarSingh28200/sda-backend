@@ -573,6 +573,7 @@ export type Database = {
       }
       dealer_finance_info: {
         Row: {
+          account_holder_name: string | null
           account_number: string | null
           bank_name: string | null
           cancelled_cheque_file: string | null
@@ -584,6 +585,7 @@ export type Database = {
           ifsc_code: string | null
         }
         Insert: {
+          account_holder_name?: string | null
           account_number?: string | null
           bank_name?: string | null
           cancelled_cheque_file?: string | null
@@ -595,6 +597,7 @@ export type Database = {
           ifsc_code?: string | null
         }
         Update: {
+          account_holder_name?: string | null
           account_number?: string | null
           bank_name?: string | null
           cancelled_cheque_file?: string | null
@@ -1425,26 +1428,35 @@ export type Database = {
       rsa_plans: {
         Row: {
           description: string | null
+          four_year_discount: number | null
           id: string
           is_active: boolean | null
           name: string
           price: number
+          three_year_discount: number | null
+          two_year_discount: number | null
           validity: string
         }
         Insert: {
           description?: string | null
+          four_year_discount?: number | null
           id?: string
           is_active?: boolean | null
           name: string
           price: number
+          three_year_discount?: number | null
+          two_year_discount?: number | null
           validity: string
         }
         Update: {
           description?: string | null
+          four_year_discount?: number | null
           id?: string
           is_active?: boolean | null
           name?: string
           price?: number
+          three_year_discount?: number | null
+          two_year_discount?: number | null
           validity?: string
         }
         Relationships: []

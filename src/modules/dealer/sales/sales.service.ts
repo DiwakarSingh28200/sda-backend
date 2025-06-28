@@ -89,3 +89,69 @@ export const getDelaerSalesAndComissions = async (dealer_id: string) => {
     data: cleanedData,
   }
 }
+
+export const getRsaplans = async () => {
+  const { data, error } = await db
+    .from("rsa_plans")
+    .select(
+      `
+    id,
+    name,
+    description,
+    price,
+    validity,
+    is_active,
+    two_year_discount,
+    three_year_discount,
+    four_year_discount,
+    rsa_plan_features (
+      rsa_features (
+        id,
+        name,
+        description
+      )
+    )
+  `
+    )
+    .order("price", { ascending: true })
+
+  if (error) {
+    return {
+      success: false,
+      message: "Failed to fetch RSA plans",
+      data: [],
+    }
+  }
+
+  if (!data || data.length === 0) {
+    return {
+      success: false,
+      message: "No RSA plans found",
+      data: [],
+    }
+  }
+
+  // ✅ Flatten and remove rsa_plan_features
+  const plansWithFlatFeatures = data.map((plan) => ({
+    id: plan.id,
+    name: plan.name,
+    description: plan.description,
+    price: plan.price,
+    validity: plan.validity,
+    is_active: plan.is_active,
+    two_year_discount: plan.two_year_discount,
+    three_year_discount: plan.three_year_discount,
+    four_year_discount: plan.four_year_discount,
+    features: plan.rsa_plan_features.map((f) => ({
+      id: f.rsa_features.id,
+      name: f.rsa_features.name,
+      description: f.rsa_features.description,
+    })),
+  }))
+
+  return {
+    success: true,
+    message: "RSA plans fetched successfully",
+    data: plansWithFlatFeatures,
+  }
+}
