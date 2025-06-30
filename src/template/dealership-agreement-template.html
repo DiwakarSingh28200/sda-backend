@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dealership Agreement</title>
+  <style>
+    body {{ font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; font-size: 14px; }}
+    h1 {{ text-align: center; text-transform: uppercase; }}
+    .section-title {{ font-weight: bold; margin-top: 30px; }}
+    .signature {{ margin-top: 60px; }}
+    .signature-block {{ display: inline-block; width: 45%; vertical-align: top; }}
+  </style>
+</head>
+<body>
+
+<h1>Dealership Agreement</h1>
+
+<p>This Dealership Agreement (“Agreement”) is made and entered into on this <strong>{{agreement_day}}</strong> day of <strong>{{agreement_month}}</strong>, <strong>{{agreement_year}}</strong>, at Gurugram, Haryana, India.</p>
+
+<p>By and Between<br/>
+<strong>SureDrive Assist Private Limited</strong>, ... represented herein by <strong>{{sda_signatory_name}}</strong>, <strong>{{sda_signatory_designation}}</strong> (hereinafter referred to as "SDA")</p>
+
+<p>AND</p>
+
+<p><strong>{{dealer_name}}</strong>, a {{dealer_entity_type}}, having its registered office at <strong>{{dealer_address}}</strong>, represented by <strong>{{dealer_signatory_name}}</strong>, <strong>{{dealer_signatory_designation}}</strong> (hereinafter referred to as the "Dealer")</p>
+
+<p>SDA and Dealer are collectively referred to as the “Parties”.</p>
+
+<p class="section-title">1. Scope of Services</p>
+<p>SDA shall offer Roadside Assistance and related services as specified in Annexure 1...</p>
+
+<!-- Additional clauses would go here (trimmed for brevity) -->
+
+<p class="section-title">24. Notices</p>
+<p>For SDA:<br/>
+SureDrive Assist Pvt. Ltd.<br/>
+Unit No. 1007, 10th Floor, Vipul Business Park, Gurugram, Haryana – 122018<br/>
+Email: finops@suredriveassist.com<br/>
+Attn: Finance Team</p>
+
+<p>For Dealer:<br/>
+<strong>{{dealer_name}}</strong><br/>
+<strong>{{dealer_address}}</strong><br/>
+Email: <strong>{{dealer_email}}</strong><br/>
+Attn: <strong>{{dealer_signatory_name}}, {{dealer_signatory_designation}}</strong></p>
+
+<div class="signature">
+  <div class="signature-block">
+    <p>For SureDrive Assist Private Limited</p>
+    <p>Signature: _____________________<br/>
+    Name: {{sda_signatory_name}}<br/>
+    Designation: {{sda_signatory_designation}}<br/>
+    Date: {{agreement_date}}<br/>
+    Place: Gurugram</p>
+  </div>
+
+  <div class="signature-block">
+    <p>For {{dealer_name}}</p>
+    <p>Signature: _____________________<br/>
+    Name: {{dealer_signatory_name}}<br/>
+    Designation: {{dealer_signatory_designation}}<br/>
+    Date: {{agreement_date}}<br/>
+    Place: {{dealer_place}}</p>
+  </div>
+</div>
+
+</body>
+</html>
