@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { sendOTP, verifyOTP } from "./otp.service"
+import { sendEmailOTP, sendOTP, verifyOTP } from "./otp.service"
 
 export const sendOTPController = async (req: Request, res: Response) => {
   try {
@@ -39,6 +39,23 @@ export const verifyOTPController = async (req: Request, res: Response) => {
       success: true,
       message: result?.message,
     })
+  }
+  return res.status(400).json({
+    success: false,
+    message: result?.message,
+  })
+}
+export const sendEmailOTPController = async (req: Request, res: Response) => {
+  const { email } = req.body
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required",
+    })
+  }
+  const result = await sendEmailOTP(email)
+  if (result.success) {
+    return res.status(200).json(result)
   }
   return res.status(400).json({
     success: false,
