@@ -8,14 +8,6 @@ import { DealerOnboardingSchema } from "./dealer.schema"
 import { zodErrorFormatter } from "../../../utils/index"
 import { db } from "../../../config/db"
 
-// export const onboardDealerHandler = async (
-//   req: Request<{}, {}, DealerOnboardingPayload>,
-//   res: Response
-// ) => {
-//   const result = await onboardDealerService(req.body, (req as any).user?.id)
-//   return res.status(result.status).json(result)
-// }
-
 export const onboardDealerHandler = async (req: Request, res: Response) => {
   const parsed = DealerOnboardingSchema.safeParse(req.body)
 
@@ -208,8 +200,7 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
 }
 
 export const getDealerOnboardStatController = async (req: Request, res: Response) => {
-  // const employeeID = req.user?.id
-  const employeeID = "315cd559-91ec-483f-966f-365e46472b86"
+  const employeeID = req.user?.id
   if (!employeeID) {
     return res.status(400).json({ success: false, message: "Employee ID is required" })
   }

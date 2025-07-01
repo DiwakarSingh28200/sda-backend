@@ -696,6 +696,7 @@ export type Database = {
       }
       dealers: {
         Row: {
+          agreement_url: string | null
           available_days: string[] | null
           city: string | null
           created_at: string | null
@@ -740,6 +741,7 @@ export type Database = {
           vehicle_types: string[] | null
         }
         Insert: {
+          agreement_url?: string | null
           available_days?: string[] | null
           city?: string | null
           created_at?: string | null
@@ -784,6 +786,7 @@ export type Database = {
           vehicle_types?: string[] | null
         }
         Update: {
+          agreement_url?: string | null
           available_days?: string[] | null
           city?: string | null
           created_at?: string | null

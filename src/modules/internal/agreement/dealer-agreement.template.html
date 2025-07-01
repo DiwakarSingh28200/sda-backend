@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealership Agreement</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.4;
+        font-size: 14px;
+        margin: 20px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .section-title {
+        font-size: 1em;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      .subsection-title {
+        font-weight: bold;
+        margin-top: 15px;
+      }
+      .indent {
+        margin-left: 20px;
+      }
+      .signature-block {
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-around;
+      }
+      .signature-box {
+        border-top: 1px solid #000;
+        padding-top: 5px;
+        width: 45%;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .flex {
+        display: flex;
+        justify-content: space-between;
+      }
+      .flex-column {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <p>(TO BE PRINTED ON LETTER HEAD OF DEALERSHIP)</p>
+      <h1>DEALERSHIP AGREEMENT</h1>
+      <p>
+        This Dealership Agreement ("Agreement") is made and entered into on this
+        <span style="border-bottom: 1px solid #000; display: inline-block; width: 50px"
+          >{{DAY}}</span
+        >
+        day of
+        <span style="border-bottom: 1px solid #000; display: inline-block; width: 80px"
+          >{{MONTH}}</span
+        >
+        20YY ("Effective Date"), at Gurugram, Haryana, India.
+      </p>
+    </div>
+
+    <p><strong>By and Between</strong></p>
+
+    <p>
+      M/s SureDrive Assist Private Limited, a company incorporated under the Companies Act, 2013,
+      having its registered office at Unit No. 1007, 10th Floor, Vipul Business Park, Sohna Road,
+      Sector 48, Gurugram, Haryana 122018, India, bearing Corporate Identification Number (CIN)
+      U45200HR2024PTC126936, and represented herein by Mr./Ms.
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{SDA_SALES_HEAD_NAME}}</span
+      >,
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{SDA_SALES_HEAD_DESIGNATION}}</span
+      >, who is duly authorized to sign and bind the company for the purposes of this Agreement
+      (hereinafter referred to as the "SDA", which expression shall, unless repugnant to the
+      context or meaning thereof, be deemed to include its successors, affiliates, and permitted
+      assigns);
+    </p>
+
+    <p><strong>AND</strong></p>
+
+    <p>
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 250px"
+        >{{DEALER_FULL_LEGAL_NAME}}</span
+      >, a type of
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{DEALER_ENTITY_TYPE}}</span
+      >, incorporated/registered under the laws of India, having its principal/registered office at
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 250px"
+        >{{DEALER_ADDRESS}}</span
+      >, bearing registration number
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{DEALER_REGISTRATION_ID_IF_APPLICABLE}}</span
+      >, and represented herein by
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{DEALER_AUTHORIZED_SIGNATORY_NAME}}</span
+      >,
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+        >{{DEALER_AUTHORIZED_SIGNATORY_DESIGNATION}}</span
+      >, who is duly authorized to sign and bind the company for the purposes of this Agreement
+      (hereinafter referred to as the "Dealer", which expression shall, unless repugnant to the
+      context or meaning thereof, be deemed to include its successors, affiliates, and permitted
+      assigns)
+    </p>
+
+    <p>
+      SDA and Dealer are hereinafter collectively referred to as "Parties" and individually as
+      "Party"
+    </p>
+
+    <div class="section-title">WHEREAS</div>
+    <p class="">
+      <span style="font-weight: bold">A.</span> SureDrive Assist Private Limited (SDA) is a
+      tech-enabled automotive service provider operating in both B2B and B2B2C segments. While
+      Roadside Assistance (RSA) forms the backbone of our offerings, we also deliver a
+      comprehensive suite of mobility support solutions including Warranty Management, Electric
+      Vehicle (EV) Support Services, Accident Management and Insurance Facilitation. SDA
+      collaborates with OEMs, dealerships, workshops, fleet operators, and insurance partners to
+      offer seamless, scalable, and value-driven vehicle support across the customer lifecycle.
+    </p>
+    <p class="">
+      <span style="font-weight: bold">B.</span> The Dealer is engaged in the business of selling
+      and servicing automobiles, as well as offering ancillary products and related services;
+    </p>
+    <p class="">
+      <span style="font-weight: bold">C.</span> The Parties intend to enter into this Agreement
+      whereby the Dealer shall promote and facilitate the sale of SDA's RSA products to its
+      customers as per the terms and conditions set forth herein.
+    </p>
+
+    <div class="section-title">NOW, THEREFORE, IT IS AGREED AS FOLLOWS:</div>
+
+    <div class="section-title">1. SCOPE OF SERVICES</div>
+    <p class="">
+      SDA shall offer Roadside Assistance and related services as specified in Annexure 1. These
+      services may be updated or modified by SDA, in consultation with the Dealer, through written
+      acceptance email or official correspondence. Such modifications shall become binding only
+      upon written acceptance by the Dealer.
+    </p>
+    <p class="indent">
+      The Dealer shall not, under any circumstances, solicit, negotiate, or accept business or
+      issue documents in SDA's name without express prior written authorization. Any additional
+      offerings or representations to end customers must be listed, mutually agreed upon, and
+      configured in the SDA platform.
+    </p>
+
+    <div class="section-title">2. DEALER'S RESPONSIBILITIES</div>
+    <ul class="indent">
+      <li>
+        The Dealer shall be solely responsible for marketing and selling SDA's RSA Subscription
+        Plan to its end customers.
+      </li>
+      <li>
+        The Dealer shall collect payments from the end customers for the RSA services offered and
+        ensure that customers receive their RSA service certificates digitally, as prescribed by
+        SDA.
+      </li>
+      <li>
+        The Dealer shall ensure that all payments collected are settled with SDA in accordance with
+        Clause 3.
+      </li>
+      <li>
+        The Dealer shall not be responsible for delivering the RSA services described in the
+        Subscription Plan or addressing claims relating to those services.
+      </li>
+    </ul>
+
+    <div class="section-title">3. PAYMENT TERMS</div>
+    <ul class="indent">
+      <li>
+        The Dealer shall collect payment from the customer at the time of RSA sale and remit the
+        due amount to SDA within seven (7) business days via bank transfer or Dealer's wallet (bank
+        details in Annexure 2).
+      </li>
+      <li>
+        SDA shall raise GST-compliant tax invoices on a fortnightly, as mutually agreed, based on
+        actual RSA sales.
+      </li>
+      <li>
+        Dealer shall ensure its GST registration remains valid and active throughout the Term of
+        this Agreement. SDA shall not be liable for any input tax credit denial arising from
+        Dealer's non-compliance.
+      </li>
+      <li>
+        Delayed payments beyond ten (10) business days shall attract interest at 18% p.a.,
+        calculated daily until payment is received.
+      </li>
+      <li>
+        During the initial onboarding, SDA may provide a credit limit to the Dealer's wallet, valid
+        for 30 days. After expiry, the Dealer must make advance payments to continue RSA issuance.
+        Unused credit shall lapse post- validity.
+      </li>
+      <li>
+        Policy issuance will be suspended if the wallet lacks funds or if payments are overdue.
+      </li>
+      <li>
+        In case of non-payment beyond forty-five (45) days from the due date, SDA reserves the
+        right to cancel the corresponding RSA Subscription Plan issued under the Dealer's account,
+        without further notice.
+      </li>
+    </ul>
+
+    <div class="section-title">4. COMMISSION AND INCENTIVES</div>
+    <ul class="indent">
+      <li>
+        SDA shall credit to the Dealer a commission for RSA Subscription Plan sold, as per
+        commission structure defined in Annexure 3 including slab-wise earnings, volume-based
+        bonuses, and seasonal incentives.
+      </li>
+      <li>
+        Such commissions shall be credited on a daily basis to the Dealer's wallet maintained with
+        SDA.
+      </li>
+      <li>
+        The Dealer shall raise a monthly invoice or relevant documentation for such fees for
+        compliance with applicable tax laws.
+      </li>
+      <li>
+        SDA's liability toward the Dealer shall be limited to the commission payable under this
+        Agreement.
+      </li>
+      <li>
+        SDA reserves the right to revise commission rates with a 30-day prior notice, applicable
+        prospectively.
+      </li>
+    </ul>
+
+    <div class="section-title">5. SECURITY DEPOSIT</div>
+    <ul class="indent">
+      <li>
+        The Dealer has provided SDA with a post-dated security deposit cheque, details of which are
+        acknowledged and recorded separately in Annexure 2.
+      </li>
+      <li>
+        The Dealer agrees that encashment of the security cheque shall not be construed as a
+        penalty, but as compensation for non-performance under this Agreement.
+      </li>
+      <li>
+        SDA reserves the right to encash the security cheque in the event of default or breach of
+        payment obligations by the Dealer under this Agreement. Dealer shall be notified at least 5
+        business days prior to encashment of the security cheque due to default.
+      </li>
+    </ul>
+
+    <div class="section-title">6. TERM</div>
+    <p class="indent">
+      This Agreement shall be valid for a period of three (3) years from the Effective Date, unless
+      earlier terminated in accordance with Clause 7.
+    </p>
+    <p class="indent">
+      The Agreement shall automatically renew for successive one-year terms, unless either Party
+      provides a 30- day written notice of non-renewal.
+    </p>
+
+    <div class="section-title">7. TERMINATION</div>
+    <p class="indent">
+      Either Party may terminate this Agreement with 30 days' written notice without assigning any
+      reason.
+    </p>
+    <p class="indent">SDA may terminate this Agreement with immediate effect if:</p>
+    <ul class="indent">
+      <li>The Dealer breaches applicable laws or regulations;</li>
+      <li>There is a change in the Dealer's corporate structure;</li>
+      <li>The Dealer undergoes dissolution, insolvency, or liquidation;</li>
+      <li>A receiver or similar officer is appointed for the Dealer's assets.</li>
+    </ul>
+
+    <div class="section-title">8. INDEMNIFICATION</div>
+    <p class="indent">
+      The Dealer agrees to indemnify and hold harmless SDA and its affiliates from and against any
+      claims, losses, liabilities, or damages arising from:
+    </p>
+    <ul class="indent">
+      <li>Breach of this Agreement;</li>
+      <li>Willful misconduct or gross negligence by the Dealer;</li>
+      <li>Any third-party or employment-related claims;</li>
+      <li>Personal injury or property damage resulting from the Dealer's actions.</li>
+    </ul>
+    <p class="indent">
+      SDA reserves the right to determine and recover such losses from any amounts payable to the
+      Dealer.
+    </p>
+
+    <div class="section-title">9. CONFIDENTIALITY & DATA PROTECTION</div>
+    <p class="indent">
+      The Dealer shall maintain the confidentiality of all proprietary and customer data of SDA and
+      shall ensure that all its personnel and representatives do likewise. Upon termination, all
+      such data shall be returned to SDA and must not be used or retained by the Dealer under any
+      circumstances. The obligations under this clause shall survive for a period of 2 years
+      post-termination.
+    </p>
+
+    <div class="section-title">10. INTELLECTUAL PROPERTY</div>
+    <p class="indent">
+      All intellectual property rights in SDA's documentation, systems, platforms, and materials
+      shall remain the exclusive property of SDA, including after termination.
+    </p>
+
+    <div class="section-title">11. NO AGENCY</div>
+    <p class="indent">
+      Nothing in this Agreement shall be construed to establish a principal-agent relationship or
+      create any authority for the Dealer to act on behalf of SDA for procuring or marketing
+      insurance products.
+    </p>
+
+    <div class="section-title">12. LEGAL COMPLIANCE</div>
+    <p class="indent">
+      The Dealer shall comply with all applicable laws while performing its obligations under this
+      Agreement. SDA shall similarly comply with applicable laws governing its operations.
+    </p>
+
+    <div class="section-title">13. ETHICAL CONDUCT</div>
+    <p class="indent">
+      The Dealer shall not engage in any unethical, unlawful, or deceptive practices while
+      marketing RSA Subscription Plan or interacting with customers.
+    </p>
+
+    <div class="section-title">14. WORK PRODUCT</div>
+    <p class="indent">
+      Any software, programs, documentation, or tools created under this Agreement shall remain the
+      property of SDA. SDA shall ensure adherence to industry data security and privacy standards.
+    </p>
+
+    <div class="section-title">15. SUBCONTRACTING</div>
+    <p class="indent">
+      The Dealer shall not subcontract any responsibilities under this Agreement without SDA's
+      prior written consent.
+    </p>
+
+    <div class="section-title">16. BUSINESS CONTINUITY</div>
+    <p class="indent">
+      Both Parties shall maintain adequate disaster recovery and business continuity plans to
+      ensure uninterrupted services. In the event of an unforeseen disruption, SDA will coordinate
+      with the Dealer for alternative service modes.
+    </p>
+
+    <div class="section-title">17. GRIEVANCE REDRESSAL</div>
+    <p class="indent">
+      Customer complaints and issues regarding RSA services should be directed to SDA's customer
+      support or escalated to:
+    </p>
+    <p class="indent">
+      Grievance Redressal Officer<br />
+      Mr. Naveen Kumar<br />
+      SureDrive Assist Pvt. Ltd.<br />
+      1007, 10th Floor, Vipul Business Park,<br />
+      Sohna Road, Sector-48, Gurugram, Haryana - 122018<br />
+      Email: partners@suredriveassist.com
+    </p>
+
+    <div class="section-title">18. GOVERNING LAW AND DISPUTE RESOLUTION</div>
+    <ul class="indent">
+      <li>
+        This Agreement shall be governed by and construed in accordance with the laws of India,
+        including but not limited to the Indian Contract Act, 1872.
+      </li>
+      <li>
+        Any dispute arising under this Agreement shall be resolved amicably through discussion.
+      </li>
+      <li>
+        If unresolved, disputes shall be referred to arbitration by a sole arbitrator appointed by
+        mutual consent, governed by the Arbitration and Conciliation Act, 1996.
+      </li>
+      <li>
+        The venue and seat of arbitration shall be Gurugram, Haryana, and the language shall be
+        English.
+      </li>
+      <li>The arbitration award shall be final and binding upon the Parties.</li>
+      <li>
+        Subject to arbitration, courts in Gurugram, Haryana, shall have exclusive jurisdiction.
+      </li>
+    </ul>
+
+    <div class="section-title">19. LIMITATION OF DEALER LIABILITY FOR SERVICES</div>
+    <ul class="indent">
+      <li>
+        The Dealer shall not be held liable for delivering RSA services or handling claims
+        associated with such services under any circumstances.
+      </li>
+      <li>
+        Neither Party shall be liable for any indirect, incidental, or consequential damages. SDA's
+        aggregate liability under this Agreement shall not exceed the total commissions paid to the
+        Dealer in the preceding 3 months.
+      </li>
+      <li>
+        This limitation shall not apply in cases of gross negligence, fraud, or willful misconduct.
+      </li>
+    </ul>
+
+    <div class="section-title">20. FORCE MAJEURE</div>
+    <p class="indent">
+      Neither Party shall be liable for any failure or delay in performing its obligations under
+      this Agreement if such failure or delay is due to any cause beyond the reasonable control of
+      the affected Party, including but not limited to acts of God, fire, flood, earthquake,
+      pandemic, war, strikes, labor disputes, civil unrest, embargo, government regulations, or
+      power failures ("Force Majeure Event"). The Party affected by such Force Majeure Event shall
+      promptly notify the other Party in writing, stating the nature of the event, its anticipated
+      duration, and the steps being taken to mitigate the impact. The affected obligations shall be
+      suspended for the duration of the Force Majeure Event.
+    </p>
+
+    <div class="section-title">21. SEVERABILITY</div>
+    <p class="indent">
+      If any provision of this Agreement is held to be invalid, illegal, or unenforceable by a
+      court of competent jurisdiction, the remaining provisions of this Agreement shall remain in
+      full force and effect. The Parties shall negotiate in good faith to substitute such invalid
+      or unenforceable provision with a valid and enforceable provision that best reflects the
+      original intent of the Parties.
+    </p>
+
+    <div class="section-title">22. ENTIRE AGREEMENT</div>
+    <p class="indent">
+      This Agreement, including all Annexures attached hereto, constitutes the entire agreement
+      between the Parties with respect to the subject matter hereof and supersedes all prior
+      discussions, communications, negotiations, and agreements, whether oral or written. Any
+      modifications or amendments to this Agreement shall be made in writing and signed by
+      authorized representatives of both Parties.
+    </p>
+
+    <div class="section-title">23. AMENDMENTS</div>
+    <p class="indent">
+      No amendment or modification of this Agreement shall be valid or binding unless made in
+      writing and duly executed by both Parties.
+    </p>
+
+    <div class="section-title">24. NOTICES</div>
+    <p class="indent">
+      All notices, demands, consents, approvals, or other communications ("Notices") required or
+      permitted under this Agreement shall be made in writing and shall be deemed to have been duly
+      given:
+    </p>
+    <ul class="indent">
+      <li>(i) when delivered personally;</li>
+      <li>
+        (ii) when sent by a reputable international courier or registered post with acknowledgment
+        due;
+      </li>
+      <li>(iii) when sent by email with confirmed delivery/read receipt,</li>
+    </ul>
+    <p class="indent">
+      to the addresses or email IDs of the respective Parties as mentioned below, or such other
+      address as either Party may hereafter notify to the other in writing:
+    </p>
+
+    <div class="flex">
+      <div class="flex-column">
+        <div class="subsection-title">For SDA:</div>
+        <p class="">
+          SureDrive Assist Private Limited<br />
+          Unit No. 1007, 10th Floor, Vipul Business Park,<br />
+          Sohna Road, Sector 48, Gurugram, Haryana - 122018<br />
+          Email: finops@suredriveassist.com<br />
+          Attn: Finance Team
+        </p>
+      </div>
+
+      <div class="flex-column">
+        <div class="subsection-title">For Dealer:</div>
+        <p class="">
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 200px"
+            >{{DEALER_NAME_FOR_NOTICES}}</span
+          ><br />
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 250px"
+            >{{DEALER_ADDRESS_FOR_NOTICES}}</span
+          ><br />
+          Email:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 200px"
+            >{{DEALER_EMAIL_FOR_NOTICES}}</span
+          ><br />
+          Attn:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 250px"
+            >{{DEALER_REPRESENTATIVE_NAME_DESIGNATION_FOR_NOTICES}}</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <div class="section-title">25. NO WAIVER</div>
+    <p class="indent">
+      The failure or delay of either Party to enforce any of its rights under this Agreement shall
+      not be deemed a waiver of such rights. Any waiver of a breach of this Agreement shall not be
+      construed as a waiver of any subsequent breach.
+    </p>
+
+    <div class="section-title">
+      IN WITNESS WHEREOF, the Parties have executed this Agreement along with its Annexures, which
+      form an integral part of this Agreement.
+    </div>
+
+    <div class="signature-block">
+      <div class="signature-box">
+        <p><strong>For SureDrive Assist Private Limited</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_NAME}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_DESIGNATION}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_DATE}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_PLACE}}</span
+          >
+        </p>
+      </div>
+      <div class="signature-box">
+        <p><strong>For {{DEALER_NAME_FOR_SIGNATURE}}</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_NAME}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_DESIGNATION}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_DATE}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_PLACE}}</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <div style="page-break-before: always"></div>
+
+    <div class="header">
+      <h1>ANNEXURE 1</h1>
+      <h2>SCOPE OF SERVICES</h2>
+    </div>
+
+    <div class="subsection-title">1. RSA SERVICES:</div>
+    <p class="indent">
+      SDA shall provide Roadside Assistance (RSA) services, including but not limited to the
+      following:
+    </p>
+    <ul class="indent">
+      <li>Towing Assistance</li>
+      <li>Fuel delivery</li>
+      <li>Washing/Dry Cleaning</li>
+      <li>Discount on Labour (Service Bill)</li>
+      <li>Discount on Labour (Spare Parts)</li>
+      <li>Hotel Accommodation</li>
+      <li>Taxi Assistance</li>
+      <li>Labour & Service Charges</li>
+      <li>Flat Tyre Assistance</li>
+      <li>On-Site Minor Repairs</li>
+      <li>Battery Jump Start</li>
+      <li>Locked/Lost Key</li>
+      <li>Natural Disasters or Act of GOD</li>
+      <li>Emergency Medical Assistance</li>
+      <li>Emergency Doctor Assistance</li>
+      <li>Legal Assistance</li>
+      <li>Water & Refreshments</li>
+      <li>Mobile Charging</li>
+      <li>Relay or Urgent Messages</li>
+      <li>Onward/ Forward Journey</li>
+      <li>Arrangement of Rental Vehicle</li>
+    </ul>
+
+    <div class="subsection-title">2. GEOGRAPHICAL COVERAGE:</div>
+    <p class="indent">
+      Services shall be available across the territory as notified by SDA from time to time.
+    </p>
+
+    <div class="subsection-title">3. POLICY MANAGEMENT:</div>
+    <p class="indent">
+      SDA shall manage all RSA Subscription Plan issued under this Agreement, including issuance,
+      renewal, and service delivery.
+    </p>
+
+    <div class="subsection-title">4. SYSTEM ACCESS:</div>
+    <p class="indent">
+      SDA shall provide access to an online platform through which Dealers may log in, initiate RSA
+      policy purchases, and track policy details.
+    </p>
+
+    <div class="subsection-title">5. SERVICE ESCALATION & SUPPORT:</div>
+    <p class="indent">
+      SDA shall maintain a dedicated customer support line for resolution of policyholder queries
+      and grievances. A Grievance Redressal Officer shall also be appointed for escalated matters.
+    </p>
+
+    <div class="subsection-title">6. DATA HANDLING:</div>
+    <p class="indent">
+      SDA shall ensure data security standards, including encryption, secured access, and
+      compliance with applicable data privacy laws.
+    </p>
+
+    <div class="section-title">
+      IN WITNESS WHEREOF, the Parties have executed this Agreement along with its Annexures, which
+      form an integral part of this Agreement.
+    </div>
+
+    <div class="signature-block">
+      <div class="signature-box">
+        <p><strong>For SureDrive Assist Private Limited</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_NAME_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_DESIGNATION_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_DATE_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_PLACE_ANNEX1}}</span
+          >
+        </p>
+      </div>
+      <div class="signature-box">
+        <p><strong>For {{DEALER_NAME_FOR_SIGNATURE_ANNEX1}}</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_NAME_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_DESIGNATION_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_DATE_ANNEX1}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_PLACE_ANNEX1}}</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <div style="page-break-before: always"></div>
+
+    <div class="header">
+      <h1>ANNEXURE 2</h1>
+      <h2>BANK DETAILS OF SDA</h2>
+    </div>
+
+    <p>
+      All payments and transfers by the Dealer to SDA, including advance policy payments and any
+      other dues, must be made to the following bank account or by recharging Dealer's Wallet:
+    </p>
+
+    <p class="indent">
+      Account Holder Name: SUREDRIVE ASSIST PVT. LTD.<br />
+      Bank Name: HDFC Bank<br />
+      Branch Address: SCO 34, DSC, SEC 23A, GURGAON-122017, HARYANA<br />
+      Account Number: 99996969000000<br />
+      IFSC Code: HDFC0000616
+    </p>
+
+    <p>Dealers must add the above account as a beneficiary before commencing transactions.</p>
+
+    <div class="subsection-title">SECURITY DEPOSIT DETAILS:</div>
+    <p class="indent">
+      A security deposit cheque bearing Cheque No.
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 100px"
+        >{{CHEQUE_NO}}</span
+      >
+      dated
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 100px"
+        >{{CHEQUE_DATE}}</span
+      >, amounting to
+      <span style="border-bottom: 1px solid #000; display: inline-block; width: 100px"
+        >{{CHEQUE_AMOUNT}}</span
+      >
+      has been handed over by the Dealer to SDA as part of this Agreement. This cheque will be
+      retained by SDA as a security instrument and will not be encashed unless in breach of
+      Agreement or non-fulfillment of Dealer obligations under this Agreement. SDA shall return
+      this cheque upon expiry of the credit limit as per the agreement, provided there is no
+      pending liability or dispute.
+    </p>
+
+    <div class="section-title">
+      IN WITNESS WHEREOF, the Parties have executed this Agreement along with its Annexures, which
+      form an integral part of this Agreement.
+    </div>
+
+    <div class="signature-block">
+      <div class="signature-box">
+        <p><strong>For SureDrive Assist Private Limited</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_NAME_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_DESIGNATION_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_DATE_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_PLACE_ANNEX2}}</span
+          >
+        </p>
+      </div>
+      <div class="signature-box">
+        <p><strong>For {{DEALER_NAME_FOR_SIGNATURE_ANNEX2}}</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_NAME_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_DESIGNATION_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_DATE_ANNEX2}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_PLACE_ANNEX2}}</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <div style="page-break-before: always"></div>
+
+    <div class="header">
+      <h1>ANNEXURE 3</h1>
+      <h2>COMMISSION STRUCTURE</h2>
+    </div>
+
+    <p>
+      SDA agrees to credit a commission to the Dealer's account for each RSA policy sold as per the
+      structure below:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>RSA Policy Type</th>
+          <th>Validity (in Years)</th>
+          <th>Customer Price (INR)</th>
+          <th>Dealer Commission (INR)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="4">SURE SHIELD CORE</td>
+          <td>1</td>
+          <td>370</td>
+          <td>{{SURE_SHIELD_CORE_COMMISSION_1_YR}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>592</td>
+          <td>{{SURE_SHIELD_CORE_COMMISSION_2_YR}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>777</td>
+          <td>{{SURE_SHIELD_CORE_COMMISSION_3_YR}}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>888</td>
+          <td>{{SURE_SHIELD_CORE_COMMISSION_4_YR}}</td>
+        </tr>
+        <tr>
+          <td rowspan="4">SURE SHIELD MAX</td>
+          <td>1</td>
+          <td>991</td>
+          <td>{{SURE_SHIELD_MAX_COMMISSION_1_YR}}</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>1586</td>
+          <td>{{SURE_SHIELD_MAX_COMMISSION_2_YR}}</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>2081</td>
+          <td>{{SURE_SHIELD_MAX_COMMISSION_3_YR}}</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>2378</td>
+          <td>{{SURE_SHIELD_MAX_COMMISSION_4_YR}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="subsection-title">Terms:</div>
+    <ul class="indent">
+      <li>
+        SDA shall pay the dealer commission to the Dealer's wallet/account with SDA on a daily
+        basis.
+      </li>
+      <li>
+        Dealer shall be eligible for an additional yearly commission equivalent to 5% of the total
+        Dealer Margin accrued over the financial year, subject to timely payments and compliance
+        with all terms of this Agreement.
+      </li>
+      <li>Dealer shall raise a monthly invoice to SDA towards such credited commission.</li>
+      <li>
+        SDA will issue GST-compliant invoices to the Dealer for RSA Subscription Plan sold on a
+        fortnightly (as mutually decided).
+      </li>
+      <li>Taxes (GST or others) will be as applicable at the time of transaction.</li>
+    </ul>
+
+    <div class="section-title">
+      IN WITNESS WHEREOF, the Parties have executed this Agreement along with its Annexures, which
+      form an integral part of this Agreement.
+    </div>
+
+    <div class="signature-block">
+      <div class="signature-box">
+        <p><strong>For SureDrive Assist Private Limited</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_NAME_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATORY_DESIGNATION_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_DATE_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{SDA_SIGNATURE_PLACE_ANNEX3}}</span
+          >
+        </p>
+      </div>
+      <div class="signature-box">
+        <p><strong>For {{DEALER_NAME_FOR_SIGNATURE_ANNEX3}}</strong></p>
+        <p>
+          Signature:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"></span>
+        </p>
+        <p>
+          Name:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_NAME_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Designation:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATORY_DESIGNATION_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Date:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_DATE_ANNEX3}}</span
+          >
+        </p>
+        <p>
+          Place:
+          <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px"
+            >{{DEALER_SIGNATURE_PLACE_ANNEX3}}</span
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

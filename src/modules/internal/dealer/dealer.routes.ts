@@ -12,7 +12,7 @@ import { authenticateEmployee } from "../../../middleware/auth.middleware"
 
 const router = Router()
 
-router.get("/dashboard-stats", asyncHandler(getDealerOnboardStatController))
+router.get("/dashboard-stats", authenticateEmployee, asyncHandler(getDealerOnboardStatController))
 router.post("/onboard", authenticateEmployee, asyncHandler(onboardDealerHandler))
 router.get("/all", authenticateEmployee, asyncHandler(getAllDealersHandler))
 router.get("/sub-dealers-leads", asyncHandler(getSubDealerLeads))
