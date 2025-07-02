@@ -7,7 +7,14 @@ export function renderTemplate(template: string, data: Record<string, string>) {
 }
 
 export const generateAgreementPDF = async (data: Record<string, string>): Promise<Uint8Array> => {
-  const templatePath = path.join(__dirname, "./dealer-agreement.template.html")
+  // const templatePath = path.join(__dirname, "./dealer-agreement.template.html")
+  const templatePath = path.join(
+    process.cwd(),
+    "src",
+    "template",
+    "dealer-agreement.template.html"
+  )
+
   const rawHtml = fs.readFileSync(templatePath, "utf-8")
   const compiledHtml = renderTemplate(rawHtml, data)
 
