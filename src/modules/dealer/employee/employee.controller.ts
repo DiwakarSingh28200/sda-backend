@@ -105,7 +105,7 @@ export const deleteDealerEmployeeHandler = async (req: Request, res: Response) =
 }
 
 export const resetDealerEmployeePasswordHandler = async (req: Request, res: Response) => {
-  const dealer_id = req.dealer?.dealer_id!
+  const dealer_id = req.dealer?.id!
   const { employee_id, password } = req.body
   if (!dealer_id || !employee_id || !password) {
     return res.status(400).json({
