@@ -14,21 +14,28 @@ export const getAllPendingDealersService = async () => {
       const { password, ...safeDealer } = dealer
 
       // Step 2: Fetch related data
-      const [documents, finance_info, sub_dealerships, employees, services] = await Promise.all([
-        db.from("dealer_documents").select("*").eq("dealer_id", dealerID).maybeSingle(),
-        db.from("dealer_finance_info").select("*").eq("dealer_id", dealerID).maybeSingle(),
-        db
-          .from("dealers")
-          .select(
-            "id, dealer_id, dealership_name, registered_address, city, state, pincode, oems, owner_name, owner_contact, owner_email, vehicle_types, created_by"
-          )
-          .eq("parent_dealer_id", dealerID),
-        db
-          .from("dealer_employees")
-          .select("name, role, contact_number, email")
-          .eq("dealer_id", dealerID),
-        db.from("dealer_services").select("*").eq("dealer_id", dealerID),
-      ])
+      const [documents, finance_info, sub_dealerships, employees, services, wallet] =
+        await Promise.all([
+          db.from("dealer_documents").select("*").eq("dealer_id", dealerID).maybeSingle(),
+          db.from("dealer_finance_info").select("*").eq("dealer_id", dealerID).maybeSingle(),
+          db
+            .from("dealers")
+            .select(
+              "id, dealer_id, dealership_name, registered_address, city, state, pincode, oems, owner_name, owner_contact, owner_email, vehicle_types, created_by"
+            )
+            .eq("parent_dealer_id", dealerID),
+          db
+            .from("dealer_employees")
+            .select("name, role, contact_number, email")
+            .eq("dealer_id", dealerID),
+          db.from("dealer_services").select("*").eq("dealer_id", dealerID),
+          db
+            .from("wallet_config")
+            .select(
+              "average_vehicles_sold_monthly,rsa_percentage_sold,dealership_share,sda_share,credit_wallet_amount,minimum_wallet_amount"
+            )
+            .eq("dealer_id", dealerID),
+        ])
 
       return {
         dealer: safeDealer,
@@ -38,11 +45,16 @@ export const getAllPendingDealersService = async () => {
         sub_dealerships: sub_dealerships.data ?? [],
         employees: employees.data ?? [],
         services: services.data ?? [],
+        wallet: wallet.data ?? null,
       }
     })
   )
 
-  return results
+  return {
+    success: true,
+    message: "Pending dealers fetched successfully",
+    data: results,
+  }
 }
 
 export const approveDealerService = async (dealerId: string) => {
