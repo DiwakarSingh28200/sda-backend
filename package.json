@@ -6,6 +6,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
+    "postinstall": "playwright install --with-deps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -27,6 +28,7 @@
     "nodemailer": "^7.0.4",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
+    "playwright": "^1.53.2",
     "puppeteer": "^24.10.2",
     "razorpay": "^2.9.6",
     "twilio": "^5.7.0",

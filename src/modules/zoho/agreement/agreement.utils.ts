@@ -1,7 +1,6 @@
-// services/generateAgreementPdf.ts
 import fs from "fs"
 import path from "path"
-import puppeteer from "puppeteer"
+import { chromium } from "playwright"
 
 export function renderTemplate(template: string, data: Record<string, string>) {
   return template.replace(/\{\{(.*?)\}\}/g, (_, key) => data[key.trim()] || "")
@@ -12,18 +11,24 @@ export const generateAgreementPDF = async (data: Record<string, string>): Promis
   const rawHtml = fs.readFileSync(templatePath, "utf-8")
   const compiledHtml = renderTemplate(rawHtml, data)
 
-  const browser = await puppeteer.launch({
+  const browser = await chromium.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   })
+
   const page = await browser.newPage()
-  await page.setContent(compiledHtml, { waitUntil: "networkidle0" })
+  await page.setContent(compiledHtml, { waitUntil: "domcontentloaded" })
 
   const pdfBuffer = await page.pdf({
     format: "A4",
     printBackground: true,
-    margin: { top: "20px", right: "10px", bottom: "40px", left: "10px" },
+    margin: {
+      top: "20px",
+      right: "10px",
+      bottom: "40px",
+      left: "10px",
+    },
   })
+
   await browser.close()
 
   return pdfBuffer
