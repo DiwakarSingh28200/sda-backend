@@ -3,6 +3,7 @@ import {
   addDealerEmployeeHandler,
   deleteDealerEmployeeHandler,
   getDealerEmployeeByDealerIDHandler,
+  resetDealerEmployeePasswordHandler,
   updateDealerEmployeeHandler,
 } from "./employee.controller"
 import { asyncHandler } from "../../../utils/asyncHandler"
@@ -20,6 +21,11 @@ router.delete(
   "/delete/:employee_id",
   authenticateDealer,
   asyncHandler(deleteDealerEmployeeHandler)
+)
+router.post(
+  "/reset-password",
+  authenticateDealer,
+  asyncHandler(resetDealerEmployeePasswordHandler)
 )
 
 export default router

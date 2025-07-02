@@ -4,6 +4,7 @@ import {
   deleteDealerEmployeeService,
   getDealerEmployeeByDealerIDService,
   updateDealerEmployeeService,
+  resetDealerEmployeePasswordService,
 } from "./employee.service"
 
 export const getDealerEmployeeByDealerIDHandler = async (req: Request, res: Response) => {
@@ -103,3 +104,21 @@ export const deleteDealerEmployeeHandler = async (req: Request, res: Response) =
   })
 }
 
+export const resetDealerEmployeePasswordHandler = async (req: Request, res: Response) => {
+  const dealer_id = req.dealer?.dealer_id!
+  const { employee_id, password } = req.body
+  if (!dealer_id || !employee_id || !password) {
+    return res.status(400).json({
+      status: 400,
+      success: false,
+      message: "All fields are required",
+    })
+  }
+  const result = await resetDealerEmployeePasswordService(dealer_id, employee_id, password)
+  return res.status(result.status).json({
+    status: result.status,
+    success: result.success,
+    message: result.message,
+    data: result.data,
+  })
+}

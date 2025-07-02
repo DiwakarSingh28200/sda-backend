@@ -1,5 +1,9 @@
 import { Request, Response } from "express"
-import { generateDealerAgreement, sendDealerAgreementEmail } from "./agreement.service"
+import {
+  generateDealerAgreement,
+  downloadDealerAgreement,
+  sendDealerAgreementEmail,
+} from "./agreement.service"
 import { asyncHandler } from "../../../utils/asyncHandler"
 import { DealerAgreementTemplateData } from "./agreement.type"
 
@@ -9,6 +13,19 @@ export const generateDealerAgreementController = asyncHandler(
     const payload = req.body as DealerAgreementTemplateData
 
     const pdfBuffer = await generateDealerAgreement(dealerId, payload)
+    res.set({
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename=${dealerId}.pdf`,
+      "Content-Length": pdfBuffer.toString().length,
+    })
+    res.send(pdfBuffer)
+  }
+)
+
+export const downloadDealerAgreementController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { dealerId } = req.params
+    const pdfBuffer = await downloadDealerAgreement(dealerId)
     res.set({
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename=${dealerId}.pdf`,

@@ -143,3 +143,49 @@ export const deleteDealerEmployeeService = async (dealer_id: string, employee_id
     data: data,
   }
 }
+
+// Dealer can reset employee password
+// Lets make api for this
+
+export const resetDealerEmployeePasswordService = async (
+  dealer_id: string,
+  employee_id: string,
+  password: string
+) => {
+  const { data: dealerEmployee, error: dealerEmployeeError } = await db
+    .from("dealer_employees")
+    .select("id")
+    .eq("id", employee_id)
+    .eq("dealer_id", dealer_id)
+
+  if (dealerEmployeeError) {
+    return {
+      status: 400,
+      success: false,
+      message: "Employee not found",
+    }
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  const { data, error } = await db
+    .from("dealer_employees")
+    .update({ password: hashedPassword })
+    .eq("id", employee_id)
+    .eq("dealer_id", dealer_id)
+
+  if (error) {
+    return {
+      status: 400,
+      success: false,
+      message: error.message,
+    }
+  }
+
+  return {
+    status: 200,
+    success: true,
+    message: "Password reset successfully",
+    data: data,
+  }
+}
