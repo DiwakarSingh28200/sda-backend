@@ -146,6 +146,7 @@ export const onboardDealerService = async (
       sda_share: wallet_config?.sda_share ?? 0,
       credit_wallet_amount: wallet_config?.credit_wallet_amount ?? 0,
       minimum_wallet_amount: wallet_config?.minimum_wallet_amount ?? 0,
+      dealer_id: dealerId,
     })
 
     await db.from("dealer_documents").insert({

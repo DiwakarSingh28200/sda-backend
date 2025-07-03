@@ -138,6 +138,14 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
         message: "Dealer not found",
       })
     }
+    console.log("dealerData ID", dealerData?.id)
+    const { data: walletData, error: walletError } = await db
+      .from("wallet_config")
+      .select(
+        "average_vehicles_sold_monthly,rsa_percentage_sold,dealership_share,sda_share,credit_wallet_amount,minimum_wallet_amount"
+      )
+      .eq("dealer_id", dealerData?.id!)
+      .single()
 
     // Restructure the response
     const response = {
@@ -183,6 +191,7 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
       sub_dealerships: dealerData.sub_dealerships,
       services: dealerData.services,
       oems: [dealerData.oem],
+      wallet: walletData,
     }
 
     return res.status(200).json({
