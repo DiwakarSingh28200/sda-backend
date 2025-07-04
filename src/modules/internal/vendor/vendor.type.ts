@@ -6,6 +6,7 @@ export type VendorOperatingArea = Database["public"]["Tables"]["vendor_operating
 export type VendorContacts = Database["public"]["Tables"]["vendor_contacts"]["Insert"]
 export type VendorDocuments = Database["public"]["Tables"]["vendor_documents"]["Insert"]
 export type VendorBankInfo = Database["public"]["Tables"]["vendor_bank_info"]["Insert"]
+export type VendorFleet = Database["public"]["Tables"]["vendor_fleets"]["Insert"]
 
 export interface VendorOnboardingPayload {
   vendor: Omit<Vendor, "id" | "created_by" | "created_at">
@@ -14,4 +15,5 @@ export interface VendorOnboardingPayload {
   bankInfo: Omit<VendorBankInfo, "id" | "vendor_id" | "created_by" | "created_at">
   contacts: Omit<VendorContacts, "id" | "vendor_id" | "created_by" | "created_at">
   documents: Omit<VendorDocuments, "id" | "vendor_id" | "created_by" | "created_at">
+  fleet: Omit<VendorFleet, "id" | "vendor_id" | "created_by" | "created_at">[]
 }
