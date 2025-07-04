@@ -7,6 +7,7 @@ const LocationSchema = z.object({
   location: z.string(),
   latitude: z.number(),
   longitude: z.number(),
+  vehicles: z.array(z.string()).optional(),
 })
 
 const ServiceSchema = z.object({
@@ -40,6 +41,11 @@ const BankInfoSchema = z.object({
   cancelled_cheque_file_path: z.string(),
 })
 
+const VendorFleetSchema = z.object({
+  vehicle_registration_number: z.string(),
+  vehicle_type: z.string(),
+})
+
 export const CreateVendorSchema = z.object({
   vendor: z.object({
     name: z.string(),
@@ -70,6 +76,7 @@ export const CreateVendorSchema = z.object({
   bankInfo: BankInfoSchema,
   contacts: ContactSchema,
   documents: DocumentSchema,
+  fleet: z.array(VendorFleetSchema),
 })
 
 export type CreateVendorInput = z.infer<typeof CreateVendorSchema>

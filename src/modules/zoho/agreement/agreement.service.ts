@@ -457,110 +457,58 @@ export const downloadDealerAgreement = async (dealerId: string) => {
 
 export const generateVendorAgreement = async (vendorId: string) => {
   const vendorAgreementData = {
-    DAY: "02",
-    MONTH: "July",
-    YEAR: "2025",
-
-    SDA_SALES_HEAD_NAME: "Anjali Sharma",
-    SDA_SALES_HEAD_DESIGNATION: "Regional Sales Head",
-
-    SDA_SIGNATORY_NAME: "Anjali Sharma",
-    SDA_SIGNATORY_DESIGNATION: "Regional Sales Head",
+    AGREEMENT_DAY: "02",
+    AGREEMENT_MONTH: "July",
+    AGREEMENT_YEAR: "2025",
+    SDA_SIGNATORY_NAME: "Naveen Kumar",
+    SDA_SIGNATORY_DESIGNATION: "Sales Head",
     SDA_SIGNATURE_DATE: "02-07-2025",
     SDA_SIGNATURE_PLACE: "Gurugram",
-
     VENDOR_FULL_LEGAL_NAME: "ABC Towing Services Pvt. Ltd.",
     VENDOR_ENTITY_TYPE: "Private Limited",
-    VENDOR_ADDRESS: "Plot No. 12, Industrial Area, Pune, Maharashtra",
-    VENDOR_REGISTRATION_ID_IF_APPLICABLE: "MH12AB1234",
-    VENDOR_AUTHORIZED_SIGNATORY_NAME: "Rakesh Yadav",
-    VENDOR_AUTHORIZED_SIGNATORY_DESIGNATION: "Operations Manager",
-
-    VENDOR_NAME_FOR_SIGNATURE: "ABC Towing Services Pvt. Ltd.",
-    VENDOR_SIGNATORY_NAME: "Rakesh Yadav",
-    VENDOR_SIGNATORY_DESIGNATION: "Operations Manager",
+    VENDOR_REGISTERED_ADDRESS: "123 Industrial Area, Pune, Maharashtra",
+    VENDOR_REGISTRATION_ID: "27ABCDE1234F1Z5",
+    VENDOR_AUTH_SIGNATORY_NAME: "Rakesh Yadav",
+    VENDOR_AUTH_SIGNATORY_DESIGNATION: "Operations Manager",
     VENDOR_SIGNATURE_DATE: "02-07-2025",
     VENDOR_SIGNATURE_PLACE: "Pune",
-
-    VENDOR_FULL_NAME_FOR_NOTICES: "ABC Towing Services Pvt. Ltd.",
-    VENDOR_ADDRESS_FOR_NOTICES: "Plot No. 12, Industrial Area, Pune, Maharashtra",
-    VENDOR_EMAIL_ADDRESS_FOR_NOTICES: "support@abctowing.com",
-
-    SIGNATURE_DATE_MAIN_AGREEMENT: "02-07-2025",
-
-    SDA_ID: "SDA-00043",
-    GARAGE_NAME: "ABC Garage & Services",
-    CONTACT_NUMBER: "9876543210",
-    COMMUNICATION_ADDRESS: "12 Park Lane, Pune",
+    VENDOR_WORKSHOP_NAME: "ABC Garage & Services",
+    PRIMARY_CONTACT_NUMBER: "9876543210",
     ALTERNATE_CONTACT_NUMBER: "9876543211",
+    BUSINESS_ADDRESS: "12 Park Lane, Pune",
     PINCODE: "411001",
     WORK_TIMINGS: "9:00 AM - 9:00 PM",
-
-    RSA_CHECKED: "checked",
-    TOWING_CHECKED: "checked",
-    TWO_WHEELER_SERVICE_CHECKED: "checked",
-    FOUR_WHEELER_SERVICE_CHECKED: "checked",
-    "24x7_YES_CHECKED": "checked",
-    "24x7_NO_CHECKED": "",
-
-    DAY_DUTY_CONTACT_PERSON_1: "Manoj Singh",
-    DAY_DUTY_CONTACT_NO_1: "9876000001",
-    DAY_DUTY_CONTACT_PERSON_2: "Neha Kumari",
-    DAY_DUTY_CONTACT_NO_2: "9876000002",
-    NIGHT_DUTY_CONTACT_PERSON_1: "Pawan Kumar",
-    NIGHT_DUTY_CONTACT_NO_1: "9876000003",
-    NIGHT_DUTY_CONTACT_PERSON_2: "Kavita Sharma",
-    NIGHT_DUTY_CONTACT_NO_2: "9876000004",
-    CONTACT_EMAIL_ID: "ops@abctowing.com",
-
+    REPAIR_ON_SITE_2W: true,
+    REPAIR_ON_SITE_4W: true,
+    TOWING_2W: true,
+    TOWING_4W: true,
+    SERVICE_AVAILABLE_24X7: true,
     ACCOUNT_HOLDER_NAME: "ABC Towing Services Pvt. Ltd.",
     BANK_ACCOUNT_NO: "123456789012",
-    NAME_OF_BANK: "HDFC Bank",
-    BRANCH_NAME: "Pune Main Branch",
-    IFSC_CODE: "HDFC0001234",
-    PAN_CARD_NUMBER: "ABCDE1234F",
-    GST_NUMBER: "27ABCDE1234F1Z5",
-    AADHARCARD_NUMBER: "123456789012",
-
-    WHEEL_TOW_UPTO_KMS: "10 KM",
-    WHEEL_TOW_2W_ADDITIONAL_CHARGES: "₹200",
-    WHEEL_TOW_4W_ADDITIONAL_CHARGES_UPTO_KMS: "₹300",
-
-    FLAT_BED_UPTO_KMS: "15 KM",
-    FLAT_BED_2W_ADDITIONAL_CHARGES: "₹250",
-    FLAT_BED_4W_ADDITIONAL_CHARGES_UPTO_KMS: "₹350",
-
-    REPAIR_ON_SPOT_2W_UPTO: "₹100",
-    REPAIR_ON_SPOT_2W_KMS: "10 KM",
-    REPAIR_ON_SPOT_4W_UPTO: "₹200",
-    REPAIR_ON_SPOT_4W_KMS: "15 KM",
-
-    ADDITIONAL_CHARGES_ABOVE_KMS: "₹25/km",
-    CANCELLATION_CHARGES: "₹150",
-
-    TRANSFER_WHEEL_TOW_UPTO_KMS: "15 KM",
-    TRANSFER_WHEEL_TOW_ADDITIONAL_CHARGES: "₹300",
-    TRANSFER_FLAT_BED_UPTO_KMS: "20 KM",
-    TRANSFER_FLAT_BED_ADDITIONAL_CHARGES: "₹350",
-
-    EOL_WHEEL_TOW_4W: "₹800",
-    EOL_WHEEL_TOW_4W_2W_1: "₹1000",
-    EOL_WHEEL_TOW_4W_2W_2: "₹1200",
-    EOL_WHEEL_TOW_BASE_KMS: "20 KM",
-    EOL_WHEEL_TOW_ADDITIONAL_CHARGES: "₹50/km",
-
-    SDA_SIGNATORY_NAME_ANNEX2: "Anjali Sharma",
-    SDA_SIGNATURE_DATE_ANNEX2: "02-07-2025",
-    SDA_SIGNATURE_PLACE_ANNEX2: "Gurugram",
-
-    VENDOR_NAME_FOR_SIGNATURE_ANNEX2: "ABC Towing Services Pvt. Ltd.",
-    VENDOR_SIGNATORY_NAME_ANNEX2: "Rakesh Yadav",
-    VENDOR_SIGNATORY_DESIGNATION_ANNEX2: "Operations Manager",
-    VENDOR_SIGNATURE_DATE_ANNEX2: "02-07-2025",
-    VENDOR_SIGNATURE_PLACE_ANNEX2: "Pune",
+    BANK_NAME: "HDFC Bank",
+    BANK_IFSC_CODE: "HDFC0001234",
+    PAN_NUMBER: "ABCDE1234F",
+    GSTIN: "27ABCDE1234F1Z5",
+    BUSINESS_ADDRESS_PROOF: true,
+    SERVICE_RATE_CARD: [
+      {
+        SERVICE_CATEGORY: "Towing - 2W",
+        CHARGES_DAY: "300",
+        CHARGES_NIGHT: "400",
+        FIXED_DISTANCE_KM: "10",
+        ADDITIONAL_PER_KM_RATE: "30",
+      },
+      {
+        SERVICE_CATEGORY: "Repair on Site - 4W",
+        CHARGES_DAY: "500",
+        CHARGES_NIGHT: "600",
+        FIXED_DISTANCE_KM: "15",
+        ADDITIONAL_PER_KM_RATE: "40",
+      },
+    ],
   }
 
-  const pdfBuffer = await generateVendorAgreementPDF(vendorAgreementData as Record<string, string>)
+  const pdfBuffer = await generateVendorAgreementPDF(vendorAgreementData)
   const fileName = `vendor-agreements/${vendorId}-agreement-${Date.now()}.pdf`
 
   return pdfBuffer

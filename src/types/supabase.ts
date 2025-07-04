@@ -1791,6 +1791,38 @@ export type Database = {
           },
         ]
       }
+      vendor_fleets: {
+        Row: {
+          created_at: string
+          id: number
+          vehicle_registration_number: string | null
+          vehicle_type: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          vehicle_registration_number?: string | null
+          vehicle_type?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          vehicle_registration_number?: string | null
+          vehicle_type?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_fleets_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendor_operating_areas: {
         Row: {
           city: string
@@ -1801,6 +1833,7 @@ export type Database = {
           longitude: number
           region: string
           state: string | null
+          vehicles: string[] | null
           vendor_id: string | null
         }
         Insert: {
@@ -1812,6 +1845,7 @@ export type Database = {
           longitude: number
           region: string
           state?: string | null
+          vehicles?: string[] | null
           vendor_id?: string | null
         }
         Update: {
@@ -1823,6 +1857,7 @@ export type Database = {
           longitude?: number
           region?: string
           state?: string | null
+          vehicles?: string[] | null
           vendor_id?: string | null
         }
         Relationships: [
@@ -2038,6 +2073,7 @@ export type Database = {
           average_vehicles_sold_monthly: number
           created_at: string | null
           credit_wallet_amount: number
+          dealer_id: string | null
           dealership_share: number
           id: string
           minimum_wallet_amount: number
@@ -2050,6 +2086,7 @@ export type Database = {
           average_vehicles_sold_monthly: number
           created_at?: string | null
           credit_wallet_amount: number
+          dealer_id?: string | null
           dealership_share: number
           id?: string
           minimum_wallet_amount: number
@@ -2062,6 +2099,7 @@ export type Database = {
           average_vehicles_sold_monthly?: number
           created_at?: string | null
           credit_wallet_amount?: number
+          dealer_id?: string | null
           dealership_share?: number
           id?: string
           minimum_wallet_amount?: number
@@ -2071,6 +2109,13 @@ export type Database = {
           wallet_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "wallet_config_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "wallet_configurations_wallet_id_fkey"
             columns: ["wallet_id"]

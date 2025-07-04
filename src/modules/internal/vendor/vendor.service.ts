@@ -5,7 +5,7 @@ import bcrypt from "bcrypt"
 import axios from "axios"
 
 export const createVendor = async (input: VendorOnboardingPayload, createdBy: string) => {
-  const { vendor, services, operatingAreas, contacts, documents, bankInfo } = input
+  const { vendor, services, operatingAreas, contacts, documents, bankInfo, fleet } = input
 
   // check if vendor already exists
   const { data: existingVendor } = await db
@@ -70,6 +70,7 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
       location: `SRID=4326;POINT(${a.longitude} ${a.latitude})`,
       state: vendor.state,
       contact_number: vendor.primary_contact_number,
+      vehicles: a.vehicles ?? [],
     }))
     const { error: areaError } = await db.from("vendor_operating_areas").insert(areaPayload)
     if (areaError) throw areaError
@@ -92,6 +93,12 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
     .from("vendor_documents")
     .insert([{ ...documents, vendor_id }])
   if (docError) throw docError
+
+  // Insert fleet
+  const { error: fleetError } = await db
+    .from("vendor_fleets")
+    .insert(fleet.map((f) => ({ ...f, vendor_id })))
+  if (fleetError) throw fleetError
 
   await db.from("audit_logs").insert([
     {
@@ -131,7 +138,8 @@ export const getVendorById = async (id: string) => {
     contacts:vendor_contacts(*),
     operating_areas:vendor_operating_areas(*),
     services:vendor_services(*),
-    bank_info:vendor_bank_info(*)`
+    bank_info:vendor_bank_info(*),
+    fleet:vendor_fleets(*)`
     )
     .eq("vendor_id", id)
     .single()
@@ -193,6 +201,7 @@ export const getVendorById = async (id: string) => {
           latitude: area.latitude,
           longitude: area.longitude,
         },
+        vehicles: area.vehicles,
       })),
     },
     operations: {
@@ -217,6 +226,7 @@ export const getVendorById = async (id: string) => {
       ifsc_code: data.bank_info[0]?.ifsc_code,
       cancelled_cheque: data.bank_info[0]?.cancelled_cheque_file_path,
     },
+    fleet: data.fleet,
   }
 }
 
