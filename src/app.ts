@@ -53,5 +53,6 @@ app.use((req, res, next) => {
 app.use("/api/v1", internalRoutes)
 app.use("/api/dealer/v1", dealerRoutes)
 app.use("/api/zoho", zohoRoutes)
+app.use("/api/v1/razorpay/webhook", express.raw({ type: "application/json" }))
 
 export default app

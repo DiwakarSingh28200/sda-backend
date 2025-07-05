@@ -7,8 +7,7 @@ import otpRoutes from "../modules/otp/otp.router"
 import vendorRoutes from "../modules/internal/vendor/vendor.router"
 import invoiceRoutes from "../modules/internal/invoice/invoice.routes"
 import agreementRoutes from "../modules/internal/agreement/agreement.route"
-// import dealerRoutes from "@/modules/dealer/dealer.routes";
-// import { authenticateEmployee } from "@/middleware/authMiddleware";
+import razorpayRoutes from "../modules/razorpay/razorpay.routes"
 
 const router = Router()
 
@@ -30,5 +29,8 @@ router.use("/invoice", invoiceRoutes)
 
 // Agreement routes
 router.use("/agreement", agreementRoutes)
+
+// Razorpay routes
+router.use("/razorpay", razorpayRoutes)
 
 export default router
