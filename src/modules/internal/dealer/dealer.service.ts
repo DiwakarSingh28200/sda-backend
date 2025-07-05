@@ -35,8 +35,6 @@ export const onboardDealerService = async (
       .from("dealers")
       .select("id")
       .ilike("dealership_name", dealer.dealership_name!)
-      .eq("city", dealer.city!)
-      .eq("state", dealer.state!)
       .single()
 
     if (existingDealer) {
