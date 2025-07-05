@@ -17,6 +17,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://hoppscotch.io",
   "https://sda.vinaydemos.site",
+  "https://sdapartner.vinaydemos.site",
 ]
 const app: Application = express()
 app.use(cookieParser())
