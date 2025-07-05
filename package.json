@@ -6,7 +6,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
-    "postinstall": "playwright install --with-deps",
+    "postinstall": "playwright install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,12 +28,15 @@
     "nodemailer": "^7.0.4",
     "pino": "^9.6.0",
     "pino-pretty": "^13.0.0",
-    "playwright": "^1.53.2",
     "puppeteer": "^24.10.2",
     "razorpay": "^2.9.6",
     "twilio": "^5.7.0",
     "uuid": "^11.1.0",
     "zod": "^3.24.4"
+  },
+  "engines": {
+    "node": "20.x",
+    "npm": "10.x"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -45,6 +48,7 @@
     "@types/node": "^22.15.17",
     "@types/nodemailer": "^6.4.17",
     "@types/puppeteer": "^5.4.7",
+    "playwright": "^1.53.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
