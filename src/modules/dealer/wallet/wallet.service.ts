@@ -86,7 +86,7 @@ export const getDealerWalletTransactions = async (
     return null
   }
 
-  const transactions = data.map((tx) => {
+  const transactions = data.map(tx => {
     const isCredit = tx.type === "recharge"
     const amountAbs = Math.abs(tx.amount || 0)
 
@@ -129,7 +129,7 @@ export const getWithdrawalHistory = async (
     return null
   }
 
-  const withdrawals = (data || []).map((w) => ({
+  const withdrawals = (data || []).map(w => ({
     id: w.id,
     amount: w.amount,
     status: w.status,
@@ -678,7 +678,12 @@ export async function deductWalletForSale({
 }
 
 export const getDealerWallet = async (dealer_id: string) => {
-  return await db.from("wallets").select("*").eq("id", dealer_id).eq("is_active", true).single()
+  return await db
+    .from("wallets")
+    .select("*")
+    .eq("dealer_id", dealer_id)
+    .eq("is_active", true)
+    .single()
 }
 
 export const createRazorpayFundAccount = async (payload: RazorpayXFundAccountInput) => {
