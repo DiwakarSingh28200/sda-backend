@@ -15,7 +15,8 @@ const allowedOrigins = [
   frontendUrl,
   frontendDevUrl,
   "http://localhost:3000",
-  "https://hoppscotch.io",
+  "https://ops.suredriveassist.com",
+  "https://partners.suredriveassist.com",
   "https://sda.vinaydemos.site",
   "https://sdapartner.vinaydemos.site",
 ]
