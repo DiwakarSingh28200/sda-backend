@@ -100,8 +100,8 @@ export const sendEmailOTP = async (email: string, business_name: string, owner_n
 
   const htmlTemplate = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <p>Dear <strong>${owner_name}</strong></p>
-      <p>Business Name: <strong>${business_name}</strong></p>
+      <p>Dear <strong>${owner_name ? owner_name : ""}</strong></p>
+      <p>Business Name: <strong>${business_name ? business_name : ""}</strong></p>
       <p>Greetings from SureDrive Assist!</p>
       <p>Thank you for choosing to partner with us. To complete your registration and verify your contact details, please use the following One-Time Password (OTP):</p>
       <p>Your OTP is: <strong style="font-size: 18px; color: #007bff;">${otp}</strong></p>
@@ -111,8 +111,8 @@ export const sendEmailOTP = async (email: string, business_name: string, owner_n
     </div>
   `
 
-  const textTemplate = `Dear ${owner_name}
-Business Name: ${business_name}
+  const textTemplate = `Dear ${owner_name ? owner_name : ""}
+Business Name: ${business_name ? business_name : ""}
 Greetings from SureDrive Assist!
 Thank you for choosing to partner with us. To complete your registration and verify your contact details, please use the following One-Time Password (OTP):
 Your OTP is: ${otp}

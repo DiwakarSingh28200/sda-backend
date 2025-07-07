@@ -47,7 +47,7 @@ export const verifyOTPController = async (req: Request, res: Response) => {
 }
 export const sendEmailOTPController = async (req: Request, res: Response) => {
   const { email, business_name, owner_name } = req.body
-  if (!email || !business_name || !owner_name) {
+  if (!email) {
     return res.status(400).json({
       success: false,
       message: "Email, business_name and owner_name are required",
