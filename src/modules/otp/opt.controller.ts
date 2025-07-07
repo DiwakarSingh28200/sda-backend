@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { sendEmailOTP, sendOTP, verifyOTP } from "./otp.service"
+import { sendEmailOTP, sendEmailUsingZohoAPI, sendOTP, verifyOTP } from "./otp.service"
 
 export const sendOTPController = async (req: Request, res: Response) => {
   try {
@@ -46,14 +46,14 @@ export const verifyOTPController = async (req: Request, res: Response) => {
   })
 }
 export const sendEmailOTPController = async (req: Request, res: Response) => {
-  const { email } = req.body
-  if (!email) {
+  const { email, business_name, owner_name } = req.body
+  if (!email || !business_name || !owner_name) {
     return res.status(400).json({
       success: false,
-      message: "Email is required",
+      message: "Email, business_name and owner_name are required",
     })
   }
-  const result = await sendEmailOTP(email)
+  const result = await sendEmailOTP(email, business_name, owner_name)
   if (result.success) {
     return res.status(200).json(result)
   }
@@ -61,4 +61,20 @@ export const sendEmailOTPController = async (req: Request, res: Response) => {
     success: false,
     message: result?.message,
   })
+}
+
+export const sendEmailUsingZohoAPIController = async (req: Request, res: Response) => {
+  const { email } = req.body
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: "Email is required",
+    })
+  }
+
+  const result = await sendEmailUsingZohoAPI(email)
+  if (result.success) {
+    return res.status(200).json(result)
+  }
+  return res.status(400).json(result)
 }
