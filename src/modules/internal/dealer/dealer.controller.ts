@@ -142,7 +142,7 @@ export const getDealerProfileById = async (req: Request, res: Response) => {
     const { data: walletData, error: walletError } = await db
       .from("wallet_config")
       .select(
-        "average_vehicles_sold_monthly,rsa_percentage_sold,dealership_share,sda_share,credit_wallet_amount,minimum_wallet_amount"
+        "average_vehicles_sold_monthly,rsa_sold_monthly,dealership_share,sda_share,credit_wallet_amount,minimum_wallet_amount"
       )
       .eq("dealer_id", dealerData?.id!)
       .single()
