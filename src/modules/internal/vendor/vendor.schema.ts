@@ -16,6 +16,7 @@ const ServiceSchema = z.object({
   day_charge: z.number().optional(),
   fixed_distance_charge: z.number().optional(),
   additional_price: z.number().optional(),
+  waiting_charge: z.number().optional(),
 })
 
 const ContactSchema = z.object({

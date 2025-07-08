@@ -12,12 +12,23 @@ export const createVendor = async (input: VendorOnboardingPayload, createdBy: st
     .from("vendors")
     .select("id")
     .ilike("name", vendor.name!)
-    .eq("city", vendor.city!)
-    .eq("state", vendor.state!)
     .single()
+
+  // check if vendor already with gst number
+  const { data: existingVendorWithGst } = await db
+    .from("vendor_documents")
+    .select("id")
+    .eq("gst_number", documents.gst_number!)
+    .single()
+
+  if (existingVendorWithGst) {
+    throw new Error("Vendor already exists with gst number")
+    return
+  }
 
   if (existingVendor) {
     throw new Error("Vendor already exists")
+    return
   }
 
   const vendorId = await generateVendorId({ state: vendor.state! })
@@ -218,6 +229,7 @@ export const getVendorById = async (id: string) => {
       day_charge: service.day_charge,
       fixed_distance_charge: service.fixed_distance_charge,
       additional_price: service.additional_price,
+      waiting_charge: service.waiting_charge,
     })),
     bank_info: {
       bank_name: data.bank_info[0]?.bank_name,
