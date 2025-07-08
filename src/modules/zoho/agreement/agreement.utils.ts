@@ -22,6 +22,10 @@ export const generateAgreementPDF = async (data: Record<string, string>): Promis
   // const browser = await chromium.launch({
   //   headless: true,
   // })
+
+  console.log("Using Puppeteer from:", require.resolve("puppeteer"))
+  console.log("Puppeteer executable path:", puppeteer.executablePath())
+
   const browser = await puppeteer.launch({
     headless: true,
     args: [
