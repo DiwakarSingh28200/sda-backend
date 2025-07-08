@@ -86,7 +86,7 @@ export const getDealerWalletTransactions = async (
     return null
   }
 
-  const transactions = data.map(tx => {
+  const transactions = data.map((tx) => {
     const isCredit = tx.type === "recharge"
     const amountAbs = Math.abs(tx.amount || 0)
 
@@ -129,7 +129,7 @@ export const getWithdrawalHistory = async (
     return null
   }
 
-  const withdrawals = (data || []).map(w => ({
+  const withdrawals = (data || []).map((w) => ({
     id: w.id,
     amount: w.amount,
     status: w.status,
@@ -591,12 +591,12 @@ export async function deductWalletForSale({
     }
 
   // 3. Calculate shares
-  const dealerShare = (planAmount * config.dealership_share) / 100
-  const sdaShare = (planAmount * config.sda_share) / 100
+  const dealerShare = config.dealership_share
+  const sdaShare = config.sda_share
 
   // 4. Calculate TDS (default 2%)
   const tdsPercent = 2
-  const tdsAmount = (dealerShare * tdsPercent) / 100
+  const tdsAmount = (dealerShare / 100) * tdsPercent
   const netDealerCommission = dealerShare - tdsAmount
   const totalDeduction = sdaShare + tdsAmount
 
