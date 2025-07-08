@@ -139,7 +139,7 @@ export const onboardDealerService = async (
     await db.from("wallet_config").insert({
       wallet_id: walletData?.id,
       average_vehicles_sold_monthly: wallet_config?.average_vehicles_sold_monthly ?? 0,
-      rsa_percentage_sold: wallet_config?.rsa_percentage_sold ?? 0,
+      rsa_sold_monthly: wallet_config?.rsa_sold_monthly ?? 0,
       dealership_share: wallet_config?.dealership_share ?? 0,
       sda_share: wallet_config?.sda_share ?? 0,
       credit_wallet_amount: wallet_config?.credit_wallet_amount ?? 0,

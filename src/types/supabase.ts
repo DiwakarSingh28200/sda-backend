@@ -2085,7 +2085,7 @@ export type Database = {
           dealership_share: number
           id: string
           minimum_wallet_amount: number
-          rsa_percentage_sold: number
+          rsa_sold_monthly: number
           sda_share: number
           updated_at: string | null
           wallet_id: string | null
@@ -2098,7 +2098,7 @@ export type Database = {
           dealership_share: number
           id?: string
           minimum_wallet_amount: number
-          rsa_percentage_sold: number
+          rsa_sold_monthly: number
           sda_share: number
           updated_at?: string | null
           wallet_id?: string | null
@@ -2111,7 +2111,7 @@ export type Database = {
           dealership_share?: number
           id?: string
           minimum_wallet_amount?: number
-          rsa_percentage_sold?: number
+          rsa_sold_monthly?: number
           sda_share?: number
           updated_at?: string | null
           wallet_id?: string | null
