@@ -1,6 +1,7 @@
 import fs from "fs"
 import path from "path"
-import { chromium } from "playwright"
+// import { chromium } from "playwright"
+import puppeteer from "puppeteer"
 
 export function renderTemplate(template: string, data: Record<string, string>) {
   return template.replace(/\{\{(.*?)\}\}/g, (_, key) => data[key.trim()] || "")
@@ -18,8 +19,21 @@ export const generateAgreementPDF = async (data: Record<string, string>): Promis
   const rawHtml = fs.readFileSync(templatePath, "utf-8")
   const compiledHtml = renderTemplate(rawHtml, data)
 
-  const browser = await chromium.launch({
+  // const browser = await chromium.launch({
+  //   headless: true,
+  // })
+  const browser = await puppeteer.launch({
     headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ],
   })
 
   const page = await browser.newPage()
@@ -131,8 +145,18 @@ export const generateVendorAgreementPDF = async (
   const rawHtml = fs.readFileSync(templatePath, "utf-8")
   const compiledHtml = renderTemplate(rawHtml, data as unknown as Record<string, string>)
 
-  const browser = await chromium.launch({
+  const browser = await puppeteer.launch({
     headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ],
   })
 
   const page = await browser.newPage()

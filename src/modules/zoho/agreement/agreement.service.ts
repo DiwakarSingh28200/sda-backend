@@ -23,12 +23,17 @@ export const generateDealerAgreement = async (
     .eq("id", dealerId)
     .single()
 
-  if (!dealerData) {
+  if (dealerError) {
     return {
       success: false,
       message: "Dealer not found",
     }
   }
+
+  console.log("dealerData: ", dealerData)
+
+  console.log("dealerData feching done: ")
+  console.log("payload feching: 2")
 
   // Generate dealer agreement
   const dealerAgreementData = {
