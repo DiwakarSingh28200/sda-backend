@@ -96,7 +96,7 @@ export const EmployeeSchema = z.object({
 // 🔹 Wallet Config
 export const WalletConfigSchema = z.object({
   average_vehicles_sold_monthly: z.number(),
-  rsa_percentage_sold: z.number(),
+  rsa_sold_monthly: z.number(),
   dealership_share: z.number(),
   sda_share: z.number(),
   credit_wallet_amount: z.number(),
